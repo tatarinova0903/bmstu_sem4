@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab1.MainController">
+   <children>
+      <HBox alignment="CENTER" layoutY="8.0" prefHeight="80.0" prefWidth="200.0" spacing="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button fx:id="revertButton" focusTraversable="false" mnemonicParsing="false" text="Отменить" textAlignment="CENTER" />
+            <Button fx:id="enterSetButton1" focusTraversable="false" mnemonicParsing="false" onAction="#enterSetButton1Tap" text="Ввести 1 множество" textAlignment="CENTER" />
+            <Button fx:id="enterSetButton2" focusTraversable="false" mnemonicParsing="false" onAction="#enterSetButton2Tap" text="Ввести 2 множество" textAlignment="CENTER" />
+            <Button fx:id="calculateButton" focusTraversable="false" mnemonicParsing="false" text="Вычислить" textAlignment="CENTER" />
+         </children>
+      </HBox>
+      <Canvas fx:id="canvas" height="320.0" layoutX="77.0" layoutY="124.0" onMouseClicked="#onMouseClicked" width="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+   </children>
+</AnchorPane>
