@@ -12,6 +12,14 @@ public class MainModel {
         this.current_set = current_set;
     }
 
+    public ArrayList<Point> getSet1() {
+        return set1;
+    }
+
+    public ArrayList<Point> getSet2() {
+        return set2;
+    }
+
     void addToSet(Point point) {
         if (current_set == null) { return; }
         switch (current_set) {
