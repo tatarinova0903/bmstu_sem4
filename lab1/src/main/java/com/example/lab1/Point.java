@@ -1,5 +1,7 @@
 package com.example.lab1;
 
+import static java.lang.Math.sqrt;
+
 public class Point {
     private double x;
     private double y;
@@ -21,5 +23,9 @@ public class Point {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    double distance(Point point) {
+        return sqrt((this.x - point.x) * (this.x - point.x) + (this.y - point.y) * (this.y - point.y));
     }
 }

@@ -1,15 +1,10 @@
 package com.example.lab1;
 
-import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class MainController extends AnchorPane {
     private Button cancelBtn;
@@ -38,16 +33,15 @@ public class MainController extends AnchorPane {
 
         canvas.widthProperty().bind(this.widthProperty());
         canvas.heightProperty().bind(this.heightProperty());
+
+        addHandlers();
     }
 
     void addHandlers() {
-        cancelBtn.setOnAction(event -> { cancelBtnDidTap(); });
-        inputFirstSetBtn.setOnAction(event -> { canvas.inputFirstSetBtn(event); });
-        inputSecondSetBtn.setOnAction(event -> { canvas.inputSecondSetBtn(event); });
-    }
-
-    void cancelBtnDidTap() {
-
+        cancelBtn.setOnAction(event -> { canvas.cancelBtnDidTap(); });
+        inputFirstSetBtn.setOnAction(event -> { canvas.inputFirstSetBtnDidTap(event); });
+        inputSecondSetBtn.setOnAction(event -> { canvas.inputSecondSetBtnDidTap(event); });
+        calculateBtn.setOnAction(event -> { canvas.calculateBtnDidTap(); });
     }
 }
 

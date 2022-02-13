@@ -31,7 +31,13 @@ class ResizableCanvas extends Canvas {
         model.getSet1().forEach(point -> {
             point.setX(point.getX() * deltaWidth);
             point.setY(point.getY() * deltaHeight);
-            gc.fillOval(point.getX(), point.getY(), 5, 5);
+            gc.fillOval(point.getX(), point.getY(), Constants.pointDiameter, Constants.pointDiameter);
+        });
+
+        model.getSet2().forEach(point -> {
+            point.setX(point.getX() * deltaWidth);
+            point.setY(point.getY() * deltaHeight);
+            gc.fillOval(point.getX(), point.getY(), Constants.pointDiameter, Constants.pointDiameter);
         });
 
         oldWidth = width;
@@ -60,13 +66,29 @@ class ResizableCanvas extends Canvas {
         model.addToSet(point);
     }
 
-    void inputFirstSetBtn(ActionEvent event) {
+    void inputFirstSetBtnDidTap(ActionEvent event) {
         gc.setFill(Color.CORAL);
         model.setCurrent_set(SetNumber.FIRST);
     }
 
-    void inputSecondSetBtn(ActionEvent event) {
+    void inputSecondSetBtnDidTap(ActionEvent event) {
         gc.setFill(Color.OLIVE);
         model.setCurrent_set(SetNumber.SECOND);
     }
+
+    void cancelBtnDidTap() {
+
+    }
+
+    void calculateBtnDidTap() {
+        Circle circle = model.calculateBtnDidTap();
+        gc.setFill(Color.GREEN);
+        double radius = circle.getRadius();
+        double diameter = circle.getRadius() * 2;
+        gc.fillOval(circle.getCenter().getX() - radius, circle.getCenter().getY() - radius, diameter, diameter);
+    }
+}
+
+class Constants {
+    static int pointDiameter = 5;
 }
