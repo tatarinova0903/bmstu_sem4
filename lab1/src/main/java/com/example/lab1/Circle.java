@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Circle {
-    Point center;
-    Double radius;
+    private Point center;
+    private Double radius;
 
     public Circle(Point center, Double radius) {
         this.center = center;
         this.radius = radius;
     }
 
-    public Circle() { }
+    public Circle() {
+        this.center = new Point(0,0);
+        this.radius = 0.0;
+    }
 
     public Point getCenter() {
         return center;
@@ -20,6 +23,14 @@ public class Circle {
 
     public Double getRadius() {
         return radius;
+    }
+
+    public void setCenter(Point center) {
+        this.center = center;
+    }
+
+    public void setRadius(Double radius) {
+        this.radius = radius;
     }
 
     double square() {
