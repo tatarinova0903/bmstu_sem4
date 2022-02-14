@@ -2,33 +2,49 @@ package com.example.lab1;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class MainController extends AnchorPane {
-    private Button cancelBtn;
-    private Button inputFirstSetBtn;
-    private Button inputSecondSetBtn;
-    private Button editBtn;
-    private Button calculateBtn;
-    private ResizableCanvas canvas;
+    private Button plusBtn = new Button("+");
+    private Button minusBtn = new Button("-");
+    private Button cancelBtn = new Button("Отменить");
+    private Button inputFirstSetBtn = new Button("Ввести 1 множество");
+    private Button inputSecondSetBtn = new Button("Ввести 2 множество");
+    private Button editBtn = new Button("Редактировать");
+    private Button calculateBtn = new Button("Вычислить");
+    private Button addToFirstSetBtn = new Button("Добавить в 1 множество");
+    private Button addToSecondSetBtn = new Button("Добавить во 2 множество");
+    private Text coordXLabel = new Text("X:");
+    private TextField coordXField = new TextField();
+    private Text coordYLabel = new Text("Y:");
+    private TextField coordYField = new TextField();
+    private ResizableCanvas canvas = new ResizableCanvas();
 
     public MainController() {
-        canvas = new ResizableCanvas();
         canvas.setHeight(200);
 
-        cancelBtn = new Button("Отменить");
-        inputFirstSetBtn = new Button("Ввести 1 множество");
-        inputSecondSetBtn = new Button("Ввести 2 множество");
-        editBtn = new Button("Редактировать");
-        calculateBtn = new Button("Вычислить");
+        HBox mainMenu = new HBox(plusBtn, minusBtn, cancelBtn, inputFirstSetBtn, inputSecondSetBtn, editBtn, calculateBtn);
+        mainMenu.setAlignment(Pos.CENTER);
+        mainMenu.setSpacing(10);
+        mainMenu.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
 
-        HBox menu = new HBox(cancelBtn, inputFirstSetBtn, inputSecondSetBtn, editBtn, calculateBtn);
-        menu.setAlignment(Pos.CENTER);
-        menu.setSpacing(10);
+        coordXField.setMaxWidth(60);
+        coordYField.setMaxWidth(60);
+        HBox editMenu = new HBox(coordXLabel, coordXField, coordYLabel, coordYField, addToFirstSetBtn, addToSecondSetBtn);
+        editMenu.setAlignment(Pos.CENTER);
+        editMenu.setSpacing(10);
+        editMenu.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
 
-        VBox main = new VBox(menu, canvas);
+        VBox main = new VBox(mainMenu, editMenu, canvas);
+        main.setSpacing(5);
         this.getChildren().add(main);
 
         canvas.widthProperty().bind(this.widthProperty());
@@ -38,59 +54,22 @@ public class MainController extends AnchorPane {
     }
 
     void addHandlers() {
-        cancelBtn.setOnAction(event -> { canvas.cancelBtnDidTap(); });
-        inputFirstSetBtn.setOnAction(event -> { canvas.inputFirstSetBtnDidTap(event); });
-        inputSecondSetBtn.setOnAction(event -> { canvas.inputSecondSetBtnDidTap(event); });
-        calculateBtn.setOnAction(event -> { canvas.calculateBtnDidTap(); });
+        cancelBtn.setOnAction(actionEvent -> { canvas.cancelBtnDidTap(); });
+        inputFirstSetBtn.setOnAction(actionEvent -> { canvas.inputFirstSetBtnDidTap(actionEvent); });
+        inputSecondSetBtn.setOnAction(actionEvent -> { canvas.inputSecondSetBtnDidTap(actionEvent); });
+        calculateBtn.setOnAction(actionEvent -> { canvas.calculateBtnDidTap(); });
+        addToFirstSetBtn.setOnAction(actionEvent -> {
+            double xCoord = Double.parseDouble(coordXField.getText());
+            double yCoord = Double.parseDouble(coordYField.getText());
+            canvas.addPoint(xCoord, yCoord, SetNumber.FIRST);
+        });
+        addToSecondSetBtn.setOnAction(actionEvent -> {
+            double xCoord = Double.parseDouble(coordXField.getText());
+            double yCoord = Double.parseDouble(coordYField.getText());
+            canvas.addPoint(xCoord, yCoord, SetNumber.SECOND);
+        });
+        editBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(); });
+        plusBtn.setOnAction(actionEvent -> { canvas.scale(true); });
+        minusBtn.setOnAction(actionEvent -> { canvas.scale(false); });
     }
 }
-
-
-
-
-//public class MainController {
-//    @FXML
-//    private Button calculateButton;
-//
-//    @FXML
-//    private Button enterSetButton1;
-//
-//    @FXML
-//    private Button enterSetButton2;
-//
-//    @FXML
-//    private Button revertButton;
-//
-//    @FXML
-//    private Canvas canvas;
-//
-//    private GraphicsContext gc;
-//    private MainModel model;
-//
-//    @FXML
-//    void initialize() {
-//        model = new MainModel();
-//        gc = canvas.getGraphicsContext2D();
-//        gc.setFill(Color.WHITE);
-//    }
-//
-//    @FXML
-//    void onMouseClicked(MouseEvent event) {
-//        int diameter = 5;
-//        Point point = new Point((int)event.getX(), (int)event.getY());
-//        gc.fillOval(point.getX(), point.getY(), diameter, diameter);
-//        model.addToSet(point);
-//    }
-//
-//    @FXML
-//    void enterSetButton1Tap(ActionEvent event) {
-//        gc.setFill(Color.CORAL);
-//        model.setCurrent_set(SetNumber.FIRST);
-//    }
-//
-//    @FXML
-//    void enterSetButton2Tap(ActionEvent event) {
-//        gc.setFill(Color.OLIVE);
-//        model.setCurrent_set(SetNumber.SECOND);
-//    }
-//}

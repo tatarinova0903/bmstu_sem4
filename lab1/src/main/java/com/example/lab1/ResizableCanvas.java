@@ -7,14 +7,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 class ResizableCanvas extends Canvas {
-    private GraphicsContext gc = getGraphicsContext2D();
+    private final GraphicsContext gc = getGraphicsContext2D();
     private double oldWidth = getWidth();
     private double oldHeight = getHeight();
-    private MainModel model = new MainModel();
+    private final MainModel model = new MainModel();
 
     public ResizableCanvas() {
         model.setCurrent_set(SetNumber.NONE);
-        setOnMouseClicked(mouseEvent -> onMouseClicked(mouseEvent));
+        setOnMouseClicked(this::onMouseClicked);
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
     }
@@ -25,7 +25,6 @@ class ResizableCanvas extends Canvas {
         if (width == 0 || height == 0) { return; }
         double deltaWidth = width / (oldWidth == 0 ? width : oldWidth);
         double deltaHeight = height / (oldHeight == 0 ? height : oldHeight);
-        double deltaDiagonal = Math.sqrt(width * width + height * height) / Math.sqrt(oldWidth * oldWidth + oldHeight * oldHeight);
         gc.clearRect(0, 0, width, height);
 
         if (!model.getSet1().isEmpty()) { model.setCurrent_set(SetNumber.FIRST); }
@@ -38,9 +37,11 @@ class ResizableCanvas extends Canvas {
             scalePoint(point, deltaWidth, deltaHeight);
             drawPoint(point);
         });
-//        model.getRes().forEach(point -> {
-//            scalePoint(point, deltaWidth, deltaHeight);
-//        });
+
+        // scale коружности
+//        drawCircle(model.getCircle());
+
+        // scale овала
         Oval oval = model.getOval();
         scaleOval(oval, deltaWidth, deltaHeight);
         drawOval(model.getOval());
@@ -64,6 +65,13 @@ class ResizableCanvas extends Canvas {
         return getHeight();
     }
 
+    void scale(Boolean isPlus) {
+        if (isPlus) { model.incrementCurrScale(); }
+        else { model.decrementCurrScale(); }
+        this.setScaleX(model.getCurrScale());
+        this.setScaleY(model.getCurrScale());
+    }
+
     void inputFirstSetBtnDidTap(ActionEvent event) {
         model.setCurrent_set(SetNumber.FIRST);
     }
@@ -72,8 +80,13 @@ class ResizableCanvas extends Canvas {
         model.setCurrent_set(SetNumber.SECOND);
     }
 
-    void cancelBtnDidTap() {
+    void editBtnDidTap() {
+        model.setIsEditing(EditingMode.POINT_CHOSEN);
+    }
 
+    void cancelBtnDidTap() {
+        model.removePoint();
+        draw();
     }
 
     void calculateBtnDidTap() {
@@ -81,8 +94,35 @@ class ResizableCanvas extends Canvas {
         drawCircle(circle);
     }
 
+    void addPoint(double x, double y, SetNumber setNumber) {
+        model.setCurrent_set(setNumber);
+        Point point = new Point(x, y);
+        drawPoint(point);
+        model.addToSet(point);
+    }
+
     private void onMouseClicked(MouseEvent event) {
-        Point point = new Point((int)event.getX(), (int)event.getY());
+        if (model.getIsEditing() == EditingMode.POINT_CHOSEN) {
+            Point point = model.findClosestAndRemove(new Point(event.getX(), event.getY()));
+            draw();
+            gc.setFill(Color.rgb(0, 0, 0, 0.2));
+            gc.fillOval(
+                    point.getX() - Constants.pointRadius,
+                    point.getY() - Constants.pointRadius,
+                    Constants.pointDiameter,
+                    Constants.pointDiameter
+            );
+            model.setIsEditing(EditingMode.POINT_SET);
+            return;
+        }
+        if (model.getIsEditing() == EditingMode.POINT_SET) {
+            addPoint(event.getX(), event.getY(), model.getSetToEdit());
+            model.setIsEditing(EditingMode.NONE);
+            model.setSetToEdit(SetNumber.NONE);
+            draw();
+            return;
+        }
+        Point point = new Point(event.getX(), event.getY());
         drawPoint(point);
         model.addToSet(point);
     }

@@ -1,6 +1,9 @@
 package com.example.lab1;
 
+import javafx.scene.control.Alert;
+
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainModel {
     private SetNumber current_set;
@@ -9,6 +12,9 @@ public class MainModel {
     private ArrayList<Point> res = new ArrayList<>();
     private Circle circle = new Circle();
     private Oval oval = new Oval();
+    private EditingMode isEditing = EditingMode.NONE;
+    private SetNumber setToEdit = SetNumber.NONE;
+    private Double currScale = 1.0;
     public void setCurrent_set(SetNumber current_set) {
         this.current_set = current_set;
     }
@@ -29,10 +35,30 @@ public class MainModel {
         this.oval = oval;
     }
 
+    public Double getCurrScale() {
+        return currScale;
+    }
+
+    public EditingMode getIsEditing() {
+        return isEditing;
+    }
+
+    public void setIsEditing(EditingMode isEditing) {
+        this.isEditing = isEditing;
+    }
+
+    public SetNumber getSetToEdit() {
+        return setToEdit;
+    }
+
+    public void setSetToEdit(SetNumber setToEdit) {
+        this.setToEdit = setToEdit;
+    }
+
     public Circle getCircle() {
-        return this.circle;
-//        if (res.size() != 3) { return new Circle(); }
-//        return circleBy3Points(res.get(0), res.get(1), res.get(2));
+//        return this.circle;
+        if (res.size() != 3) { return new Circle(); }
+        return circleBy3Points(res.get(0), res.get(1), res.get(2));
     }
 
     public void setCircle(Circle circle) {
@@ -59,12 +85,61 @@ public class MainModel {
         }
     }
 
+    public void incrementCurrScale() {
+        this.currScale += 0.1;
+    }
+
+    public void decrementCurrScale() {
+        this.currScale -= 0.1;
+    }
+
     Circle calculateBtnDidTap() {
-//        Circle res = circleBy3Points(new Point(21, 60), new Point(14, 14), new Point(51, 42));
-        if (set1.size() > 2 && !set2.isEmpty()) {
-            return findCircle();
+        if (set1.size() < 3) {
+            showErrorAlert("В первом множестве не хватает точек");
+            return new Circle();
         }
-        return new Circle();
+        if (set2.isEmpty()) {
+            showErrorAlert("Во втором множестве не хватает точек");
+            return new Circle();
+        }
+        return findCircle();
+    }
+
+    Point findClosestAndRemove(Point point) {
+        AtomicReference<Double> minDistance = new AtomicReference<>(Double.MAX_VALUE);
+        AtomicReference<Point> res = new AtomicReference<>(set1.get(0));
+        set1.forEach(curPoint -> {
+            if (point.distance(curPoint) < minDistance.get()) {
+                res.set(curPoint);
+                minDistance.set(point.distance(curPoint));
+            }
+        });
+        set2.forEach(curPoint -> {
+            if (point.distance(curPoint) < minDistance.get()) {
+                res.set(curPoint);
+                minDistance.set(point.distance(curPoint));
+            }
+        });
+        if (set1.remove(res.get())) { setToEdit = SetNumber.FIRST; }
+        else if (set2.remove(res.get())) { setToEdit = SetNumber.SECOND; }
+        return res.get();
+    }
+
+    void removePoint() {
+        switch (current_set) {
+            case NONE:
+                break;
+            case FIRST:
+                int lastIndex = set1.size() - 1;
+                if (lastIndex < 0) { break; }
+                set1.remove(lastIndex);
+                break;
+            case SECOND:
+                lastIndex = set2.size() - 1;
+                if (lastIndex < 0) { break; }
+                set2.remove(lastIndex);
+                break;
+        }
     }
 
     private Circle findCircle() {
@@ -99,5 +174,10 @@ public class MainModel {
 
         Point center = new Equation(centerPerpendAB, centerPerpendBC).calculate();
         return new Circle(center, pointA.distance(center));
+    }
+
+    private void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message);
+        alert.show();
     }
 }

@@ -44,6 +44,6 @@ public class Circle {
                 count.getAndIncrement();
             }
         });
-        return count.get() >= points.size() * percent / 100;
+        return count.get() > points.size() * percent / 100;
     }
 }
