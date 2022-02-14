@@ -9,20 +9,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class MainController extends AnchorPane {
-    private Button plusBtn = new Button("+");
-    private Button minusBtn = new Button("-");
-    private Button cancelBtn = new Button("Отменить");
-    private Button inputFirstSetBtn = new Button("Ввести 1 множество");
-    private Button inputSecondSetBtn = new Button("Ввести 2 множество");
-    private Button editBtn = new Button("Редактировать");
-    private Button calculateBtn = new Button("Вычислить");
-    private Button addToFirstSetBtn = new Button("Добавить в 1 множество");
-    private Button addToSecondSetBtn = new Button("Добавить во 2 множество");
-    private Text coordXLabel = new Text("X:");
-    private TextField coordXField = new TextField();
-    private Text coordYLabel = new Text("Y:");
-    private TextField coordYField = new TextField();
-    private ResizableCanvas canvas = new ResizableCanvas();
+    private final Button plusBtn = new Button("+");
+    private final Button minusBtn = new Button("-");
+    private final Button cancelBtn = new Button("Отменить");
+    private final Button inputFirstSetBtn = new Button("Ввести 1 множество");
+    private final Button inputSecondSetBtn = new Button("Ввести 2 множество");
+    private final Button editBtn = new Button("Редактировать");
+    private final Button calculateBtn = new Button("Вычислить");
+    private final Button addToFirstSetBtn = new Button("Добавить в 1 множество");
+    private final Button addToSecondSetBtn = new Button("Добавить во 2 множество");
+    private final Text coordXLabel = new Text("X:");
+    private final TextField coordXField = new TextField();
+    private final Text coordYLabel = new Text("Y:");
+    private final TextField coordYField = new TextField();
+    private final ResizableCanvas canvas = new ResizableCanvas();
 
     public MainController() {
         canvas.setHeight(200);
@@ -42,7 +42,7 @@ public class MainController extends AnchorPane {
         editMenu.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
-
+        
         VBox main = new VBox(mainMenu, editMenu, canvas);
         main.setSpacing(5);
         this.getChildren().add(main);

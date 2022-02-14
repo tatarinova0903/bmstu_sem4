@@ -7,9 +7,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MainModel {
     private SetNumber current_set;
-    private ArrayList<Point> set1 = new ArrayList<>();
-    private ArrayList<Point> set2 = new ArrayList<>();
-    private ArrayList<Point> res = new ArrayList<>();
+    private final ArrayList<Point> set1 = new ArrayList<>();
+    private final ArrayList<Point> set2 = new ArrayList<>();
+    private final ArrayList<Point> res = new ArrayList<>();
     private Circle circle = new Circle();
     private Oval oval = new Oval();
     private EditingMode isEditing = EditingMode.NONE;
