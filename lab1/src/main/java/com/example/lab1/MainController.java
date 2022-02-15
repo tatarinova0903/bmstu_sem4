@@ -12,7 +12,8 @@ public class MainController extends AnchorPane {
     private final Button cancelBtn = new Button("Отменить");
     private final Button inputFirstSetBtn = new Button("Ввести 1 множество");
     private final Button inputSecondSetBtn = new Button("Ввести 2 множество");
-    private final Button editBtn = new Button("Редактировать");
+    private final Button editFirstBtn = new Button("Редактировать 1 множество");
+    private final Button editSecondBtn = new Button("Редактировать 2 множество");
     private final Button calculateBtn = new Button("Вычислить");
     private final Button addToFirstSetBtn = new Button("Добавить в 1 множество");
     private final Button addToSecondSetBtn = new Button("Добавить во 2 множество");
@@ -23,7 +24,16 @@ public class MainController extends AnchorPane {
     private final ResizableCanvas canvas = new ResizableCanvas();
 
     public MainController() {
-        HBox mainMenu = new HBox(plusBtn, minusBtn, cancelBtn, inputFirstSetBtn, inputSecondSetBtn, editBtn, calculateBtn);
+        HBox mainMenu = new HBox(
+                plusBtn,
+                minusBtn,
+                cancelBtn,
+                inputFirstSetBtn,
+                inputSecondSetBtn,
+                editFirstBtn,
+                editSecondBtn,
+                calculateBtn
+        );
         mainMenu.setAlignment(Pos.CENTER);
         mainMenu.setSpacing(10);
         mainMenu.getChildren().forEach(element -> {
@@ -64,7 +74,8 @@ public class MainController extends AnchorPane {
             double yCoord = Double.parseDouble(coordYField.getText());
             canvas.addPoint(xCoord, yCoord, SetNumber.SECOND);
         });
-        editBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(); });
+        editFirstBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(SetNumber.FIRST); });
+        editSecondBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(SetNumber.SECOND); });
         plusBtn.setOnAction(actionEvent -> { canvas.scale(true); });
         minusBtn.setOnAction(actionEvent -> { canvas.scale(false); });
     }

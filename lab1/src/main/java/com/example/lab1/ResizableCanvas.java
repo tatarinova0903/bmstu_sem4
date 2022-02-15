@@ -87,17 +87,34 @@ class ResizableCanvas extends Canvas {
         model.setCurrent_set(SetNumber.SECOND);
     }
 
-    void editBtnDidTap() {
+    void editBtnDidTap(SetNumber setNumber) {
+        model.setCurrent_set(setNumber);
         model.setIsEditing(EditingMode.POINT_CHOSEN);
     }
 
     void cancelBtnDidTap() {
-        model.removePoint();
+        switch (model.getLastAction()) {
+            case NONE:
+                break;
+            case ADD_POINT:
+                model.removePoint();
+            case DRAW_CIRCLE:
+                model.setCircle(new Circle());
+                break;
+            case EDIT_POINT:
+                model.removePoint();
+                model.addToSet(model.getEditedPoint());
+                break;
+        }
         draw();
+        model.setCurrent_set(SetNumber.NONE);
     }
 
     void calculateBtnDidTap() {
         model.calculateBtnDidTap();
+        if (!model.getCircle().isZero()) {
+            model.setLastAction(LastAction.DRAW_CIRCLE);
+        }
         draw();
     }
 
@@ -125,6 +142,8 @@ class ResizableCanvas extends Canvas {
     private void onMouseClicked(MouseEvent event) {
         if (model.getIsEditing() == EditingMode.POINT_CHOSEN) {
             Point point = model.findClosestAndRemove(new Point(event.getX(), event.getY()));
+            model.setEditedPoint(point);
+            model.setLastAction(LastAction.EDIT_POINT);
             draw();
             gc.setFill(Color.rgb(0, 0, 0, 0.2));
             gc.fillOval(
@@ -143,9 +162,8 @@ class ResizableCanvas extends Canvas {
             draw();
             return;
         }
-        Point point = new Point(event.getX(), event.getY());
-        drawPoint(point);
-        model.addToSet(point);
+        model.setLastAction(LastAction.ADD_POINT);
+        addPoint(event.getX(), event.getY(), model.getCurrent_set());
     }
 
     private void drawCircle(Circle circle) {
@@ -187,9 +205,9 @@ class ResizableCanvas extends Canvas {
         oval.setWidth(oval.getWidth() * deltaX);
         oval.setHeight(oval.getHeight() * deltaY);
     }
-}
 
-class Constants {
-    static double pointDiameter = 6.0;
-    static double pointRadius = Constants.pointDiameter / 2;
+    static class Constants {
+        static double pointDiameter = 6.0;
+        static double pointRadius = Constants.pointDiameter / 2;
+    }
 }

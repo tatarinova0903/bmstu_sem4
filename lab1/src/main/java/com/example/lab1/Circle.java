@@ -39,7 +39,7 @@ public class Circle {
         return Math.PI * this.radius * this.radius;
     }
 
-    Boolean contains(ArrayList<Point> points, Integer percent) {
+    boolean contains(ArrayList<Point> points, Integer percent) {
         AtomicInteger count = new AtomicInteger();
         points.forEach ( point -> {
             if (this.center.distance(point) < this.radius) {
@@ -47,5 +47,9 @@ public class Circle {
             }
         });
         return count.get() > points.size() * percent / 100 || Math.abs(count.get() - points.size() * percent / 100) < EPS;
+    }
+
+    boolean isZero() {
+        return Math.abs(center.getX()) < EPS && Math.abs(center.getY()) < EPS && Math.abs(radius) < EPS;
     }
 }

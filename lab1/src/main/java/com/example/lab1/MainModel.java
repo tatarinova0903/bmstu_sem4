@@ -15,6 +15,23 @@ public class MainModel {
     private EditingMode isEditing = EditingMode.NONE;
     private SetNumber setToEdit = SetNumber.NONE;
     private Double currScale = 1.0;
+    private LastAction lastAction = LastAction.NONE;
+    private Point editedPoint = new Point();
+
+    public Point getEditedPoint() {
+        return editedPoint;
+    }
+
+    public void setEditedPoint(Point editedPoint) {
+        this.editedPoint = editedPoint;
+    }
+
+    public LastAction getLastAction() {return lastAction; }
+
+    public void setLastAction(LastAction lastAction) {
+        this.lastAction = lastAction;
+    }
+
     public void setCurrent_set(SetNumber current_set) {
         this.current_set = current_set;
     }
@@ -102,24 +119,33 @@ public class MainModel {
             showErrorAlert("Во втором множестве не хватает точек");
             return;
         }
-        findCircle();
+        Circle circle = findCircle();
+        if (circle.isZero()) {
+            showErrorAlert("Точки лежат на одной прямой");
+        }
     }
 
     Point findClosestAndRemove(Point point) {
         AtomicReference<Double> minDistance = new AtomicReference<>(Double.MAX_VALUE);
-        AtomicReference<Point> res = new AtomicReference<>(set1.get(0));
-        set1.forEach(curPoint -> {
-            if (point.distance(curPoint) < minDistance.get()) {
-                res.set(curPoint);
-                minDistance.set(point.distance(curPoint));
-            }
-        });
-        set2.forEach(curPoint -> {
-            if (point.distance(curPoint) < minDistance.get()) {
-                res.set(curPoint);
-                minDistance.set(point.distance(curPoint));
-            }
-        });
+        AtomicReference<Point> res = new AtomicReference<>(new Point());
+        switch (current_set) {
+            case NONE:
+                break;
+            case FIRST:
+                set1.forEach(curPoint -> {
+                    if (point.distance(curPoint) < minDistance.get()) {
+                        res.set(curPoint);
+                        minDistance.set(point.distance(curPoint));
+                    }
+                });
+            case SECOND:
+                set2.forEach(curPoint -> {
+                    if (point.distance(curPoint) < minDistance.get()) {
+                        res.set(curPoint);
+                        minDistance.set(point.distance(curPoint));
+                    }
+                });
+        }
         if (set1.remove(res.get())) { setToEdit = SetNumber.FIRST; }
         else if (set2.remove(res.get())) { setToEdit = SetNumber.SECOND; }
         return res.get();
@@ -149,7 +175,7 @@ public class MainModel {
             for (int j = i + 1; j < set1.size() - 1; j++) {
                 for (int k = j + 1; k < set1.size(); k++) {
                     Circle circle = circleBy3Points(set1.get(i), set1.get(j), set1.get(k));
-                    if (circle.square() < minSquare && circle.contains(set2, 80)) {
+                    if (!circle.getCenter().isInfinity() && circle.square() < minSquare && circle.contains(set2, 80)) {
                         minSquare = circle.square();
                         res = circle;
                         this.res.clear();

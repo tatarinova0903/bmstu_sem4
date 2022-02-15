@@ -11,6 +11,11 @@ public class Point {
         this.y = y;
     }
 
+    public Point() {
+        this.x = 0;
+        this.y = 0;
+    }
+
     public double getX() { return x; }
 
     public void setX(double x) {
@@ -27,5 +32,10 @@ public class Point {
 
     double distance(Point point) {
         return sqrt((this.x - point.x) * (this.x - point.x) + (this.y - point.y) * (this.y - point.y));
+    }
+
+    boolean isInfinity() {
+        return x == Double.NEGATIVE_INFINITY || x == Double.POSITIVE_INFINITY ||
+                y == Double.NEGATIVE_INFINITY || y == Double.POSITIVE_INFINITY;
     }
 }
