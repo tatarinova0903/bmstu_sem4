@@ -80,6 +80,7 @@ public class MainModel {
 
     public void setCircle(Circle circle) {
         this.circle = circle;
+        this.oval = new Oval();
     }
 
     public SetNumber getCurrent_set() {
@@ -138,6 +139,7 @@ public class MainModel {
                         minDistance.set(point.distance(curPoint));
                     }
                 });
+                break;
             case SECOND:
                 set2.forEach(curPoint -> {
                     if (point.distance(curPoint) < minDistance.get()) {
@@ -145,6 +147,7 @@ public class MainModel {
                         minDistance.set(point.distance(curPoint));
                     }
                 });
+                break;
         }
         if (set1.remove(res.get())) { setToEdit = SetNumber.FIRST; }
         else if (set2.remove(res.get())) { setToEdit = SetNumber.SECOND; }

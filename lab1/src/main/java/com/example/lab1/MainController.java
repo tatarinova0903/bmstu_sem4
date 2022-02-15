@@ -2,11 +2,14 @@ package com.example.lab1;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 public class MainController extends AnchorPane {
+    private final Button aboutProgramBtn = new Button("О программе");
+    private final Button aboutAuthorBtn = new Button("Об авторе");
     private final Button plusBtn = new Button("+");
     private final Button minusBtn = new Button("-");
     private final Button cancelBtn = new Button("Отменить");
@@ -21,9 +24,20 @@ public class MainController extends AnchorPane {
     private final TextField coordXField = new TextField();
     private final Text coordYLabel = new Text("Y:");
     private final TextField coordYField = new TextField();
-    private final ResizableCanvas canvas = new ResizableCanvas();
+    private final Text resLabel = new Text("RES:");
+    private final TextField resXField = new TextField();
+    private final TextField resYField = new TextField();
+    private final TextField resRadiusField = new TextField();
+    private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     public MainController() {
+        HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn);
+        aboutMenu.setAlignment(Pos.CENTER);
+        aboutMenu.setSpacing(10);
+        aboutMenu.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
+
         HBox mainMenu = new HBox(
                 plusBtn,
                 minusBtn,
@@ -42,14 +56,28 @@ public class MainController extends AnchorPane {
 
         coordXField.setMaxWidth(60);
         coordYField.setMaxWidth(60);
-        HBox editMenu = new HBox(coordXLabel, coordXField, coordYLabel, coordYField, addToFirstSetBtn, addToSecondSetBtn);
+        resXField.setMaxWidth(60);
+        resYField.setMaxWidth(60);
+        resRadiusField.setMaxWidth(60);
+        HBox editMenu = new HBox(
+                coordXLabel,
+                coordXField,
+                coordYLabel,
+                coordYField,
+                addToFirstSetBtn,
+                addToSecondSetBtn,
+                resLabel,
+                resXField,
+                resYField,
+                resRadiusField
+                );
         editMenu.setAlignment(Pos.CENTER);
         editMenu.setSpacing(10);
         editMenu.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
 
-        VBox main = new VBox(mainMenu, editMenu, canvas);
+        VBox main = new VBox(aboutMenu, mainMenu, editMenu, canvas);
         main.setSpacing(5);
         this.getChildren().add(main);
 
@@ -59,7 +87,13 @@ public class MainController extends AnchorPane {
         addHandlers();
     }
 
-    void addHandlers() {
+    void showResult(Circle circle) {
+        resXField.setText(Double.toString(circle.getCenter().getX()));
+        resYField.setText(Double.toString(circle.getCenter().getY()));
+        resRadiusField.setText(Double.toString(circle.getRadius()));
+    }
+
+    private void addHandlers() {
         cancelBtn.setOnAction(actionEvent -> { canvas.cancelBtnDidTap(); });
         inputFirstSetBtn.setOnAction(actionEvent -> { canvas.inputFirstSetBtnDidTap(actionEvent); });
         inputSecondSetBtn.setOnAction(actionEvent -> { canvas.inputSecondSetBtnDidTap(actionEvent); });
@@ -78,5 +112,7 @@ public class MainController extends AnchorPane {
         editSecondBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(SetNumber.SECOND); });
         plusBtn.setOnAction(actionEvent -> { canvas.scale(true); });
         minusBtn.setOnAction(actionEvent -> { canvas.scale(false); });
+        aboutAuthorBtn.setOnAction(actionEvent -> { canvas.aboutAuthorDidTap(); });
+        aboutProgramBtn.setOnAction(actionEvent -> { canvas.aboutProgramBtnDidTap(); });
     }
 }

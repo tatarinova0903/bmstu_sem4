@@ -3,6 +3,7 @@ package com.example.lab1;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,9 +12,11 @@ class ResizableCanvas extends Canvas {
     private final GraphicsContext gc = getGraphicsContext2D();
     private double oldWidth = getWidth();
     private double oldHeight = getHeight();
+    private MainController controller;
     private final MainModel model = new MainModel();
 
-    public ResizableCanvas() {
+    public ResizableCanvas(MainController controller) {
+        this.controller = controller;
         model.setCurrent_set(SetNumber.NONE);
         setOnMouseClicked(this::onMouseClicked);
         widthProperty().addListener(evt -> draw());
@@ -39,9 +42,6 @@ class ResizableCanvas extends Canvas {
             drawPoint(point);
         });
 
-        // scale коружности
-//        drawCircle(model.getCircle());
-
         // scale овала
         Oval oval = model.getOval();
         scaleOval(oval, deltaWidth, deltaHeight);
@@ -64,6 +64,18 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) {
         return getHeight();
+    }
+
+    void aboutProgramBtnDidTap() {
+        showInfoAlert("Даны два множества точек на плоскости. " +
+                "Выбрать три различные точки первого множества так, чтобы круг, ограниченный окружностью, " +
+                "проходящей через пять точек, " +
+                "содержал минимум 80% точек второго множества и имел минимальную площадь."
+        );
+    }
+
+    void aboutAuthorDidTap() {
+        showInfoAlert("Татаринова Дарья ИУ7-44Б");
     }
 
     void scale(Boolean isPlus) {
@@ -114,6 +126,7 @@ class ResizableCanvas extends Canvas {
         model.calculateBtnDidTap();
         if (!model.getCircle().isZero()) {
             model.setLastAction(LastAction.DRAW_CIRCLE);
+            controller.showResult(model.getCircle());
         }
         draw();
     }
@@ -142,6 +155,7 @@ class ResizableCanvas extends Canvas {
     private void onMouseClicked(MouseEvent event) {
         if (model.getIsEditing() == EditingMode.POINT_CHOSEN) {
             Point point = model.findClosestAndRemove(new Point(event.getX(), event.getY()));
+            if (point.isInfinity()) { return; }
             model.setEditedPoint(point);
             model.setLastAction(LastAction.EDIT_POINT);
             draw();
@@ -162,6 +176,7 @@ class ResizableCanvas extends Canvas {
             draw();
             return;
         }
+        if (model.getCurrent_set() == SetNumber.NONE) { return; }
         model.setLastAction(LastAction.ADD_POINT);
         addPoint(event.getX(), event.getY(), model.getCurrent_set());
     }
@@ -204,6 +219,11 @@ class ResizableCanvas extends Canvas {
         oval.setCenter(new Point(center.getX() * deltaX, center.getY() * deltaY));
         oval.setWidth(oval.getWidth() * deltaX);
         oval.setHeight(oval.getHeight() * deltaY);
+    }
+
+    private void showInfoAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
+        alert.show();
     }
 
     static class Constants {
