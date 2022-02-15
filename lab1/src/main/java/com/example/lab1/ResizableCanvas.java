@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 class ResizableCanvas extends Canvas {
     private final GraphicsContext gc = getGraphicsContext2D();
@@ -70,6 +71,12 @@ class ResizableCanvas extends Canvas {
         else { model.decrementCurrScale(); }
         this.setScaleX(model.getCurrScale());
         this.setScaleY(model.getCurrScale());
+        double newWidth = isPlus ? getWidth() : getWidth() * (2 - model.getCurrScale());
+        double newX = newXForScale(model.getCurrScale());
+        double newHeight = isPlus ? getHeight() : getHeight() * (2 - model.getCurrScale());
+        double newY = newYForScale(model.getCurrScale());
+        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
+        this.setClip(rect);
     }
 
     void inputFirstSetBtnDidTap(ActionEvent event) {
@@ -90,8 +97,8 @@ class ResizableCanvas extends Canvas {
     }
 
     void calculateBtnDidTap() {
-        Circle circle = model.calculateBtnDidTap();
-        drawCircle(circle);
+        model.calculateBtnDidTap();
+        draw();
     }
 
     void addPoint(double x, double y, SetNumber setNumber) {
@@ -99,6 +106,20 @@ class ResizableCanvas extends Canvas {
         Point point = new Point(x, y);
         drawPoint(point);
         model.addToSet(point);
+    }
+
+    private double newXForScale(Double scale) {
+        double oldWidth = getWidth();
+        double newWidth = oldWidth * scale;
+        double newX = (newWidth - oldWidth) / 2;
+        return newX * oldWidth / newWidth;
+    }
+
+    private double newYForScale(Double scale) {
+        double oldHeight = getHeight();
+        double newHeight = oldHeight * scale;
+        double newY = (newHeight - oldHeight) / 2;
+        return newY * oldHeight / newHeight;
     }
 
     private void onMouseClicked(MouseEvent event) {

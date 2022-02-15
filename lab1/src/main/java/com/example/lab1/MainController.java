@@ -3,9 +3,7 @@ package com.example.lab1;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 public class MainController extends AnchorPane {
@@ -25,8 +23,6 @@ public class MainController extends AnchorPane {
     private final ResizableCanvas canvas = new ResizableCanvas();
 
     public MainController() {
-        canvas.setHeight(200);
-
         HBox mainMenu = new HBox(plusBtn, minusBtn, cancelBtn, inputFirstSetBtn, inputSecondSetBtn, editBtn, calculateBtn);
         mainMenu.setAlignment(Pos.CENTER);
         mainMenu.setSpacing(10);
@@ -42,7 +38,7 @@ public class MainController extends AnchorPane {
         editMenu.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
-        
+
         VBox main = new VBox(mainMenu, editMenu, canvas);
         main.setSpacing(5);
         this.getChildren().add(main);

@@ -17,7 +17,7 @@ public class MainApplication extends Application {
         MainController mainPane = new MainController();
         stage.setScene(new Scene(mainPane));
         stage.setTitle("Лабораторная работа №1");
-        stage.setMinHeight(500);
+        stage.setMinHeight(300);
         stage.show();
     }
 

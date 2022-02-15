@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Circle {
+    private final double EPS = 1e-7;
+
     private Point center;
     private Double radius;
 
@@ -44,6 +46,6 @@ public class Circle {
                 count.getAndIncrement();
             }
         });
-        return count.get() > points.size() * percent / 100;
+        return count.get() > points.size() * percent / 100 || Math.abs(count.get() - points.size() * percent / 100) < EPS;
     }
 }

@@ -93,16 +93,16 @@ public class MainModel {
         this.currScale -= 0.1;
     }
 
-    Circle calculateBtnDidTap() {
+    void calculateBtnDidTap() {
         if (set1.size() < 3) {
             showErrorAlert("В первом множестве не хватает точек");
-            return new Circle();
+            return;
         }
         if (set2.isEmpty()) {
             showErrorAlert("Во втором множестве не хватает точек");
-            return new Circle();
+            return;
         }
-        return findCircle();
+        findCircle();
     }
 
     Point findClosestAndRemove(Point point) {
