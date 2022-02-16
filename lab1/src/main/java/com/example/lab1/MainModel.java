@@ -108,7 +108,7 @@ public class MainModel {
     }
 
     public void decrementCurrScale() {
-        this.currScale -= 0.1;
+        if (currScale > 0.3) { this.currScale -= 0.1; }
     }
 
     void calculateBtnDidTap() {

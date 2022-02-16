@@ -83,9 +83,9 @@ class ResizableCanvas extends Canvas {
         else { model.decrementCurrScale(); }
         this.setScaleX(model.getCurrScale());
         this.setScaleY(model.getCurrScale());
-        double newWidth = isPlus ? getWidth() : getWidth() * (2 - model.getCurrScale());
+        double newWidth = getWidth() * 3; // isPlus ? getWidth() : getWidth() * (2 - model.getCurrScale());
         double newX = newXForScale(model.getCurrScale());
-        double newHeight = isPlus ? getHeight() : getHeight() * (2 - model.getCurrScale());
+        double newHeight = getHeight() * 3; // isPlus ? getHeight() : getHeight() * (2 - model.getCurrScale());
         double newY = newYForScale(model.getCurrScale());
         Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
         this.setClip(rect);
@@ -138,7 +138,7 @@ class ResizableCanvas extends Canvas {
         model.addToSet(point);
     }
 
-    private double newXForScale(Double scale) {
+    private double newXForScale(double scale) {
         double oldWidth = getWidth();
         double newWidth = oldWidth * scale;
         double newX = (newWidth - oldWidth) / 2;
