@@ -1,5 +1,5 @@
 package com.example.lab1;
 
 public enum EditingMode {
-    NONE, POINT_CHOSEN, POINT_SET
+    NONE, POINT_CHOSEN, POINT_SET, POINT_ADD
 }

@@ -1,23 +1,26 @@
 package com.example.lab1;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 public class MainController extends AnchorPane {
     private final Button aboutProgramBtn = new Button("О программе");
     private final Button aboutAuthorBtn = new Button("Об авторе");
+    private final Text currMousePositionLabel = new Text();
     private final Button plusBtn = new Button("+");
     private final Button minusBtn = new Button("-");
     private final Button cancelBtn = new Button("Отменить");
-    private final Button inputFirstSetBtn = new Button("Ввести 1 множество");
-    private final Button inputSecondSetBtn = new Button("Ввести 2 множество");
-    private final Button editFirstBtn = new Button("Редактировать 1 множество");
-    private final Button editSecondBtn = new Button("Редактировать 2 множество");
-    private final Button deleteBtn = new Button("Удалить точку");
+    private final ToggleGroup toggleSetGroup = new ToggleGroup();
+    private final ToggleButton firstSetBtn = new ToggleButton("1 множество");
+    private final ToggleButton secondSetBtn = new ToggleButton("2 множество");
+    private final ToggleGroup toggleActionGroup = new ToggleGroup();
+    private final ToggleButton inputSetBtn = new ToggleButton("Ввести");
+    private final ToggleButton editBtn = new ToggleButton("Редактировать");
     private final Button clearBtn = new Button("Очистить");
     private final Button calculateBtn = new Button("Вычислить");
     private final Button addToFirstSetBtn = new Button("Добавить в 1 множество");
@@ -33,21 +36,23 @@ public class MainController extends AnchorPane {
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     public MainController() {
-        HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn);
+        firstSetBtn.setToggleGroup(toggleSetGroup);
+        secondSetBtn.setToggleGroup(toggleSetGroup);
+        HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
         aboutMenu.setAlignment(Pos.CENTER);
         aboutMenu.setSpacing(10);
         aboutMenu.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
 
+        inputSetBtn.setToggleGroup(toggleActionGroup);
+        editBtn.setToggleGroup(toggleActionGroup);
         HBox mainMenu = new HBox(
                 plusBtn,
                 minusBtn,
                 cancelBtn,
-                inputFirstSetBtn,
-                inputSecondSetBtn,
-                editFirstBtn,
-                editSecondBtn,
+                inputSetBtn, editBtn,
+                firstSetBtn, secondSetBtn,
                 calculateBtn
         );
         mainMenu.setAlignment(Pos.CENTER);
@@ -72,7 +77,6 @@ public class MainController extends AnchorPane {
                 resXField,
                 resYField,
                 resRadiusField,
-                deleteBtn,
                 clearBtn
                 );
         editMenu.setAlignment(Pos.CENTER);
@@ -92,15 +96,27 @@ public class MainController extends AnchorPane {
     }
 
     void showResult(Circle circle) {
-        resXField.setText(Double.toString(circle.getCenter().getX()));
-        resYField.setText(Double.toString(circle.getCenter().getY()));
-        resRadiusField.setText(Double.toString(circle.getRadius()));
+        String resX = String.format("%.2f", circle.getCenter().getX());
+        String resY = String.format("%.2f", circle.getCenter().getY());
+        String resRadius = String.format("%.2f", circle.getRadius());
+        resXField.setText(resX);
+        resYField.setText(resY);
+        resRadiusField.setText(resRadius);
+    }
+
+    void backspaceDidTap() {
+        canvas.deleteBtnDidTap();
+    }
+
+    void setCurrentMousePosition(double x, double y) {
+        currMousePositionLabel.setText(String.format("%.2f; %.2f", x, y));
     }
 
     private void addHandlers() {
         cancelBtn.setOnAction(actionEvent -> { canvas.cancelBtnDidTap(); });
-        inputFirstSetBtn.setOnAction(actionEvent -> { canvas.inputFirstSetBtnDidTap(actionEvent); });
-        inputSecondSetBtn.setOnAction(actionEvent -> { canvas.inputSecondSetBtnDidTap(actionEvent); });
+        firstSetBtn.setOnAction(actionEvent -> { canvas.firstSetBtnDidTap(actionEvent); });
+        secondSetBtn.setOnAction(actionEvent ->  { canvas.secondSetBtnDidTap(actionEvent); });
+        inputSetBtn.setOnAction(actionEvent -> { canvas.inputBtnDidTap(); });
         calculateBtn.setOnAction(actionEvent -> { canvas.calculateBtnDidTap(); });
         addToFirstSetBtn.setOnAction(actionEvent -> {
             double xCoord = Double.parseDouble(coordXField.getText()) + canvas.getWidth() / 2;
@@ -112,8 +128,7 @@ public class MainController extends AnchorPane {
             double yCoord = Double.parseDouble(coordYField.getText()) * (-1) + canvas.getHeight() / 2;
             canvas.addPoint(xCoord, yCoord, SetNumber.SECOND);
         });
-        editFirstBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(SetNumber.FIRST); });
-        editSecondBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(SetNumber.SECOND); });
+        editBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(); });
         plusBtn.setOnAction(actionEvent -> { canvas.scale(true); });
         minusBtn.setOnAction(actionEvent -> { canvas.scale(false); });
         aboutAuthorBtn.setOnAction(actionEvent -> { canvas.aboutAuthorDidTap(); });
@@ -121,8 +136,16 @@ public class MainController extends AnchorPane {
         clearBtn.setOnAction(actionEvent ->  {
             canvas.clearBtnDidTap();
         });
-        deleteBtn.setOnAction(actionEvent -> {
-            canvas.deleteBtnDidTap();
+//        deleteBtn.setOnAction(actionEvent -> {
+//            canvas.deleteBtnDidTap();
+//        });
+        addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.ESCAPE) {
+                    System.out.println("Key Pressed: " + ke.getCode());
+                    ke.consume(); // <-- stops passing the event to next node
+                }
+            }
         });
     }
 }

@@ -13,7 +13,7 @@ public class MainModel {
     private final ArrayList<Point> res = new ArrayList<>();
     private Circle circle = new Circle();
     private Oval oval = new Oval();
-    private EditingMode isEditing = EditingMode.NONE;
+    private EditingMode editingMode = EditingMode.NONE;
     private SetNumber setToEdit = SetNumber.NONE;
     private Double currScale = 1.3;
     private LastAction lastAction = LastAction.NONE;
@@ -57,12 +57,12 @@ public class MainModel {
         return currScale;
     }
 
-    public EditingMode getIsEditing() {
-        return isEditing;
+    public EditingMode getEditingMode() {
+        return editingMode;
     }
 
-    public void setIsEditing(EditingMode isEditing) {
-        this.isEditing = isEditing;
+    public void setEditingMode(EditingMode editingMode) {
+        this.editingMode = editingMode;
     }
 
     public SetNumber getSetToEdit() {
@@ -161,6 +161,7 @@ public class MainModel {
             case NONE:
                 break;
             case FIRST:
+                if (set1.isEmpty()) { break; }
                 set1.forEach(curPoint -> {
                     if (point.distance(curPoint) < minDistance.get()) {
                         res.set(curPoint);
@@ -169,6 +170,7 @@ public class MainModel {
                 });
                 break;
             case SECOND:
+                if (set2.isEmpty()) { break; }
                 set2.forEach(curPoint -> {
                     if (point.distance(curPoint) < minDistance.get()) {
                         res.set(curPoint);

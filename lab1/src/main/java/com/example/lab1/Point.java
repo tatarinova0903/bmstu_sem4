@@ -12,8 +12,8 @@ public class Point {
     }
 
     public Point() {
-        this.x = 0;
-        this.y = 0;
+        this.x = Double.NEGATIVE_INFINITY;
+        this.y = Double.NEGATIVE_INFINITY;
     }
 
     public double getX() { return x; }
