@@ -17,6 +17,8 @@ public class MainController extends AnchorPane {
     private final Button inputSecondSetBtn = new Button("Ввести 2 множество");
     private final Button editFirstBtn = new Button("Редактировать 1 множество");
     private final Button editSecondBtn = new Button("Редактировать 2 множество");
+    private final Button deleteBtn = new Button("Удалить точку");
+    private final Button clearBtn = new Button("Очистить");
     private final Button calculateBtn = new Button("Вычислить");
     private final Button addToFirstSetBtn = new Button("Добавить в 1 множество");
     private final Button addToSecondSetBtn = new Button("Добавить во 2 множество");
@@ -69,7 +71,9 @@ public class MainController extends AnchorPane {
                 resLabel,
                 resXField,
                 resYField,
-                resRadiusField
+                resRadiusField,
+                deleteBtn,
+                clearBtn
                 );
         editMenu.setAlignment(Pos.CENTER);
         editMenu.setSpacing(10);
@@ -99,13 +103,13 @@ public class MainController extends AnchorPane {
         inputSecondSetBtn.setOnAction(actionEvent -> { canvas.inputSecondSetBtnDidTap(actionEvent); });
         calculateBtn.setOnAction(actionEvent -> { canvas.calculateBtnDidTap(); });
         addToFirstSetBtn.setOnAction(actionEvent -> {
-            double xCoord = Double.parseDouble(coordXField.getText());
-            double yCoord = Double.parseDouble(coordYField.getText());
+            double xCoord = Double.parseDouble(coordXField.getText()) + canvas.getWidth() / 2;
+            double yCoord = Double.parseDouble(coordYField.getText()) * (-1) + canvas.getHeight() / 2;
             canvas.addPoint(xCoord, yCoord, SetNumber.FIRST);
         });
         addToSecondSetBtn.setOnAction(actionEvent -> {
-            double xCoord = Double.parseDouble(coordXField.getText());
-            double yCoord = Double.parseDouble(coordYField.getText());
+            double xCoord = Double.parseDouble(coordXField.getText()) + canvas.getWidth() / 2;
+            double yCoord = Double.parseDouble(coordYField.getText()) * (-1) + canvas.getHeight() / 2;
             canvas.addPoint(xCoord, yCoord, SetNumber.SECOND);
         });
         editFirstBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(SetNumber.FIRST); });
@@ -114,5 +118,11 @@ public class MainController extends AnchorPane {
         minusBtn.setOnAction(actionEvent -> { canvas.scale(false); });
         aboutAuthorBtn.setOnAction(actionEvent -> { canvas.aboutAuthorDidTap(); });
         aboutProgramBtn.setOnAction(actionEvent -> { canvas.aboutProgramBtnDidTap(); });
+        clearBtn.setOnAction(actionEvent ->  {
+            canvas.clearBtnDidTap();
+        });
+        deleteBtn.setOnAction(actionEvent -> {
+            canvas.deleteBtnDidTap();
+        });
     }
 }

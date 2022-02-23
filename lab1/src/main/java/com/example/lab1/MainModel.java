@@ -3,6 +3,7 @@ package com.example.lab1;
 import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainModel {
@@ -14,7 +15,7 @@ public class MainModel {
     private Oval oval = new Oval();
     private EditingMode isEditing = EditingMode.NONE;
     private SetNumber setToEdit = SetNumber.NONE;
-    private Double currScale = 1.0;
+    private Double currScale = 1.3;
     private LastAction lastAction = LastAction.NONE;
     private Point editedPoint = new Point();
 
@@ -103,12 +104,39 @@ public class MainModel {
         }
     }
 
+    void clearAll() {
+        set1.clear();
+        set2.clear();
+        circle = new Circle();
+        oval = new Oval();
+    }
+
+    void deleteEditngPoint() {
+        set1.remove(editedPoint);
+        set2.remove(editedPoint);
+    }
+
+    boolean contains(Point point) {
+        AtomicBoolean res = new AtomicBoolean(false);
+        set1.forEach(curPoint -> {
+            if (curPoint.getX() == point.getX() && curPoint.getY() == point.getY()) {
+                res.set(true);
+            }
+        });
+        set2.forEach(curPoint -> {
+            if (curPoint.getX() == point.getX() && curPoint.getY() == point.getY()) {
+                res.set(true);
+            }
+        });
+        return res.get();
+    }
+
     public void incrementCurrScale() {
         this.currScale += 0.1;
     }
 
     public void decrementCurrScale() {
-        if (currScale > 0.3) { this.currScale -= 0.1; }
+        if (currScale > 1.0) { this.currScale -= 0.1; }
     }
 
     void calculateBtnDidTap() {

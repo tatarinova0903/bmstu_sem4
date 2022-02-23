@@ -12,7 +12,7 @@ class ResizableCanvas extends Canvas {
     private final GraphicsContext gc = getGraphicsContext2D();
     private double oldWidth = getWidth();
     private double oldHeight = getHeight();
-    private MainController controller;
+    private final MainController controller;
     private final MainModel model = new MainModel();
 
     public ResizableCanvas(MainController controller) {
@@ -24,12 +24,28 @@ class ResizableCanvas extends Canvas {
     }
 
     private void draw() {
+        this.setScaleX(model.getCurrScale());
+        this.setScaleY(model.getCurrScale());
+        double newWidth = getWidth() * 3;
+        double newX = newXForScale(model.getCurrScale());
+        double newHeight = getHeight() * 3;
+        double newY = newYForScale(model.getCurrScale());
+        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
+        this.setClip(rect);
+
         double width = getWidth();
         double height = getHeight();
         if (width == 0 || height == 0) { return; }
         double deltaWidth = width / (oldWidth == 0 ? width : oldWidth);
         double deltaHeight = height / (oldHeight == 0 ? height : oldHeight);
-        gc.clearRect(0, 0, width, height);
+        gc.clearRect(0, 0, width * 3, height * 3);
+
+        gc.setFill(Color.BLACK);
+        gc.setLineWidth(0.5 / model.getCurrScale());
+        gc.strokeLine(0, height / 2, width, height / 2);
+        gc.strokeLine(width / 2, 0, width / 2, height);
+
+//        gc.fillText("0", width / 2, height / 2);
 
         if (!model.getSet1().isEmpty()) { model.setCurrent_set(SetNumber.FIRST); }
         model.getSet1().forEach(point -> {
@@ -57,9 +73,7 @@ class ResizableCanvas extends Canvas {
     }
 
     @Override
-    public double prefWidth(double height) {
-        return getWidth();
-    }
+    public double prefWidth(double height) { return getWidth(); }
 
     @Override
     public double prefHeight(double width) {
@@ -69,7 +83,7 @@ class ResizableCanvas extends Canvas {
     void aboutProgramBtnDidTap() {
         showInfoAlert("Даны два множества точек на плоскости. " +
                 "Выбрать три различные точки первого множества так, чтобы круг, ограниченный окружностью, " +
-                "проходящей через пять точек, " +
+                "проходящей через эти три точки, " +
                 "содержал минимум 80% точек второго множества и имел минимальную площадь."
         );
     }
@@ -89,6 +103,8 @@ class ResizableCanvas extends Canvas {
         double newY = newYForScale(model.getCurrScale());
         Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
         this.setClip(rect);
+//        gc.scale(model.getCurrScale(), model.getCurrScale());
+//        draw();
     }
 
     void inputFirstSetBtnDidTap(ActionEvent event) {
@@ -130,6 +146,18 @@ class ResizableCanvas extends Canvas {
         }
         draw();
     }
+
+    void deleteBtnDidTap() {
+        model.deleteEditngPoint();
+        model.setIsEditing(EditingMode.NONE);
+        draw();
+    }
+
+    void clearBtnDidTap() {
+        model.clearAll();
+        draw();
+    }
+
 
     void addPoint(double x, double y, SetNumber setNumber) {
         model.setCurrent_set(setNumber);
@@ -177,8 +205,10 @@ class ResizableCanvas extends Canvas {
             return;
         }
         if (model.getCurrent_set() == SetNumber.NONE) { return; }
-        model.setLastAction(LastAction.ADD_POINT);
-        addPoint(event.getX(), event.getY(), model.getCurrent_set());
+        if (!model.contains(new Point(event.getX() + getWidth() * model.getCurrScale(), event.getY() + getWidth() * model.getCurrScale()))) {
+            model.setLastAction(LastAction.ADD_POINT);
+            addPoint(event.getX(), event.getY(), model.getCurrent_set());
+        }
     }
 
     private void drawCircle(Circle circle) {
@@ -227,7 +257,7 @@ class ResizableCanvas extends Canvas {
     }
 
     static class Constants {
-        static double pointDiameter = 6.0;
+        static double pointDiameter = 4.0;
         static double pointRadius = Constants.pointDiameter / 2;
     }
 }
