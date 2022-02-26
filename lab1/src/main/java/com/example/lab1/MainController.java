@@ -3,7 +3,6 @@ package com.example.lab1;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -23,8 +22,7 @@ public class MainController extends AnchorPane {
     private final ToggleButton editBtn = new ToggleButton("Редактировать");
     private final Button clearBtn = new Button("Очистить");
     private final Button calculateBtn = new Button("Вычислить");
-    private final Button addToFirstSetBtn = new Button("Добавить в 1 множество");
-    private final Button addToSecondSetBtn = new Button("Добавить во 2 множество");
+    private final Button addToSetBtn = new Button("Добавить");
     private final Text coordXLabel = new Text("X:");
     private final TextField coordXField = new TextField();
     private final Text coordYLabel = new Text("Y:");
@@ -71,8 +69,7 @@ public class MainController extends AnchorPane {
                 coordXField,
                 coordYLabel,
                 coordYField,
-                addToFirstSetBtn,
-                addToSecondSetBtn,
+                addToSetBtn,
                 resLabel,
                 resXField,
                 resYField,
@@ -104,7 +101,14 @@ public class MainController extends AnchorPane {
         resRadiusField.setText(resRadius);
     }
 
+    void clearResult() {
+        resXField.setText("");
+        resYField.setText("");
+        resRadiusField.setText("");
+    }
+
     void keyboardDidTap(KeyEvent keyEvent) {
+        if (coordXField.focusedProperty().get() || coordYField.focusedProperty().get()) { return; }
         switch (keyEvent.getCode()) {
             case BACK_SPACE -> canvas.deleteBtnDidTap();
             case RIGHT -> canvas.goTo(Direction.RIGHT);
@@ -115,7 +119,7 @@ public class MainController extends AnchorPane {
     }
 
     void setCurrentMousePosition(double x, double y) {
-        currMousePositionLabel.setText(String.format("%.2f; %.2f", x, y));
+        currMousePositionLabel.setText(String.format("%.0f; %.0f", x, y));
     }
 
     private void addHandlers() {
@@ -124,15 +128,11 @@ public class MainController extends AnchorPane {
         secondSetBtn.setOnAction(actionEvent ->  { canvas.secondSetBtnDidTap(actionEvent); });
         inputSetBtn.setOnAction(actionEvent -> { canvas.inputBtnDidTap(); });
         calculateBtn.setOnAction(actionEvent -> { canvas.calculateBtnDidTap(); });
-        addToFirstSetBtn.setOnAction(actionEvent -> {
+        addToSetBtn.setOnAction(actionEvent -> {
             double xCoord = Double.parseDouble(coordXField.getText()) + canvas.getWidth() / 2;
             double yCoord = Double.parseDouble(coordYField.getText()) * (-1) + canvas.getHeight() / 2;
-            canvas.addPoint(xCoord, yCoord, SetNumber.FIRST);
-        });
-        addToSecondSetBtn.setOnAction(actionEvent -> {
-            double xCoord = Double.parseDouble(coordXField.getText()) + canvas.getWidth() / 2;
-            double yCoord = Double.parseDouble(coordYField.getText()) * (-1) + canvas.getHeight() / 2;
-            canvas.addPoint(xCoord, yCoord, SetNumber.SECOND);
+            canvas.addPoint(xCoord, yCoord, canvas.getModel().getCurrent_set());
+            canvas.requestFocus();
         });
         editBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(); });
         plusBtn.setOnAction(actionEvent -> { canvas.scale(true); });

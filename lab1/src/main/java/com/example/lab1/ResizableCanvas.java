@@ -29,6 +29,10 @@ class ResizableCanvas extends Canvas {
         heightProperty().addListener(evt -> draw());
     }
 
+    public MainModel getModel() {
+        return model;
+    }
+
     private void draw() {
         this.setScaleX(model.getCurrScale());
         this.setScaleY(model.getCurrScale());
@@ -159,6 +163,7 @@ class ResizableCanvas extends Canvas {
 
     void clearBtnDidTap() {
         model.clearAll();
+        controller.clearResult();
         draw();
     }
 
@@ -175,10 +180,13 @@ class ResizableCanvas extends Canvas {
     }
 
     void addPoint(double x, double y, SetNumber setNumber) {
-        model.setCurrent_set(setNumber);
-        Point point = new Point(x, y);
-        drawPoint(point, setNumber);
-        model.addToSet(point);
+        if (!model.contains(new Point(x, y))) {
+            model.setCurrent_set(setNumber);
+            Point point = new Point(x, y);
+
+            drawPoint(point, setNumber);
+            model.addToSet(point);
+        }
     }
 
     private void clip() {
@@ -193,14 +201,14 @@ class ResizableCanvas extends Canvas {
     private double newXForScale(double scale) {
         double oldWidth = getWidth();
         double newWidth = oldWidth * scale;
-        double newX = (newWidth - oldWidth) / 2;
+        double newX = (newWidth - oldWidth) / 2 - model.getTranslateCoords().getX();
         return newX * oldWidth / newWidth;
     }
 
     private double newYForScale(Double scale) {
         double oldHeight = getHeight();
         double newHeight = oldHeight * scale;
-        double newY = (newHeight - oldHeight) / 2;
+        double newY = (newHeight - oldHeight) / 2  - model.getTranslateCoords().getY();
         return newY * oldHeight / newHeight;
     }
 
@@ -228,10 +236,8 @@ class ResizableCanvas extends Canvas {
             return;
         }
         if (model.getCurrent_set() == SetNumber.NONE) { return; }
-        if (!model.contains(new Point(event.getX() + getWidth() * model.getCurrScale(), event.getY() + getWidth() * model.getCurrScale()))) {
-            model.setLastAction(LastAction.ADD_POINT);
-            addPoint(event.getX(), event.getY(), model.getCurrent_set());
-        }
+        model.setLastAction(LastAction.ADD_POINT);
+        addPoint(event.getX(), event.getY(), model.getCurrent_set());
     }
 
     private void drawCircle(Circle circle) {

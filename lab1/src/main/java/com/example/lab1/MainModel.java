@@ -155,6 +155,9 @@ public class MainModel {
         }
         Circle circle = findCircle();
         if (circle.isZero()) {
+            showErrorAlert("Решение не найдено");
+        }
+        if (circle.getCenter().isInfinity()) {
             showErrorAlert("Точки лежат на одной прямой");
         }
     }
@@ -209,10 +212,15 @@ public class MainModel {
     private Circle findCircle() {
         double minSquare = Double.MAX_VALUE;
         Circle res = new Circle();
+        int degenerateCount = 0;
         for (int i = 0 ; i < set1.size() - 2; i++) {
             for (int j = i + 1; j < set1.size() - 1; j++) {
                 for (int k = j + 1; k < set1.size(); k++) {
                     Circle circle = circleBy3Points(set1.get(i), set1.get(j), set1.get(k));
+                    if (circle.getCenter().isInfinity()) {
+                        degenerateCount++;
+                        continue;
+                    }
                     if (!circle.getCenter().isInfinity() && circle.square() < minSquare && circle.contains(set2, 80)) {
                         minSquare = circle.square();
                         res = circle;
@@ -224,6 +232,10 @@ public class MainModel {
                     }
                 }
             }
+        }
+        int c = getFactorial(set1.size()) / (getFactorial(3) * getFactorial(set1.size() - 3));
+        if (degenerateCount == getFactorial(set1.size()) / (getFactorial(3) * getFactorial(set1.size() - 3))) {
+            res = new Circle(new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY), Double.NEGATIVE_INFINITY);
         }
         this.circle = res;
         return res;
@@ -243,5 +255,13 @@ public class MainModel {
     private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR, message);
         alert.show();
+    }
+
+    private int getFactorial(int f) {
+        int result = 1;
+        for (int i = 1; i <= f; i++) {
+            result = result * i;
+        }
+        return result;
     }
 }
