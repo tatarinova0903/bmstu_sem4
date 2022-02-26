@@ -168,11 +168,44 @@ class ResizableCanvas extends Canvas {
     }
 
     void goTo(Direction direction) {
+        double newX, newY;
         switch (direction) {
-            case RIGHT -> model.getTranslateCoords().incrementX();
-            case LEFT -> model.getTranslateCoords().decrementX();
-            case DOWN -> model.getTranslateCoords().incrementY();
-            case UP -> model.getTranslateCoords().decrementY();
+            case RIGHT:
+                model.getTranslateCoords().incrementX();
+                newX = newXForScale(model.getCurrScale());
+                if (newX < 0) {
+                    model.getTranslateCoords().decrementX();
+                    return;
+                }
+                break;
+            case LEFT:
+                model.getTranslateCoords().decrementX();
+                newX = newXForScale(model.getCurrScale());
+                double screenWidth = getWidth();
+                double shownWidth = (getWidth() - newX) * model.getCurrScale();
+                if (screenWidth > shownWidth) {
+                    model.getTranslateCoords().incrementX();
+                    return;
+                }
+                break;
+            case DOWN:
+                model.getTranslateCoords().incrementY();
+                newY = newYForScale(model.getCurrScale());
+                if (newY < 0) {
+                    model.getTranslateCoords().decrementY();
+                    return;
+                }
+                break;
+            case UP:
+                model.getTranslateCoords().decrementY();
+                newY = newYForScale(model.getCurrScale());
+                double screenHeight = getHeight();
+                double shownHeight = (getHeight() - newY) * model.getCurrScale();
+                if (screenHeight > shownHeight) {
+                    model.getTranslateCoords().incrementY();
+                    return;
+                }
+                break;
         }
         setTranslateX(model.getTranslateCoords().getX());
         setTranslateY(model.getTranslateCoords().getY());

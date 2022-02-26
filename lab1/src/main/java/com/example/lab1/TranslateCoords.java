@@ -18,18 +18,18 @@ public class TranslateCoords {
     }
 
     public void incrementX() {
-        this.x += 10;
+        this.x += 5;
     }
 
     public void incrementY() {
-        this.y += 10;
+        this.y += 5;
     }
 
     public void decrementX() {
-        this.x -= 10;
+        this.x -= 5;
     }
 
     public void decrementY() {
-        this.y -= 10;
+        this.y -= 5;
     }
 }
