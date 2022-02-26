@@ -16,6 +16,7 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setTitle("Лабораторная работа №2");
         stage.setMinHeight(500);
+        stage.setMinWidth(600);
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
                 mainPane.keyboardDidTap(ke);

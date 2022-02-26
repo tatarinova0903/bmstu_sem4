@@ -23,7 +23,7 @@ public class MainController extends AnchorPane {
     private final Text rotateDegreeLabel = new Text("°");
     private final TextField rotateDegreeField = new TextField();
     private final Button cancelBtn = new Button("Отменить");
-    private final ResizableCanvas canvas = new ResizableCanvas(this);
+    private final ResizableCanvas canvas = new ResizableCanvas();
 
     public MainController() {
         HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn);
@@ -43,21 +43,21 @@ public class MainController extends AnchorPane {
 
         HBox scaleBox = new HBox(scaleFactorField, scaleBtn);
         scaleBox.setAlignment(Pos.CENTER);
-        scaleBox.setSpacing(10);
+        scaleBox.setSpacing(5);
         scaleBox.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
 
         HBox rotateBox = new HBox(rotateDegreeField, rotateDegreeLabel, rotateBtn);
         rotateBox.setAlignment(Pos.CENTER);
-        rotateBox.setSpacing(10);
+        rotateBox.setSpacing(5);
         rotateBox.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
 
         HBox scaleRotateBox = new HBox(scaleBox, rotateBox);
         scaleRotateBox.setAlignment(Pos.CENTER);
-        scaleRotateBox.setSpacing(15);
+        scaleRotateBox.setSpacing(20);
         scaleRotateBox.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
