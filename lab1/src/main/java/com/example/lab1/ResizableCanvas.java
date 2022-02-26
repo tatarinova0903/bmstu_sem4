@@ -61,10 +61,15 @@ class ResizableCanvas extends Canvas {
             drawPoint(point, SetNumber.SECOND);
         });
 
+        Circle circle = model.findCircle();
+        if (!circle.isZero() && !circle.getCenter().isInfinity()) {
+            drawCircle(circle);
+        }
+
         // scale овала
-        Oval oval = model.getOval();
-        scaleOval(oval, deltaWidth, deltaHeight);
-        drawOval(model.getOval());
+//        Oval oval = model.getOval();
+//        scaleOval(oval, deltaWidth, deltaHeight);
+//        drawOval(model.getOval());
 
         oldWidth = width;
         oldHeight = height;
