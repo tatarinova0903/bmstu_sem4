@@ -1,5 +1,6 @@
 package com.example.lab2;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -12,6 +13,8 @@ import javafx.scene.text.Text;
 public class MainController extends AnchorPane {
     private final Button aboutProgramBtn = new Button("О программе");
     private final Button aboutAuthorBtn = new Button("Об авторе");
+//    private final Button plusBtn = new Button("+");
+//    private final Button minusBtn = new Button("-");
     private final Button moveBtn = new Button("Переместить");
     private final Text moveXLabel = new Text("x:");
     private final TextField moveXField = new TextField();
@@ -74,13 +77,40 @@ public class MainController extends AnchorPane {
 
     void keyboardDidTap(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
-
+            case TAB -> {
+                if (moveXField.focusedProperty().get()) { moveYField.requestFocus(); }
+                else if (moveYField.focusedProperty().get()) { moveXField.requestFocus(); }
+            }
         }
     }
 
     private void addHandlers() {
         aboutAuthorBtn.setOnAction(actionEvent -> { aboutAuthorDidTap(); });
         aboutProgramBtn.setOnAction(actionEvent -> { aboutProgramBtnDidTap(); });
+        moveBtn.setOnAction(actionEvent -> {
+            if (moveXField.getText().isEmpty() || moveYField.getText().isEmpty()) { return; }
+            double dx = Double.parseDouble(moveXField.getText());
+            double dy = Double.parseDouble(moveYField.getText());
+            canvas.moveBtnDidTap(dx, dy);
+            canvas.requestFocus();
+        });
+        rotateBtn.setOnAction(actionEvent -> {
+            if (rotateDegreeField.getText().isEmpty()) { return; }
+            double degree = Double.parseDouble(rotateDegreeField.getText());
+            canvas.rotateBtnDidTap(degree);
+            canvas.requestFocus();
+        });
+        scaleBtn.setOnAction(actionEvent -> {
+            if (scaleFactorField.getText().isEmpty()) { return; }
+            double scaleFactor = Double.parseDouble(scaleFactorField.getText());
+            canvas.scaleBtnDidTap(scaleFactor);
+            canvas.requestFocus();
+        });
+        addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent ke) {
+                keyboardDidTap(ke);
+            }
+        });
     }
 
     private void aboutProgramBtnDidTap() {

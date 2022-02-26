@@ -24,4 +24,9 @@ public class Point {
     public void setY(double y) {
         this.y = y;
     }
+
+    void move(double dx, double dy) {
+        x += dx;
+        y += dy;
+    }
 }

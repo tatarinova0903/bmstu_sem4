@@ -50,6 +50,19 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
+    void moveBtnDidTap(double dx, double dy) {
+        model.move(dx, dy);
+        draw();
+    }
+
+    void rotateBtnDidTap(double degree) {
+
+    }
+
+    void scaleBtnDidTap(double scaleFactor) {
+
+    }
+
     private void drawLine(Line line) {
         Point start = translatePoint(line.getStart());
         Point end = translatePoint(line.getEnd());

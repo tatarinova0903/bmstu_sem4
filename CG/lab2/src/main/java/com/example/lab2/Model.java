@@ -48,4 +48,10 @@ public class Model {
     public ArrayList<Integer> getRoad() {
         return road;
     }
+
+    void move(double dx, double dy) {
+        points.forEach(point -> {
+            point.move(dx, dy);
+        });
+    }
 }
