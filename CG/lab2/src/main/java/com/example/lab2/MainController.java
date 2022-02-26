@@ -3,7 +3,6 @@ package com.example.lab2;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -21,7 +20,10 @@ public class MainController extends AnchorPane {
     private final Text moveYLabel = new Text("y:");
     private final TextField moveYField = new TextField();
     private final Button scaleBtn = new Button("Масштабировать");
-    private final TextField scaleFactorField = new TextField();
+    private final Text scaleXLabel = new Text("x:");
+    private final TextField scaleFactorXField = new TextField();
+    private final Text scaleYLabel = new Text("y:");
+    private final TextField scaleFactorYField = new TextField();
     private final Button rotateBtn = new Button("Повернуть");
     private final Text rotateDegreeLabel = new Text("°");
     private final TextField rotateDegreeField = new TextField();
@@ -44,7 +46,7 @@ public class MainController extends AnchorPane {
             element.setFocusTraversable(false);
         });
 
-        HBox scaleBox = new HBox(scaleFactorField, scaleBtn);
+        HBox scaleBox = new HBox(scaleXLabel, scaleFactorXField, scaleYLabel, scaleFactorYField, scaleBtn);
         scaleBox.setAlignment(Pos.CENTER);
         scaleBox.setSpacing(5);
         scaleBox.getChildren().forEach(element -> {
@@ -80,6 +82,8 @@ public class MainController extends AnchorPane {
             case TAB -> {
                 if (moveXField.focusedProperty().get()) { moveYField.requestFocus(); }
                 else if (moveYField.focusedProperty().get()) { moveXField.requestFocus(); }
+                else if (scaleFactorXField.focusedProperty().get()) { scaleFactorYField.requestFocus(); }
+                else if (scaleFactorYField.focusedProperty().get()) { scaleFactorXField.requestFocus(); }
             }
         }
     }
@@ -101,15 +105,14 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         scaleBtn.setOnAction(actionEvent -> {
-            if (scaleFactorField.getText().isEmpty()) { return; }
-            double scaleFactor = Double.parseDouble(scaleFactorField.getText());
-            canvas.scaleBtnDidTap(scaleFactor);
+            if (scaleFactorXField.getText().isEmpty()) { return; }
+            double dx = Double.parseDouble(scaleFactorXField.getText());
+            double dy = Double.parseDouble(scaleFactorYField.getText());
+            canvas.scaleBtnDidTap(dx, dy);
             canvas.requestFocus();
         });
         addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                keyboardDidTap(ke);
-            }
+            public void handle(KeyEvent ke) { keyboardDidTap(ke); }
         });
     }
 

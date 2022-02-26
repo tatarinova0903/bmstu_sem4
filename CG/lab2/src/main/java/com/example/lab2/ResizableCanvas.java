@@ -59,8 +59,9 @@ class ResizableCanvas extends Canvas {
 
     }
 
-    void scaleBtnDidTap(double scaleFactor) {
-
+    void scaleBtnDidTap(double dx, double dy) {
+        model.scale(dx, dy);
+        draw();
     }
 
     private void drawLine(Line line) {

@@ -29,4 +29,9 @@ public class Point {
         x += dx;
         y += dy;
     }
+
+    void scale(double dx, double dy) {
+        x *= dx;
+        y *= dy;
+    }
 }

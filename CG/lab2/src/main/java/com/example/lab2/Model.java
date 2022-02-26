@@ -54,4 +54,10 @@ public class Model {
             point.move(dx, dy);
         });
     }
+
+    void scale(double dx, double dy) {
+        points.forEach(point -> {
+            point.scale(dx, dy);
+        });
+    }
 }
