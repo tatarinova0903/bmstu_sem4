@@ -63,9 +63,9 @@ public class MainController extends AnchorPane {
 
         coordXField.setMaxWidth(60);
         coordYField.setMaxWidth(60);
-        resXField.setMaxWidth(60);
-        resYField.setMaxWidth(60);
-        resRadiusField.setMaxWidth(60);
+        resXField.setMaxWidth(70);
+        resYField.setMaxWidth(70);
+        resRadiusField.setMaxWidth(80);
         HBox editMenu = new HBox(
                 coordXLabel,
                 coordXField,
@@ -80,7 +80,7 @@ public class MainController extends AnchorPane {
                 clearBtn
                 );
         editMenu.setAlignment(Pos.CENTER);
-        editMenu.setSpacing(10);
+        editMenu.setSpacing(5);
         editMenu.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
@@ -96,16 +96,22 @@ public class MainController extends AnchorPane {
     }
 
     void showResult(Circle circle) {
-        String resX = String.format("%.2f", circle.getCenter().getX());
-        String resY = String.format("%.2f", circle.getCenter().getY());
-        String resRadius = String.format("%.2f", circle.getRadius());
+        String resX = String.format("x: %.2f", circle.getCenter().getX());
+        String resY = String.format("y: %.2f", circle.getCenter().getY());
+        String resRadius = String.format("rad: %.2f", circle.getRadius());
         resXField.setText(resX);
         resYField.setText(resY);
         resRadiusField.setText(resRadius);
     }
 
-    void backspaceDidTap() {
-        canvas.deleteBtnDidTap();
+    void keyboardDidTap(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()) {
+            case BACK_SPACE -> canvas.deleteBtnDidTap();
+            case RIGHT -> canvas.goTo(Direction.RIGHT);
+            case LEFT -> canvas.goTo(Direction.LEFT);
+            case UP -> canvas.goTo(Direction.UP);
+            case DOWN -> canvas.goTo(Direction.DOWN);
+        }
     }
 
     void setCurrentMousePosition(double x, double y) {
@@ -136,15 +142,9 @@ public class MainController extends AnchorPane {
         clearBtn.setOnAction(actionEvent ->  {
             canvas.clearBtnDidTap();
         });
-//        deleteBtn.setOnAction(actionEvent -> {
-//            canvas.deleteBtnDidTap();
-//        });
         addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.ESCAPE) {
-                    System.out.println("Key Pressed: " + ke.getCode());
-                    ke.consume(); // <-- stops passing the event to next node
-                }
+                keyboardDidTap(ke);
             }
         });
     }

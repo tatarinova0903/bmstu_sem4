@@ -16,8 +16,13 @@ public class MainModel {
     private EditingMode editingMode = EditingMode.NONE;
     private SetNumber setToEdit = SetNumber.NONE;
     private Double currScale = 1.3;
+    private TranslateCoords translateCoords = new TranslateCoords(0.0,0.0);
     private LastAction lastAction = LastAction.NONE;
     private Point editedPoint = new Point();
+
+    public TranslateCoords getTranslateCoords() {
+        return translateCoords;
+    }
 
     public Point getEditedPoint() {
         return editedPoint;

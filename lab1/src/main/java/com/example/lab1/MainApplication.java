@@ -23,7 +23,7 @@ public class MainApplication extends Application {
         stage.setMinHeight(650);
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
-                mainPane.backspaceDidTap();
+                mainPane.keyboardDidTap(ke);
             }
         });
         stage.show();

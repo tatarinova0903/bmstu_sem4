@@ -32,12 +32,7 @@ class ResizableCanvas extends Canvas {
     private void draw() {
         this.setScaleX(model.getCurrScale());
         this.setScaleY(model.getCurrScale());
-        double newWidth = getWidth() * 3;
-        double newX = newXForScale(model.getCurrScale());
-        double newHeight = getHeight() * 3;
-        double newY = newYForScale(model.getCurrScale());
-        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
-        this.setClip(rect);
+        clip();
 
         double width = getWidth();
         double height = getHeight();
@@ -101,12 +96,7 @@ class ResizableCanvas extends Canvas {
         else { model.decrementCurrScale(); }
         this.setScaleX(model.getCurrScale());
         this.setScaleY(model.getCurrScale());
-        double newWidth = getWidth() * 3; // isPlus ? getWidth() : getWidth() * (2 - model.getCurrScale());
-        double newX = newXForScale(model.getCurrScale());
-        double newHeight = getHeight() * 3; // isPlus ? getHeight() : getHeight() * (2 - model.getCurrScale());
-        double newY = newYForScale(model.getCurrScale());
-        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
-        this.setClip(rect);
+        clip();
     }
 
     void firstSetBtnDidTap(ActionEvent event) {
@@ -172,11 +162,32 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
+    void goTo(Direction direction) {
+        switch (direction) {
+            case RIGHT -> model.getTranslateCoords().incrementX();
+            case LEFT -> model.getTranslateCoords().decrementX();
+            case DOWN -> model.getTranslateCoords().incrementY();
+            case UP -> model.getTranslateCoords().decrementY();
+        }
+        setTranslateX(model.getTranslateCoords().getX());
+        setTranslateY(model.getTranslateCoords().getY());
+        clip();
+    }
+
     void addPoint(double x, double y, SetNumber setNumber) {
         model.setCurrent_set(setNumber);
         Point point = new Point(x, y);
         drawPoint(point, setNumber);
         model.addToSet(point);
+    }
+
+    private void clip() {
+        double newWidth = getWidth() * 3; // isPlus ? getWidth() : getWidth() * (2 - model.getCurrScale());
+        double newX = newXForScale(model.getCurrScale());
+        double newHeight = getHeight() * 3; // isPlus ? getHeight() : getHeight() * (2 - model.getCurrScale());
+        double newY = newYForScale(model.getCurrScale());
+        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
+        this.setClip(rect);
     }
 
     private double newXForScale(double scale) {
