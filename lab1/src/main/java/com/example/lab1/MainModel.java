@@ -15,7 +15,7 @@ public class MainModel {
     private Oval oval = new Oval();
     private EditingMode editingMode = EditingMode.NONE;
     private SetNumber setToEdit = SetNumber.NONE;
-    private Double currScale = 1.3;
+    private Double currScale = 1.5;
     private TranslateCoords translateCoords = new TranslateCoords(0.0,0.0);
     private LastAction lastAction = LastAction.NONE;
     private Point editedPoint = new Point();
@@ -209,7 +209,7 @@ public class MainModel {
         }
     }
 
-    private Circle findCircle() {
+    Circle findCircle() {
         double minSquare = Double.MAX_VALUE;
         Circle res = new Circle();
         int degenerateCount = 0;

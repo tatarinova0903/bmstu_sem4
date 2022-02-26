@@ -46,7 +46,7 @@ class ResizableCanvas extends Canvas {
         gc.clearRect(0, 0, width * 3, height * 3);
 
         gc.setFill(Color.BLACK);
-        gc.setLineWidth(0.5 / model.getCurrScale());
+        gc.setLineWidth(0.4 / model.getCurrScale());
         gc.strokeLine(0, height / 2, width, height / 2);
         gc.strokeLine(width / 2, 0, width / 2, height);
 
@@ -319,7 +319,7 @@ class ResizableCanvas extends Canvas {
     }
 
     static class Constants {
-        static double pointDiameter = 4.0;
+        static double pointDiameter = 3.0;
         static double pointRadius = Constants.pointDiameter / 2;
     }
 }
