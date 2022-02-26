@@ -61,9 +61,11 @@ class ResizableCanvas extends Canvas {
             drawPoint(point, SetNumber.SECOND);
         });
 
-        Circle circle = model.findCircle();
-        if (!circle.isZero() && !circle.getCenter().isInfinity()) {
-            drawCircle(circle);
+        if (!model.getCircle().isZero()) {
+            Circle circle = model.findCircle();
+            if (!circle.isZero() && !circle.getCenter().isInfinity()) {
+                drawCircle(circle);
+            }
         }
 
         // scale овала
@@ -102,7 +104,12 @@ class ResizableCanvas extends Canvas {
 
     void scale(Boolean isPlus) {
         if (isPlus) { model.incrementCurrScale(); }
-        else { model.decrementCurrScale(); }
+        else {
+            model.getTranslateCoords().clear();
+            setTranslateX(model.getTranslateCoords().getX());
+            setTranslateY(model.getTranslateCoords().getY());
+            model.decrementCurrScale();
+        }
         this.setScaleX(model.getCurrScale());
         this.setScaleY(model.getCurrScale());
         clip();
@@ -175,15 +182,15 @@ class ResizableCanvas extends Canvas {
     void goTo(Direction direction) {
         double newX, newY;
         switch (direction) {
-            case RIGHT:
+            case RIGHT -> {
                 model.getTranslateCoords().incrementX();
                 newX = newXForScale(model.getCurrScale());
                 if (newX < 0) {
                     model.getTranslateCoords().decrementX();
                     return;
                 }
-                break;
-            case LEFT:
+            }
+            case LEFT -> {
                 model.getTranslateCoords().decrementX();
                 newX = newXForScale(model.getCurrScale());
                 double screenWidth = getWidth();
@@ -192,16 +199,16 @@ class ResizableCanvas extends Canvas {
                     model.getTranslateCoords().incrementX();
                     return;
                 }
-                break;
-            case DOWN:
+            }
+            case DOWN -> {
                 model.getTranslateCoords().incrementY();
                 newY = newYForScale(model.getCurrScale());
                 if (newY < 0) {
                     model.getTranslateCoords().decrementY();
                     return;
                 }
-                break;
-            case UP:
+            }
+            case UP -> {
                 model.getTranslateCoords().decrementY();
                 newY = newYForScale(model.getCurrScale());
                 double screenHeight = getHeight();
@@ -210,7 +217,7 @@ class ResizableCanvas extends Canvas {
                     model.getTranslateCoords().incrementY();
                     return;
                 }
-                break;
+            }
         }
         setTranslateX(model.getTranslateCoords().getX());
         setTranslateY(model.getTranslateCoords().getY());
