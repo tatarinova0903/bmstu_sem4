@@ -3,6 +3,7 @@ package com.example.lab1;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -28,9 +29,7 @@ public class MainController extends AnchorPane {
     private final Text coordYLabel = new Text("Y:");
     private final TextField coordYField = new TextField();
     private final Text resLabel = new Text("RES:");
-    private final TextField resXField = new TextField();
-    private final TextField resYField = new TextField();
-    private final TextField resRadiusField = new TextField();
+    private final Text res = new Text("");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     public MainController() {
@@ -61,20 +60,15 @@ public class MainController extends AnchorPane {
 
         coordXField.setMaxWidth(60);
         coordYField.setMaxWidth(60);
-        resXField.setMaxWidth(70);
-        resYField.setMaxWidth(70);
-        resRadiusField.setMaxWidth(80);
         HBox editMenu = new HBox(
                 coordXLabel,
                 coordXField,
                 coordYLabel,
                 coordYField,
                 addToSetBtn,
+                clearBtn,
                 resLabel,
-                resXField,
-                resYField,
-                resRadiusField,
-                clearBtn
+                res
                 );
         editMenu.setAlignment(Pos.CENTER);
         editMenu.setSpacing(5);
@@ -93,21 +87,22 @@ public class MainController extends AnchorPane {
     }
 
     void showResult(Circle circle) {
-        String resX = String.format("x: %.2f", circle.getCenter().getX());
-        String resY = String.format("y: %.2f", circle.getCenter().getY());
-        String resRadius = String.format("rad: %.2f", circle.getRadius());
-        resXField.setText(resX);
-        resYField.setText(resY);
-        resRadiusField.setText(resRadius);
+        String resCircle = String.format("x: %.2f y: %.2f rad: %.2f",
+                circle.getCenter().getX(),
+                circle.getCenter().getY(),
+                circle.getRadius()
+        );
+        res.setText(resCircle);
     }
 
     void clearResult() {
-        resXField.setText("");
-        resYField.setText("");
-        resRadiusField.setText("");
+        res.setText("");
     }
 
     void keyboardDidTap(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.TAB && coordXField.focusedProperty().get()) {
+            coordYField.requestFocus();
+        }
         if (coordXField.focusedProperty().get() || coordYField.focusedProperty().get()) { return; }
         switch (keyEvent.getCode()) {
             case BACK_SPACE -> canvas.deleteBtnDidTap();
