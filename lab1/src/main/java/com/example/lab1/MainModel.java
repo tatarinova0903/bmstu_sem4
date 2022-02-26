@@ -79,9 +79,9 @@ public class MainModel {
     }
 
     public Circle getCircle() {
-//        return this.circle;
-        if (res.size() != 3) { return new Circle(); }
-        return circleBy3Points(res.get(0), res.get(1), res.get(2));
+        return this.circle;
+//        if (res.size() != 3) { return new Circle(); }
+//        return circleBy3Points(res.get(0), res.get(1), res.get(2));
     }
 
     public void setCircle(Circle circle) {

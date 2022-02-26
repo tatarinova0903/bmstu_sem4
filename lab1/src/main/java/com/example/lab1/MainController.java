@@ -100,8 +100,12 @@ public class MainController extends AnchorPane {
     }
 
     void keyboardDidTap(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.TAB && coordXField.focusedProperty().get()) {
-            coordYField.requestFocus();
+        if (keyEvent.getCode() == KeyCode.TAB) {
+            if (coordXField.focusedProperty().get()) {
+                coordYField.requestFocus();
+            } else if (coordYField.focusedProperty().get()) {
+                coordXField.requestFocus();
+            }
         }
         if (coordXField.focusedProperty().get() || coordYField.focusedProperty().get()) { return; }
         switch (keyEvent.getCode()) {
@@ -124,9 +128,11 @@ public class MainController extends AnchorPane {
         inputSetBtn.setOnAction(actionEvent -> { canvas.inputBtnDidTap(); });
         calculateBtn.setOnAction(actionEvent -> { canvas.calculateBtnDidTap(); });
         addToSetBtn.setOnAction(actionEvent -> {
+            if (coordXField.getText().isEmpty() || coordYField.getText().isEmpty()) { return; }
             double xCoord = Double.parseDouble(coordXField.getText()) + canvas.getWidth() / 2;
             double yCoord = Double.parseDouble(coordYField.getText()) * (-1) + canvas.getHeight() / 2;
             canvas.addPoint(xCoord, yCoord, canvas.getModel().getCurrent_set());
+            canvas.getModel().setLastAction(LastAction.ADD_POINT);
             canvas.requestFocus();
         });
         editBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(); });

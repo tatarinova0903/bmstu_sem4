@@ -275,9 +275,9 @@ class ResizableCanvas extends Canvas {
             return;
         }
         if (model.getEditingMode() == EditingMode.POINT_SET) {
+            draw();
             addPoint(event.getX(), event.getY(), model.getSetToEdit());
             model.setEditingMode(EditingMode.POINT_CHOSEN);
-            draw();
             return;
         }
         if (model.getCurrent_set() == SetNumber.NONE) { return; }
@@ -314,8 +314,8 @@ class ResizableCanvas extends Canvas {
     }
 
     private void scalePoint(Point point, double deltaX, double deltaY) {
-        point.setX(point.getX() * deltaX);
-        point.setY(point.getY() * deltaY);
+        point.setX(point.getX() - oldWidth / 2 + getWidth() / 2);
+        point.setY(point.getY() - oldHeight / 2 + getHeight() / 2);
     }
 
     private void scaleOval(Oval oval, double deltaX, double deltaY) {
