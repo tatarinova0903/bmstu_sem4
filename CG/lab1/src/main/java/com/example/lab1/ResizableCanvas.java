@@ -123,7 +123,11 @@ class ResizableCanvas extends Canvas {
                 model.setCircle(new Circle());
                 break;
             case EDIT_POINT:
-                model.removePoint();
+                if (model.getEditingMode() == EditingMode.POINT_SET) {
+                    model.setEditingMode(EditingMode.POINT_CHOSEN);
+                } else {
+                    model.removePoint();
+                }
                 model.addToSet(model.getEditedPoint().getIdeal(), model.getEditedPoint().getNotIdeal());
                 break;
             case REMOVE_POINT:
@@ -240,7 +244,7 @@ class ResizableCanvas extends Canvas {
             model.setEditingMode(EditingMode.POINT_CHOSEN);
             return;
         }
-        if (model.getCurrent_set() == SetNumber.NONE) { return; }
+        if (model.getCurrent_set() == SetNumber.NONE || model.getEditingMode() == EditingMode.NONE) { return; }
         model.setLastAction(LastAction.ADD_POINT);
         addPointByCanvas(event.getX(), event.getY(), model.getCurrent_set());
     }

@@ -130,8 +130,14 @@ public class MainController extends AnchorPane {
             canvas.secondSetBtnDidTap(actionEvent);
             canvas.requestFocus();
         });
-        inputSetBtn.setOnAction(actionEvent -> { canvas.inputBtnDidTap(); });
-        calculateBtn.setOnAction(actionEvent -> { canvas.calculateBtnDidTap(); });
+        inputSetBtn.setOnAction(actionEvent -> {
+            canvas.inputBtnDidTap();
+            canvas.requestFocus();
+        });
+        calculateBtn.setOnAction(actionEvent -> {
+            canvas.calculateBtnDidTap();
+            canvas.requestFocus();
+        });
         addToSetBtn.setOnAction(actionEvent -> {
             if (coordXField.getText().isEmpty() || coordYField.getText().isEmpty() || canvas.getModel().getCurrent_set() == SetNumber.NONE) { return; }
             double xCoord = Double.parseDouble(coordXField.getText());
@@ -140,7 +146,10 @@ public class MainController extends AnchorPane {
             canvas.getModel().setLastAction(LastAction.ADD_POINT);
             canvas.requestFocus();
         });
-        editBtn.setOnAction(actionEvent -> { canvas.editBtnDidTap(); });
+        editBtn.setOnAction(actionEvent -> {
+            canvas.editBtnDidTap();
+            canvas.requestFocus();
+        });
         plusBtn.setOnAction(actionEvent -> { canvas.scale(true); });
         minusBtn.setOnAction(actionEvent -> { canvas.scale(false); });
         aboutAuthorBtn.setOnAction(actionEvent -> { canvas.aboutAuthorDidTap(); });
