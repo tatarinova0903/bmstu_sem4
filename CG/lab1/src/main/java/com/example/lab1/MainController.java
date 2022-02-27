@@ -33,8 +33,6 @@ public class MainController extends AnchorPane {
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     public MainController() {
-        firstSetBtn.setToggleGroup(toggleSetGroup);
-        secondSetBtn.setToggleGroup(toggleSetGroup);
         HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
         aboutMenu.setAlignment(Pos.CENTER);
         aboutMenu.setSpacing(10);
@@ -42,14 +40,31 @@ public class MainController extends AnchorPane {
             element.setFocusTraversable(false);
         });
 
+        HBox setBox = new HBox(firstSetBtn, secondSetBtn);
+        setBox.setAlignment(Pos.CENTER);
+        setBox.setSpacing(0);
+        setBox.setStyle("-fx-border-color: #ffffff;");
+        setBox.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
+
+        HBox actionBox = new HBox(inputSetBtn, editBtn);
+        actionBox.setAlignment(Pos.CENTER);
+        actionBox.setSpacing(0);
+        actionBox.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
+
+        firstSetBtn.setToggleGroup(toggleSetGroup);
+        secondSetBtn.setToggleGroup(toggleSetGroup);
         inputSetBtn.setToggleGroup(toggleActionGroup);
         editBtn.setToggleGroup(toggleActionGroup);
         HBox mainMenu = new HBox(
                 plusBtn,
                 minusBtn,
                 cancelBtn,
-                inputSetBtn, editBtn,
-                firstSetBtn, secondSetBtn,
+                actionBox,
+                setBox,
                 calculateBtn
         );
         mainMenu.setAlignment(Pos.CENTER);
