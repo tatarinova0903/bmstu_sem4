@@ -2,7 +2,6 @@ package com.example.lab2;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
@@ -12,8 +11,11 @@ class ResizableCanvas extends Canvas {
     private double oldHeight = getHeight();
     private final Model model = new Model();
 
-    public ResizableCanvas() {
-//        gc.setFill(Color.BLACK);
+    public ResizableCanvas(MainController controller) {
+        setOnMouseMoved(mouseEvent -> {
+            Point ideal = translatePointFromReal(new Point(mouseEvent.getX(), mouseEvent.getY()));
+            controller.setCurrentMousePosition(ideal.getX(), ideal.getY());
+        });
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
     }
@@ -31,7 +33,7 @@ class ResizableCanvas extends Canvas {
         gc.clearRect(0, 0, width * 3, height * 3);
 
         ArrayList<Point> points = model.getPoints();
-        ArrayList<Integer> road = model.getRoad();
+        ArrayList<Integer> road = model.getHorse();
         for (int i = 0; i < road.size() - 1; i++) {
             Line line = new Line(points.get(road.get(i)), points.get(road.get(i + 1)));
             drawLine(line);
@@ -65,12 +67,16 @@ class ResizableCanvas extends Canvas {
     }
 
     private void drawLine(Line line) {
-        Point start = translatePoint(line.getStart());
-        Point end = translatePoint(line.getEnd());
+        Point start = translatePointFromIdeal(line.getStart());
+        Point end = translatePointFromIdeal(line.getEnd());
         gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
     }
 
-    private Point translatePoint(Point point) {
+    private Point translatePointFromIdeal(Point point) {
         return new Point(point.getX() + getWidth() / 2, (point.getY() - getHeight() / 2) * (-1));
+    }
+
+    private Point translatePointFromReal(Point point) {
+        return new Point(point.getX() - getWidth() / 2, (point.getY()) * (-1) + getHeight() / 2);
     }
 }

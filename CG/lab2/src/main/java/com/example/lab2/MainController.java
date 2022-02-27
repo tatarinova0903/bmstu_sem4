@@ -1,8 +1,11 @@
 package com.example.lab2;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -12,8 +15,8 @@ import javafx.scene.text.Text;
 public class MainController extends AnchorPane {
     private final Button aboutProgramBtn = new Button("О программе");
     private final Button aboutAuthorBtn = new Button("Об авторе");
-//    private final Button plusBtn = new Button("+");
-//    private final Button minusBtn = new Button("-");
+    private final Button plusBtn = new Button("+");
+    private final Button minusBtn = new Button("-");
     private final Button moveBtn = new Button("Переместить");
     private final Text moveXLabel = new Text("x:");
     private final TextField moveXField = new TextField();
@@ -28,17 +31,18 @@ public class MainController extends AnchorPane {
     private final Text rotateDegreeLabel = new Text("°");
     private final TextField rotateDegreeField = new TextField();
     private final Button cancelBtn = new Button("Отменить");
-    private final ResizableCanvas canvas = new ResizableCanvas();
+    private final Text currMousePositionLabel = new Text("");
+    private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     public MainController() {
-        HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn);
+        HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
         aboutMenu.setAlignment(Pos.CENTER);
         aboutMenu.setSpacing(10);
         aboutMenu.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
 
-        HBox moveBox = new HBox(moveXLabel, moveXField, moveYLabel, moveYField, moveBtn);
+        HBox moveBox = new HBox(minusBtn, plusBtn, moveXLabel, moveXField, moveYLabel, moveYField, moveBtn);
 
         moveBox.setAlignment(Pos.CENTER);
         moveBox.setSpacing(10);
@@ -77,6 +81,10 @@ public class MainController extends AnchorPane {
         addHandlers();
     }
 
+    void setCurrentMousePosition(double x, double y) {
+        currMousePositionLabel.setText(String.format("%.0f; %.0f", x, y));
+    }
+
     void keyboardDidTap(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case TAB -> {
@@ -84,6 +92,28 @@ public class MainController extends AnchorPane {
                 else if (moveYField.focusedProperty().get()) { moveXField.requestFocus(); }
                 else if (scaleFactorXField.focusedProperty().get()) { scaleFactorYField.requestFocus(); }
                 else if (scaleFactorYField.focusedProperty().get()) { scaleFactorXField.requestFocus(); }
+            }
+            case LEFT -> canvas.moveBtnDidTap(-10, 0);
+            case RIGHT -> canvas.moveBtnDidTap(10, 0);
+            case UP -> canvas.moveBtnDidTap(0, 10);
+            case DOWN -> canvas.moveBtnDidTap(0, -10);
+            case ENTER -> {
+                if (moveXField.focusedProperty().get() || moveYField.focusedProperty().get()) {
+                    if (!moveXField.getText().isEmpty() && !moveYField.getText().isEmpty()) {
+                        double dx = Double.parseDouble(moveXField.getText());
+                        double dy = Double.parseDouble(moveYField.getText());
+                        canvas.moveBtnDidTap(dx, dy);
+                        canvas.requestFocus();
+                    }
+                }
+                else if (scaleFactorXField.focusedProperty().get() || scaleFactorYField.focusedProperty().get()) {
+                    if (!scaleFactorXField.getText().isEmpty() && !scaleFactorYField.getText().isEmpty()) {
+                        double dx = Double.parseDouble(scaleFactorXField.getText());
+                        double dy = Double.parseDouble(scaleFactorYField.getText());
+                        canvas.scaleBtnDidTap(dx, dy);
+                        canvas.requestFocus();
+                    }
+                }
             }
         }
     }
@@ -113,6 +143,14 @@ public class MainController extends AnchorPane {
         });
         addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) { keyboardDidTap(ke); }
+        });
+        plusBtn.setOnAction(actionEvent -> {
+            canvas.scaleBtnDidTap(1.1, 1.1);
+            canvas.requestFocus();
+        });
+        minusBtn.setOnAction(actionEvent -> {
+            canvas.scaleBtnDidTap(0.9, 0.9);
+            canvas.requestFocus();
         });
     }
 
