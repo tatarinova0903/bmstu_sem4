@@ -57,7 +57,7 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    void rotateBtnDidTap(double degree) {
+    void rotateBtnDidTap(double x, double y, double degree) {
 
     }
 

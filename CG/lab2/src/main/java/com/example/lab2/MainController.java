@@ -1,11 +1,8 @@
 package com.example.lab2;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -28,6 +25,10 @@ public class MainController extends AnchorPane {
     private final Text scaleYLabel = new Text("y:");
     private final TextField scaleFactorYField = new TextField();
     private final Button rotateBtn = new Button("Повернуть");
+    private final Text rotateXLabel = new Text("x:");
+    private final TextField rotateXField = new TextField();
+    private final Text rotateYLabel = new Text("y:");
+    private final TextField rotateYField = new TextField();
     private final Text rotateDegreeLabel = new Text("°");
     private final TextField rotateDegreeField = new TextField();
     private final Button cancelBtn = new Button("Отменить");
@@ -43,7 +44,8 @@ public class MainController extends AnchorPane {
         });
 
         HBox moveBox = new HBox(minusBtn, plusBtn, moveXLabel, moveXField, moveYLabel, moveYField, moveBtn);
-
+        moveXField.setMaxWidth(60);
+        moveYField.setMaxWidth(60);
         moveBox.setAlignment(Pos.CENTER);
         moveBox.setSpacing(10);
         moveBox.getChildren().forEach(element -> {
@@ -51,13 +53,18 @@ public class MainController extends AnchorPane {
         });
 
         HBox scaleBox = new HBox(scaleXLabel, scaleFactorXField, scaleYLabel, scaleFactorYField, scaleBtn);
+        scaleFactorXField.setMaxWidth(60);
+        scaleFactorYField.setMaxWidth(60);
         scaleBox.setAlignment(Pos.CENTER);
         scaleBox.setSpacing(5);
         scaleBox.getChildren().forEach(element -> {
             element.setFocusTraversable(false);
         });
 
-        HBox rotateBox = new HBox(rotateDegreeField, rotateDegreeLabel, rotateBtn);
+        HBox rotateBox = new HBox(rotateXLabel, rotateXField, rotateYLabel, rotateYField, rotateDegreeField, rotateDegreeLabel, rotateBtn);
+        rotateXField.setMaxWidth(60);
+        rotateYField.setMaxWidth(60);
+        rotateDegreeField.setMaxWidth(60);
         rotateBox.setAlignment(Pos.CENTER);
         rotateBox.setSpacing(5);
         rotateBox.getChildren().forEach(element -> {
@@ -131,7 +138,9 @@ public class MainController extends AnchorPane {
         rotateBtn.setOnAction(actionEvent -> {
             if (rotateDegreeField.getText().isEmpty()) { return; }
             double degree = Double.parseDouble(rotateDegreeField.getText());
-            canvas.rotateBtnDidTap(degree);
+            double x = Double.parseDouble(rotateXField.getText());
+            double y = Double.parseDouble(rotateYField.getText());
+            canvas.rotateBtnDidTap(x, y, degree);
             canvas.requestFocus();
         });
         scaleBtn.setOnAction(actionEvent -> {
