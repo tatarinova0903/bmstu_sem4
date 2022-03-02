@@ -43,7 +43,7 @@ public class MainController extends AnchorPane {
             element.setFocusTraversable(false);
         });
 
-        HBox moveBox = new HBox(minusBtn, plusBtn, moveXLabel, moveXField, moveYLabel, moveYField, moveBtn);
+        HBox moveBox = new HBox(cancelBtn, minusBtn, plusBtn, moveXLabel, moveXField, moveYLabel, moveYField, moveBtn);
         moveXField.setMaxWidth(60);
         moveYField.setMaxWidth(60);
         moveBox.setAlignment(Pos.CENTER);
@@ -160,6 +160,9 @@ public class MainController extends AnchorPane {
         minusBtn.setOnAction(actionEvent -> {
             canvas.scaleBtnDidTap(0.9, 0.9);
             canvas.requestFocus();
+        });
+        cancelBtn.setOnAction(actionEvent -> {
+            canvas.cancelBtnDidTap();
         });
     }
 

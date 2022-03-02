@@ -7,6 +7,9 @@ public class Model {
 
     private final ArrayList<Point> points = new ArrayList<>();
     private final ArrayList<Integer> horse;
+    private MoveAction moveAction;
+    private ScaleAction scaleAction;
+    private RotateAction rotateAction;
 
     public Model() {
         points.add(new Point(-78, -30)); // 0
@@ -54,20 +57,43 @@ public class Model {
     }
 
     void move(double dx, double dy) {
+        moveAction = new MoveAction(dx, dy);
         points.forEach(point -> {
             point.move(dx, dy);
         });
     }
 
     void scale(double dx, double dy) {
+        scaleAction = new ScaleAction(dx, dy);
         points.forEach(point -> {
             point.scale(dx, dy);
         });
     }
 
     void rotate(double x, double y, double degree) {
+        rotateAction = new RotateAction(x, y, degree);
         points.forEach(point -> {
             point.rotate(x, y, degree);
         });
+    }
+
+    void cancel() {
+        if (moveAction != null) {
+            points.forEach(point -> {
+                point.move(-moveAction.getDx(), -moveAction.getDy());
+            });
+        } else if (scaleAction != null) {
+            points.forEach(point -> {
+                point.scale(1 / scaleAction.getDx(), 1 / scaleAction.getDy());
+            });
+        } else if (rotateAction != null) {
+
+        }
+    }
+
+    private void clearAction() {
+        moveAction = null;
+        scaleAction = null;
+        rotateAction = null;
     }
 }

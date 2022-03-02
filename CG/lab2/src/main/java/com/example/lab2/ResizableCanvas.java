@@ -67,6 +67,11 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
+    void cancelBtnDidTap() {
+        model.cancel();
+        draw();
+    }
+
     private void drawLine(Line line) {
         Point start = translatePointFromIdeal(line.getStart());
         Point end = translatePointFromIdeal(line.getEnd());
