@@ -34,4 +34,12 @@ public class Point {
         x *= dx;
         y *= dy;
     }
+
+    void rotate(double cx, double cy, double degree) {
+        double angle = Math.toRadians(degree);
+        double newX = (x - cx) * Math.cos(angle) - (y - cy) * Math.sin(angle);
+        double newY = (x - cx) * Math.sin(angle) + (y - cy) * Math.cos(angle);
+        x = newX + cx;
+        y = newY + cy;
+    }
 }

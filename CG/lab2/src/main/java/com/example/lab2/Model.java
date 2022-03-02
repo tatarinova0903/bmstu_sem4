@@ -64,4 +64,10 @@ public class Model {
             point.scale(dx, dy);
         });
     }
+
+    void rotate(double x, double y, double degree) {
+        points.forEach(point -> {
+            point.rotate(x, y, degree);
+        });
+    }
 }

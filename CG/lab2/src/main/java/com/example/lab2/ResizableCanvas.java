@@ -58,7 +58,8 @@ class ResizableCanvas extends Canvas {
     }
 
     void rotateBtnDidTap(double x, double y, double degree) {
-
+        model.rotate(x, y, degree);
+        draw();
     }
 
     void scaleBtnDidTap(double dx, double dy) {
