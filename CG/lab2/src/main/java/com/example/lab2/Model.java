@@ -57,6 +57,7 @@ public class Model {
     }
 
     void move(double dx, double dy) {
+        clearAction();
         moveAction = new MoveAction(dx, dy);
         points.forEach(point -> {
             point.move(dx, dy);
@@ -64,6 +65,7 @@ public class Model {
     }
 
     void scale(double dx, double dy) {
+        clearAction();
         scaleAction = new ScaleAction(dx, dy);
         points.forEach(point -> {
             point.scale(dx, dy);
@@ -71,6 +73,7 @@ public class Model {
     }
 
     void rotate(double x, double y, double degree) {
+        clearAction();
         rotateAction = new RotateAction(x, y, degree);
         points.forEach(point -> {
             point.rotate(x, y, degree);
@@ -87,7 +90,9 @@ public class Model {
                 point.scale(1 / scaleAction.getDx(), 1 / scaleAction.getDy());
             });
         } else if (rotateAction != null) {
-
+            points.forEach(point -> {
+                point.rotate(rotateAction.getDx(), rotateAction.getDy(), -rotateAction.getDegree());
+            });
         }
     }
 
