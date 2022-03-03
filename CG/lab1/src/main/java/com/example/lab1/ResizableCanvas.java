@@ -222,6 +222,7 @@ class ResizableCanvas extends Canvas {
     private void onMouseClicked(MouseEvent event) {
         requestFocus();
         if (model.getEditingMode() == EditingMode.POINT_CHOSEN) {
+            model.setCircle(new Circle());
             Point notIdealPoint = new Point(event.getX(), event.getY());
             CanvasPoint point = model.findClosestAndRemove(notIdealPoint);
             if (point.getNotIdeal().isInfinity()) { return; }

@@ -30,9 +30,14 @@ public class Point {
         y += dy;
     }
 
-    void scale(double dx, double dy) {
-        x *= dx;
-        y *= dy;
+    void scale(double dx, double dy, double xc, double yc) {
+        x = x * dx + (1 - dx) * xc;
+        y = y * dy + (1 - dy) * yc;
+    }
+
+    void revertScale(double kx, double ky, double xm, double ym) {
+        x = (x - (1 - kx) * xm) / kx;
+        y = (y - (1 - ky) * ym) / ky;
     }
 
     void rotate(double cx, double cy, double degree) {

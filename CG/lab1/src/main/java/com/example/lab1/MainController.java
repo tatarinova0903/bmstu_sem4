@@ -129,7 +129,7 @@ public class MainController extends AnchorPane {
     }
 
     void setCurrentMousePosition(double x, double y) {
-        currMousePositionLabel.setText(String.format("%.0f; %.0f", x, y));
+        currMousePositionLabel.setText(String.format("x:%.0f y:%.0f", x, y));
     }
 
     private void addHandlers() {

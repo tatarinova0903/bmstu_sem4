@@ -62,13 +62,18 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    void scaleBtnDidTap(double dx, double dy) {
-        model.scale(dx, dy);
+    void scaleBtnDidTap(double dx, double dy, double cx, double cy) {
+        model.scale(dx, dy, cx, cy);
         draw();
     }
 
     void cancelBtnDidTap() {
         model.cancel();
+        draw();
+    }
+
+    void cancelAllBtnDidTap() {
+        model.cancelAll();
         draw();
     }
 
