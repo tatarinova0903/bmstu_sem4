@@ -2,7 +2,7 @@
 #include "math.h"
 #include<iostream>
 
-rc_type draw_line_scene(myscene_t scene, point_t p1, point_t p2)
+ReturnCode draw_line_scene(myscene_t scene, point_t p1, point_t p2)
 {
     double z1 = sqrt(2)/2 * get_point_z(p1);
     double z2 = sqrt(2)/2 * get_point_z(p2);

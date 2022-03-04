@@ -5,11 +5,11 @@
 #include "controller.h"
 #include <iostream>
 
-rc_type download_model(figure_t &fig, action_t act)
+ReturnCode download_model(figure_t &fig, action_t act)
 {
     const char *filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
     stream_t stream;
-    rc_type rc = open_file_read(stream, filename, FILE_OPEN_TYPE);
+    ReturnCode rc = open_file_read(stream, filename, FILE_OPEN_TYPE);
     if (rc)
         return rc;
     rc = read_from_file(fig,stream);
@@ -27,7 +27,7 @@ void move(struct point &a, double dx, double dy, double dz)
     set_point_z(a,z);
 }
 
-rc_type move_fig(figure_t &fig, action_t act)
+ReturnCode move_fig(figure_t &fig, action_t act)
 {
     if (is_empty(fig))
         return ERR_EMPTY;
@@ -105,7 +105,7 @@ void rotation(struct point &a, struct point c, alpha_t alpha)
     }
 }
 
-rc_type rotation_fig(figure_t &fig, action_t act)
+ReturnCode rotation_fig(figure_t &fig, action_t act)
 {
     if (is_empty(fig))
         return ERR_EMPTY;
@@ -134,7 +134,7 @@ void scale(struct point &a, struct point center, double k)
     set_point_z(a,z);
 }
 
-rc_type scale_fig(figure_t &fig, action_t act)
+ReturnCode scale_fig(figure_t &fig, action_t act)
 {
     if (is_empty(fig))
         return ERR_EMPTY;
@@ -148,12 +148,14 @@ rc_type scale_fig(figure_t &fig, action_t act)
     return OK;
 
 }
-rc_type clear_fig(figure_t &fig)
+
+ReturnCode clear_fig(figure_t &fig)
 {
     free_fig(fig);
     return OK;
 }
-rc_type draw_fig(figure_t &fig, myscene_t scene)
+
+ReturnCode draw_fig(figure_t &fig, myscene_t scene)
 {
     clear_scene(scene);
     draw_model(fig,scene);

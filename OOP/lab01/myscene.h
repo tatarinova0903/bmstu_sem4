@@ -12,7 +12,7 @@ struct myscene
 };
 
 
-rc_type draw_line_scene(myscene_t scene, point_t p1, point_t p2);
+ReturnCode draw_line_scene(myscene_t scene, point_t p1, point_t p2);
 void draw_point_scene(myscene_t scene, point_t p1);
 void clear_scene(myscene_t scene);
 

@@ -7,12 +7,12 @@
 
 #define PI 3.14
 
-rc_type download_model(figure_t &fig, action_t act);
-rc_type move_fig(figure_t &fig, action_t act);
-rc_type rotation_fig(figure_t &fig, action_t act);
-rc_type scale_fig(figure_t &fig, action_t act);
-rc_type clear_fig(figure_t &fig);
-rc_type draw_fig(figure_t &fig, myscene_t scene);
+ReturnCode download_model(figure_t &fig, action_t act);
+ReturnCode move_fig(figure_t &fig, action_t act);
+ReturnCode rotation_fig(figure_t &fig, action_t act);
+ReturnCode scale_fig(figure_t &fig, action_t act);
+ReturnCode clear_fig(figure_t &fig);
+ReturnCode draw_fig(figure_t &fig, myscene_t scene);
 void move(struct point &a, double dx, double dy, double dz);
 void scale(struct point &a, struct point m, double k);
 void rotation(struct point &a, struct point c, double ax, double ay, double az);

@@ -61,6 +61,7 @@ public:
     QLabel *label_4;
     QDoubleSpinBox *rotateZField;
     QPushButton *rotateButton;
+    QSpacerItem *verticalSpacer_4;
     QPushButton *clearButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -234,6 +235,10 @@ public:
 
         verticalLayout->addWidget(rotateButton);
 
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer_4);
+
         clearButton = new QPushButton(verticalLayoutWidget);
         clearButton->setObjectName(QString::fromUtf8("clearButton"));
 
@@ -258,7 +263,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
         loadModelButton->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
         label_10->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\272\320\276\321\215\321\204\320\270\321\206\320\265\320\275\321\202 \320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\321\217:", nullptr));
-        label_6->setText(QApplication::translate("MainWindow", "K: ", nullptr));
+        label_6->setText(QApplication::translate("MainWindow", "k: ", nullptr));
         scaleButton->setText(QApplication::translate("MainWindow", "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\321\202\321\214", nullptr));
         label_9->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\272\320\276\321\215\321\204\320\270\321\206\321\206\320\265\320\275\321\202\321\213 \320\277\320\265\321\200\320\265\320\275\320\276\321\201\320\260:", nullptr));
         label_2->setText(QApplication::translate("MainWindow", "dx:", nullptr));
@@ -266,9 +271,9 @@ public:
         label_12->setText(QApplication::translate("MainWindow", "dz:", nullptr));
         moveButton->setText(QApplication::translate("MainWindow", "\320\237\320\265\321\200\320\265\320\275\320\265\321\201\321\202\320\270", nullptr));
         label_8->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\203\320\263\320\273\321\213 \320\264\320\273\321\217 \320\277\320\276\320\262\320\276\321\200\320\276\321\202\320\260", nullptr));
-        label->setText(QApplication::translate("MainWindow", "alphax", nullptr));
-        label_3->setText(QApplication::translate("MainWindow", "alphay", nullptr));
-        label_4->setText(QApplication::translate("MainWindow", "alphaz", nullptr));
+        label->setText(QApplication::translate("MainWindow", "x", nullptr));
+        label_3->setText(QApplication::translate("MainWindow", "y", nullptr));
+        label_4->setText(QApplication::translate("MainWindow", "z", nullptr));
         rotateButton->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\265\321\200\320\275\321\203\321\202\321\214", nullptr));
         clearButton->setText(QApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
     } // retranslateUi

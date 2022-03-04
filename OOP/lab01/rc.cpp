@@ -1,34 +1,30 @@
 #include "rc.h"
 #include <QMessageBox>
 
-void print_warning(rc_type rc)
+void print_warning(ReturnCode rc)
 {
     if (rc == OK)
         return;
     QMessageBox mbox;
-    if (rc == ERR_OPEN_FILE)
-    {
-        mbox.setText("При открытии файла произошла ошибка. Попробуйте еще раз.");
-    }
-    else if (rc == ERR_EMPTY)
-    {
+    switch (rc) {
+    case ERR_OPEN_FILE:
+       mbox.setText("При открытии файла произошла ошибка. Попробуйте еще раз.");
+        break;
+    case ERR_EMPTY:
         mbox.setText("Пустая моделью невозможно нарисоввть.");
-    }
-    else if (rc == ERR_INPUT)
-    {
+        break;
+    case ERR_INPUT:
         mbox.setText("INPUT");
-    }
-    else if (rc == ERR_MEMORY)
-    {
+        break;
+    case ERR_MEMORY:
         mbox.setText("MEMORY");
-    }
-    else if (rc == ERR_PARAMETR)
-    {
+        break;
+    case ERR_PARAMETR:
         mbox.setText("PARAMETR");
-    }
-    else
-    {
+        break;
+    default:
         mbox.setText("UNKNOWN ERROR");
+        break;
     }
     mbox.exec();
 }

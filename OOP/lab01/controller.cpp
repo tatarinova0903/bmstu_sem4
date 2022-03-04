@@ -4,10 +4,10 @@
 #include <iostream>
 
 
-rc_type controller(myscene_t scene, ActionType action, action_t act)
+ReturnCode controller(myscene_t scene, ActionType action, action_t act)
 {
     static figure_t fig = init_fig();
-    rc_type rc = OK;
+    ReturnCode rc = OK;
     switch (action) {
         case DOWNLOAD:
         rc = download_model(fig, act);

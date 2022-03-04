@@ -1,16 +1,11 @@
 #ifndef RC_H
 #define RC_H
 
-#define OK 0
-#define ERR_OPEN_FILE 1
-#define ERR_EMPTY 2
-#define ERR_INPUT 3
-#define ERR_MEMORY 4
-#define ERR_PARAMETR 5
+enum ReturnCode {
+    OK, ERR_OPEN_FILE, ERR_EMPTY, ERR_INPUT, ERR_MEMORY, ERR_PARAMETR
+};
 
-typedef int rc_type;
-
-void print_warning(rc_type rc);
+void print_warning(ReturnCode rc);
 
 #endif // RC_H
 
