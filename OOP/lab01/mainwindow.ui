@@ -18,269 +18,142 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>20</y>
-      <width>700</width>
-      <height>700</height>
+      <y>139</y>
+      <width>1011</width>
+      <height>581</height>
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>20</y>
-      <width>301</width>
-      <height>701</height>
+      <x>10</x>
+      <y>10</y>
+      <width>1021</width>
+      <height>131</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="loadModelButton">
-       <property name="text">
-        <string>Загрузить модель</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_10">
-       <property name="text">
-        <string>Введите коэфицент масштабирования:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="3">
       <layout class="QFormLayout" name="formLayout_3">
-       <property name="horizontalSpacing">
-        <number>1</number>
-       </property>
-       <property name="verticalSpacing">
-        <number>2</number>
-       </property>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_6">
+       <item row="0" column="1">
+        <widget class="QDoubleSpinBox" name="scaleField"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>k: </string>
+          <string>kx:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="scaleField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
+       <item row="1" column="0" colspan="2">
+        <widget class="QPushButton" name="scaleButton">
+         <property name="text">
+          <string>Масштабировать</string>
          </property>
         </widget>
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QPushButton" name="scaleButton">
-       <property name="text">
-        <string>Масштабировать</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>Введите коэфицценты переноса:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QFormLayout" name="formLayout_2">
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_2">
+     <item row="0" column="1">
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
          <property name="text">
           <string>dx:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="moveXField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
-         </property>
-        </widget>
+       <item row="0" column="1">
+        <widget class="QDoubleSpinBox" name="moveXField"/>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
          <property name="text">
           <string>dy:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="moveYField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
-         </property>
-        </widget>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="moveYField"/>
        </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="moveZField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_12">
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_3">
          <property name="text">
           <string>dz:</string>
          </property>
         </widget>
        </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="moveZField"/>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QPushButton" name="moveButton">
+         <property name="text">
+          <string>Переместить</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
-     <item>
-      <widget class="QPushButton" name="moveButton">
-       <property name="text">
-        <string>Перенести</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Введите углы для поворота</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="2">
+      <layout class="QFormLayout" name="formLayout_2">
        <item row="0" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>x</string>
+          <string>x:</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="rotateXField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
+        <widget class="QDoubleSpinBox" name="rotateXField"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>y:</string>
          </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="rotateYField"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>z:</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="rotateYField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
-         </property>
-        </widget>
+        <widget class="QDoubleSpinBox" name="rotateZField"/>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="3" column="0" colspan="2">
+        <widget class="QPushButton" name="rotateButton">
          <property name="text">
-          <string>y</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>z</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="rotateZField">
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
+          <string>Повернуть</string>
          </property>
         </widget>
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QPushButton" name="rotateButton">
-       <property name="text">
-        <string>Повернуть</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="clearButton">
-       <property name="text">
-        <string>Сбросить модель</string>
-       </property>
-      </widget>
+     <item row="0" column="0">
+      <layout class="QFormLayout" name="formLayout_5">
+       <item row="0" column="1">
+        <widget class="QPushButton" name="loadModelButton">
+         <property name="text">
+          <string>Загрузить модель</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="clearButton">
+         <property name="text">
+          <string>Сбросить преобразования</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
