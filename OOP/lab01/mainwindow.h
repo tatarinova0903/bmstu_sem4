@@ -25,23 +25,21 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_5_clicked();
+    void on_loadModelButton_clicked();
 
-    void on_filename_editingFinished();
+    void on_scaleButton_clicked();
 
-    void on_pushButton_3_clicked();
+    void on_moveButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_rotateButton_clicked();
 
-    void on_pushButton_clicked();
-
-    void on_pushButton_4_clicked();
+    void on_clearButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     myscene_t scene;
     struct figure fig;
-    struct data dataaction;
+    struct data dataAction;
 };
 
 #endif // MAINWINDOW_H

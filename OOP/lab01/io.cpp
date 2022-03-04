@@ -9,7 +9,7 @@
 
 rc_type open_file_read(stream_t &stream, const char *filename, const char *open_type)
 {
-     FILE *file = fopen(filename,open_type);
+     FILE *file = fopen(filename, open_type);
      if (!file)
      {
          return ERR_OPEN_FILE;

@@ -16,10 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-     std::cout << "konstructor"<<std::endl;
     ui->setupUi(this);
     scene.scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene.scene);
+    ui->graphicsView->setBackgroundBrush(QBrush(Qt::white, Qt::SolidPattern));
     fig.arr = NULL;
     fig.matrix = NULL;
     fig.n = 0;
@@ -32,65 +32,60 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_5_clicked()
+void MainWindow::on_loadModelButton_clicked()
 {
-    QString text = ui->filename->text();
-
-    std::string str = text.toStdString();
-    dataaction.filename = str.c_str();
-    rc_type rc = controller(scene,DOWNLOAD, dataaction);
+    dataAction.filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
+    rc_type rc = controller(scene, DOWNLOAD, dataAction);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW_NUMBER, dataaction);
+    rc = controller(scene, DRAW, dataAction);
     if (rc) print_warning(rc);
 }
 
-void MainWindow::on_filename_editingFinished(){}
-
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_scaleButton_clicked()
 {
-    double km = ui->doubleSpinBox_6->value();
-    dataaction.scale.k = km;
-    rc_type rc = controller(scene, SCALE_NUMBER, dataaction);
+    double km = ui->scaleField->value();
+    dataAction.scale.k = km;
+    rc_type rc = controller(scene, SCALE, dataAction);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW_NUMBER, dataaction);
+    rc = controller(scene, DRAW, dataAction);
     if (rc) print_warning(rc);
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_moveButton_clicked()
 {
-    double dx = ui->doubleSpinBox_2->value();
-    double dy = ui->doubleSpinBox_5->value();
-    double dz = ui->doubleSpinBox_7->value();
-    dataaction.move.dx = dx;
-    dataaction.move.dy = dy;
-    dataaction.move.dz = dz;
+    double dx = ui->moveXField->value();
+    double dy = ui->moveYField->value();
+    double dz = ui->moveZField->value();
+    dataAction.move.dx = dx;
+    dataAction.move.dy = dy;
+    dataAction.move.dz = dz;
 
-    rc_type rc = controller(scene, MOVE_NUMBER, dataaction);
+    rc_type rc = controller(scene, MOVE, dataAction);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW_NUMBER, dataaction);
+    rc = controller(scene, DRAW, dataAction);
     if (rc) print_warning(rc);
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_rotateButton_clicked()
 {
-    double ax = ui->doubleSpinBox->value();
-    double ay = ui->doubleSpinBox_3->value();
-    double az = ui->doubleSpinBox_4->value();
-    dataaction.rotation.ax = ax;
-    dataaction.rotation.ay = ay;
-    dataaction.rotation.az = az;
+    double ax = ui->rotateXField->value();
+    double ay = ui->rotateYField->value();
+    double az = ui->rotateZField->value();
+    dataAction.rotation.ax = ax;
+    dataAction.rotation.ay = ay;
+    dataAction.rotation.az = az;
 
-    rc_type rc =controller(scene, ROTATION_NUMBER, dataaction);
+    rc_type rc =controller(scene, ROTATE, dataAction);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW_NUMBER, dataaction);
+    rc = controller(scene, DRAW, dataAction);
     if (rc) print_warning(rc);
 }
 
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::on_clearButton_clicked()
 {
-    rc_type rc =controller(scene, DELETE_NUMBER, dataaction);
+    rc_type rc =controller(scene, DELETE, dataAction);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW_NUMBER, dataaction);
+    rc = controller(scene, DRAW, dataAction);
     if (rc) print_warning(rc);
 }
 

@@ -7,7 +7,7 @@
 
 rc_type download_model(figure_t &fig, action_t act)
 {
-    const char *filename = get_filename(act);
+    const char *filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
     stream_t stream;
     rc_type rc = open_file_read(stream, filename, FILE_OPEN_TYPE);
     if (rc)
@@ -167,7 +167,7 @@ void draw_model(figure_t fig, myscene_t scene)
 
     for (size_t i = 0; i < get_fig_n(fig); i++)
     {
-        draw_point_scene(scene,get_point(fig,i));
+        draw_point_scene(scene, get_point(fig,i));
     }
     for (size_t i = 0; i < get_fig_n(fig); i++)
     {
@@ -175,7 +175,7 @@ void draw_model(figure_t fig, myscene_t scene)
         {
             if (get_matrix_el(fig,i,j) != 0)
             {
-                draw_line_scene(scene,get_point(fig,i),get_point(fig,j));
+                draw_line_scene(scene, get_point(fig,i), get_point(fig,j));
             }
         }
     }

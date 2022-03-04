@@ -35,28 +35,10 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label_11">
-       <property name="text">
-        <string>Введите имя файла для загрузки</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout"/>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Имя файла: </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="filename"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="loadModelButton">
        <property name="text">
         <string>Загрузить модель</string>
        </property>
@@ -98,7 +80,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
+        <widget class="QDoubleSpinBox" name="scaleField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -110,7 +92,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="scaleButton">
        <property name="text">
         <string>Масштабировать</string>
        </property>
@@ -146,7 +128,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+        <widget class="QDoubleSpinBox" name="moveXField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -163,7 +145,7 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+        <widget class="QDoubleSpinBox" name="moveYField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -173,7 +155,7 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
+        <widget class="QDoubleSpinBox" name="moveZField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -192,7 +174,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="moveButton">
        <property name="text">
         <string>Перенести</string>
        </property>
@@ -228,7 +210,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox">
+        <widget class="QDoubleSpinBox" name="rotateXField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -238,7 +220,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+        <widget class="QDoubleSpinBox" name="rotateYField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -262,7 +244,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+        <widget class="QDoubleSpinBox" name="rotateZField">
          <property name="minimum">
           <double>-1000.000000000000000</double>
          </property>
@@ -274,14 +256,14 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="rotateButton">
        <property name="text">
         <string>Повернуть</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="clearButton">
        <property name="text">
         <string>Сбросить модель</string>
        </property>

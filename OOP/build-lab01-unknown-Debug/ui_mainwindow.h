@@ -16,7 +16,6 @@
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -34,38 +33,35 @@ public:
     QGraphicsView *graphicsView;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
-    QLabel *label_11;
     QHBoxLayout *horizontalLayout;
-    QLabel *label_7;
-    QLineEdit *filename;
-    QPushButton *pushButton_5;
+    QPushButton *loadModelButton;
     QSpacerItem *verticalSpacer_3;
     QLabel *label_10;
     QFormLayout *formLayout_3;
     QLabel *label_6;
-    QDoubleSpinBox *doubleSpinBox_6;
-    QPushButton *pushButton_3;
+    QDoubleSpinBox *scaleField;
+    QPushButton *scaleButton;
     QSpacerItem *verticalSpacer_2;
     QLabel *label_9;
     QFormLayout *formLayout_2;
     QLabel *label_2;
-    QDoubleSpinBox *doubleSpinBox_2;
+    QDoubleSpinBox *moveXField;
     QLabel *label_5;
-    QDoubleSpinBox *doubleSpinBox_5;
-    QDoubleSpinBox *doubleSpinBox_7;
+    QDoubleSpinBox *moveYField;
+    QDoubleSpinBox *moveZField;
     QLabel *label_12;
-    QPushButton *pushButton_2;
+    QPushButton *moveButton;
     QSpacerItem *verticalSpacer;
     QLabel *label_8;
     QFormLayout *formLayout;
     QLabel *label;
-    QDoubleSpinBox *doubleSpinBox;
-    QDoubleSpinBox *doubleSpinBox_3;
+    QDoubleSpinBox *rotateXField;
+    QDoubleSpinBox *rotateYField;
     QLabel *label_3;
     QLabel *label_4;
-    QDoubleSpinBox *doubleSpinBox_4;
-    QPushButton *pushButton;
-    QPushButton *pushButton_4;
+    QDoubleSpinBox *rotateZField;
+    QPushButton *rotateButton;
+    QPushButton *clearButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -85,30 +81,15 @@ public:
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        label_11 = new QLabel(verticalLayoutWidget);
-        label_11->setObjectName(QString::fromUtf8("label_11"));
-
-        verticalLayout->addWidget(label_11);
-
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        label_7 = new QLabel(verticalLayoutWidget);
-        label_7->setObjectName(QString::fromUtf8("label_7"));
-
-        horizontalLayout->addWidget(label_7);
-
-        filename = new QLineEdit(verticalLayoutWidget);
-        filename->setObjectName(QString::fromUtf8("filename"));
-
-        horizontalLayout->addWidget(filename);
-
 
         verticalLayout->addLayout(horizontalLayout);
 
-        pushButton_5 = new QPushButton(verticalLayoutWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        loadModelButton = new QPushButton(verticalLayoutWidget);
+        loadModelButton->setObjectName(QString::fromUtf8("loadModelButton"));
 
-        verticalLayout->addWidget(pushButton_5);
+        verticalLayout->addWidget(loadModelButton);
 
         verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -128,20 +109,20 @@ public:
 
         formLayout_3->setWidget(2, QFormLayout::LabelRole, label_6);
 
-        doubleSpinBox_6 = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox_6->setObjectName(QString::fromUtf8("doubleSpinBox_6"));
-        doubleSpinBox_6->setMinimum(-1000.000000000000000);
-        doubleSpinBox_6->setMaximum(1000.000000000000000);
+        scaleField = new QDoubleSpinBox(verticalLayoutWidget);
+        scaleField->setObjectName(QString::fromUtf8("scaleField"));
+        scaleField->setMinimum(-1000.000000000000000);
+        scaleField->setMaximum(1000.000000000000000);
 
-        formLayout_3->setWidget(2, QFormLayout::FieldRole, doubleSpinBox_6);
+        formLayout_3->setWidget(2, QFormLayout::FieldRole, scaleField);
 
 
         verticalLayout->addLayout(formLayout_3);
 
-        pushButton_3 = new QPushButton(verticalLayoutWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        scaleButton = new QPushButton(verticalLayoutWidget);
+        scaleButton->setObjectName(QString::fromUtf8("scaleButton"));
 
-        verticalLayout->addWidget(pushButton_3);
+        verticalLayout->addWidget(scaleButton);
 
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -159,31 +140,31 @@ public:
 
         formLayout_2->setWidget(2, QFormLayout::LabelRole, label_2);
 
-        doubleSpinBox_2 = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox_2->setObjectName(QString::fromUtf8("doubleSpinBox_2"));
-        doubleSpinBox_2->setMinimum(-1000.000000000000000);
-        doubleSpinBox_2->setMaximum(1000.000000000000000);
+        moveXField = new QDoubleSpinBox(verticalLayoutWidget);
+        moveXField->setObjectName(QString::fromUtf8("moveXField"));
+        moveXField->setMinimum(-1000.000000000000000);
+        moveXField->setMaximum(1000.000000000000000);
 
-        formLayout_2->setWidget(2, QFormLayout::FieldRole, doubleSpinBox_2);
+        formLayout_2->setWidget(2, QFormLayout::FieldRole, moveXField);
 
         label_5 = new QLabel(verticalLayoutWidget);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
         formLayout_2->setWidget(4, QFormLayout::LabelRole, label_5);
 
-        doubleSpinBox_5 = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox_5->setObjectName(QString::fromUtf8("doubleSpinBox_5"));
-        doubleSpinBox_5->setMinimum(-1000.000000000000000);
-        doubleSpinBox_5->setMaximum(1000.000000000000000);
+        moveYField = new QDoubleSpinBox(verticalLayoutWidget);
+        moveYField->setObjectName(QString::fromUtf8("moveYField"));
+        moveYField->setMinimum(-1000.000000000000000);
+        moveYField->setMaximum(1000.000000000000000);
 
-        formLayout_2->setWidget(4, QFormLayout::FieldRole, doubleSpinBox_5);
+        formLayout_2->setWidget(4, QFormLayout::FieldRole, moveYField);
 
-        doubleSpinBox_7 = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox_7->setObjectName(QString::fromUtf8("doubleSpinBox_7"));
-        doubleSpinBox_7->setMinimum(-1000.000000000000000);
-        doubleSpinBox_7->setMaximum(1000.000000000000000);
+        moveZField = new QDoubleSpinBox(verticalLayoutWidget);
+        moveZField->setObjectName(QString::fromUtf8("moveZField"));
+        moveZField->setMinimum(-1000.000000000000000);
+        moveZField->setMaximum(1000.000000000000000);
 
-        formLayout_2->setWidget(5, QFormLayout::FieldRole, doubleSpinBox_7);
+        formLayout_2->setWidget(5, QFormLayout::FieldRole, moveZField);
 
         label_12 = new QLabel(verticalLayoutWidget);
         label_12->setObjectName(QString::fromUtf8("label_12"));
@@ -193,10 +174,10 @@ public:
 
         verticalLayout->addLayout(formLayout_2);
 
-        pushButton_2 = new QPushButton(verticalLayoutWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        moveButton = new QPushButton(verticalLayoutWidget);
+        moveButton->setObjectName(QString::fromUtf8("moveButton"));
 
-        verticalLayout->addWidget(pushButton_2);
+        verticalLayout->addWidget(moveButton);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -214,19 +195,19 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, label);
 
-        doubleSpinBox = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox->setObjectName(QString::fromUtf8("doubleSpinBox"));
-        doubleSpinBox->setMinimum(-1000.000000000000000);
-        doubleSpinBox->setMaximum(1000.000000000000000);
+        rotateXField = new QDoubleSpinBox(verticalLayoutWidget);
+        rotateXField->setObjectName(QString::fromUtf8("rotateXField"));
+        rotateXField->setMinimum(-1000.000000000000000);
+        rotateXField->setMaximum(1000.000000000000000);
 
-        formLayout->setWidget(0, QFormLayout::FieldRole, doubleSpinBox);
+        formLayout->setWidget(0, QFormLayout::FieldRole, rotateXField);
 
-        doubleSpinBox_3 = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox_3->setObjectName(QString::fromUtf8("doubleSpinBox_3"));
-        doubleSpinBox_3->setMinimum(-1000.000000000000000);
-        doubleSpinBox_3->setMaximum(1000.000000000000000);
+        rotateYField = new QDoubleSpinBox(verticalLayoutWidget);
+        rotateYField->setObjectName(QString::fromUtf8("rotateYField"));
+        rotateYField->setMinimum(-1000.000000000000000);
+        rotateYField->setMaximum(1000.000000000000000);
 
-        formLayout->setWidget(2, QFormLayout::FieldRole, doubleSpinBox_3);
+        formLayout->setWidget(2, QFormLayout::FieldRole, rotateYField);
 
         label_3 = new QLabel(verticalLayoutWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
@@ -238,25 +219,25 @@ public:
 
         formLayout->setWidget(3, QFormLayout::LabelRole, label_4);
 
-        doubleSpinBox_4 = new QDoubleSpinBox(verticalLayoutWidget);
-        doubleSpinBox_4->setObjectName(QString::fromUtf8("doubleSpinBox_4"));
-        doubleSpinBox_4->setMinimum(-1000.000000000000000);
-        doubleSpinBox_4->setMaximum(1000.000000000000000);
+        rotateZField = new QDoubleSpinBox(verticalLayoutWidget);
+        rotateZField->setObjectName(QString::fromUtf8("rotateZField"));
+        rotateZField->setMinimum(-1000.000000000000000);
+        rotateZField->setMaximum(1000.000000000000000);
 
-        formLayout->setWidget(3, QFormLayout::FieldRole, doubleSpinBox_4);
+        formLayout->setWidget(3, QFormLayout::FieldRole, rotateZField);
 
 
         verticalLayout->addLayout(formLayout);
 
-        pushButton = new QPushButton(verticalLayoutWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        rotateButton = new QPushButton(verticalLayoutWidget);
+        rotateButton->setObjectName(QString::fromUtf8("rotateButton"));
 
-        verticalLayout->addWidget(pushButton);
+        verticalLayout->addWidget(rotateButton);
 
-        pushButton_4 = new QPushButton(verticalLayoutWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        clearButton = new QPushButton(verticalLayoutWidget);
+        clearButton->setObjectName(QString::fromUtf8("clearButton"));
 
-        verticalLayout->addWidget(pushButton_4);
+        verticalLayout->addWidget(clearButton);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -275,23 +256,21 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
-        label_11->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\270\320\274\321\217 \321\204\320\260\320\271\320\273\320\260 \320\264\320\273\321\217 \320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\270", nullptr));
-        label_7->setText(QApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\204\320\260\320\271\320\273\320\260: ", nullptr));
-        pushButton_5->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
+        loadModelButton->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
         label_10->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\272\320\276\321\215\321\204\320\270\321\206\320\265\320\275\321\202 \320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\321\217:", nullptr));
         label_6->setText(QApplication::translate("MainWindow", "K: ", nullptr));
-        pushButton_3->setText(QApplication::translate("MainWindow", "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\321\202\321\214", nullptr));
+        scaleButton->setText(QApplication::translate("MainWindow", "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\321\202\321\214", nullptr));
         label_9->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\272\320\276\321\215\321\204\320\270\321\206\321\206\320\265\320\275\321\202\321\213 \320\277\320\265\321\200\320\265\320\275\320\276\321\201\320\260:", nullptr));
         label_2->setText(QApplication::translate("MainWindow", "dx:", nullptr));
         label_5->setText(QApplication::translate("MainWindow", "dy:", nullptr));
         label_12->setText(QApplication::translate("MainWindow", "dz:", nullptr));
-        pushButton_2->setText(QApplication::translate("MainWindow", "\320\237\320\265\321\200\320\265\320\275\320\265\321\201\321\202\320\270", nullptr));
+        moveButton->setText(QApplication::translate("MainWindow", "\320\237\320\265\321\200\320\265\320\275\320\265\321\201\321\202\320\270", nullptr));
         label_8->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\203\320\263\320\273\321\213 \320\264\320\273\321\217 \320\277\320\276\320\262\320\276\321\200\320\276\321\202\320\260", nullptr));
         label->setText(QApplication::translate("MainWindow", "alphax", nullptr));
         label_3->setText(QApplication::translate("MainWindow", "alphay", nullptr));
         label_4->setText(QApplication::translate("MainWindow", "alphaz", nullptr));
-        pushButton->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\265\321\200\320\275\321\203\321\202\321\214", nullptr));
-        pushButton_4->setText(QApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
+        rotateButton->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\265\321\200\320\275\321\203\321\202\321\214", nullptr));
+        clearButton->setText(QApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
     } // retranslateUi
 
 };

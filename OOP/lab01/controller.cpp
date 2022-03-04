@@ -4,38 +4,31 @@
 #include <iostream>
 
 
-rc_type controller(myscene_t scene, int act_number, action_t act)
+rc_type controller(myscene_t scene, ActionType action, action_t act)
 {
     static figure_t fig = init_fig();
     rc_type rc = OK;
-    if (act_number == DOWNLOAD)
-    {
+    switch (action) {
+        case DOWNLOAD:
         rc = download_model(fig, act);
-    }
-    else if (act_number ==  MOVE_NUMBER)
-    {
+        break;
+    case MOVE:
         rc = move_fig(fig,act);
-    }
-    else if (act_number == ROTATION_NUMBER)
-    {
+        break;
+    case ROTATE:
         rc = rotation_fig(fig,act);
-    }
-    else if (act_number == SCALE_NUMBER)
-    {
+        break;
+    case SCALE:
         rc = scale_fig(fig,act);
-    }
-    else if (act_number == DELETE_NUMBER)
-    {
+        break;
+    case DELETE:
         rc = clear_fig(fig);
-    }
-    else if (act_number == DRAW_NUMBER)
-    {
+        break;
+    case DRAW:
         rc = draw_fig(fig, scene);
-    }
-    else
-    {
+        break;
+    default:
         rc = ERR_PARAMETR;
     }
-
     return rc;
 }
