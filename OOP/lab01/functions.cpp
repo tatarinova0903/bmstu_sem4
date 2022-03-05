@@ -7,13 +7,12 @@
 
 ReturnCode download_model(figure_t &fig, action_t act)
 {
-    const char *filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
-    stream_t stream;
-    ReturnCode rc = open_file_read(stream, filename, FILE_OPEN_TYPE);
-    if (rc)
-        return rc;
-    rc = read_from_file(fig,stream);
-    close_file(stream);
+    FILE *file;
+    file = fopen(act.filename, "r");
+    if (!file)
+        return ERR_OPEN_FILE;
+    ReturnCode rc = read_from_file(fig, file);
+    fclose(file);
     return rc;
 }
 

@@ -34,20 +34,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_loadModelButton_clicked()
 {
-    dataAction.filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
-    ReturnCode rc = controller(scene, DOWNLOAD, dataAction);
+    data_action.filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
+    ReturnCode rc = controller(scene, DOWNLOAD, data_action);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW, dataAction);
+    rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
 }
 
 void MainWindow::on_scaleButton_clicked()
 {
     double km = ui->scaleField->value();
-    dataAction.scale.k = km;
-    ReturnCode rc = controller(scene, SCALE, dataAction);
+    data_action.scale.k = km;
+    ReturnCode rc = controller(scene, SCALE, data_action);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW, dataAction);
+    rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
 }
 
@@ -56,13 +56,13 @@ void MainWindow::on_moveButton_clicked()
     double dx = ui->moveXField->value();
     double dy = ui->moveYField->value();
     double dz = ui->moveZField->value();
-    dataAction.move.dx = dx;
-    dataAction.move.dy = dy;
-    dataAction.move.dz = dz;
+    data_action.move.dx = dx;
+    data_action.move.dy = dy;
+    data_action.move.dz = dz;
 
-    ReturnCode rc = controller(scene, MOVE, dataAction);
+    ReturnCode rc = controller(scene, MOVE, data_action);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW, dataAction);
+    rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
 }
 
@@ -71,21 +71,21 @@ void MainWindow::on_rotateButton_clicked()
     double ax = ui->rotateXField->value();
     double ay = ui->rotateYField->value();
     double az = ui->rotateZField->value();
-    dataAction.rotation.ax = ax;
-    dataAction.rotation.ay = ay;
-    dataAction.rotation.az = az;
+    data_action.rotation.ax = ax;
+    data_action.rotation.ay = ay;
+    data_action.rotation.az = az;
 
-    ReturnCode rc =controller(scene, ROTATE, dataAction);
+    ReturnCode rc =controller(scene, ROTATE, data_action);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW, dataAction);
+    rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
 }
 
 void MainWindow::on_clearButton_clicked()
 {
-    ReturnCode rc =controller(scene, DELETE, dataAction);
+    ReturnCode rc = controller(scene, DELETE, data_action);
     if (rc) print_warning(rc);
-    rc = controller(scene, DRAW, dataAction);
+    rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
 }
 

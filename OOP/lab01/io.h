@@ -7,15 +7,8 @@
 #include "points.h"
 #include "rc.h"
 
-#define FILE_OPEN_TYPE "r"
-
-typedef FILE * stream_t;
-
-ReturnCode open_file_read(stream_t &stream, const char *filename,const char *open_type);
-void close_file(stream_t stream);
-
 void free_fig(struct figure &fig);
-ReturnCode read_from_file(struct figure &fig, stream_t f);
+ReturnCode read_from_file(struct figure &fig, FILE *f);
 
 #endif // IO_H
 

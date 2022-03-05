@@ -39,7 +39,7 @@ private:
     Ui::MainWindow *ui;
     myscene_t scene;
     struct figure fig;
-    struct data dataAction;
+    struct data data_action;
 };
 
 #endif // MAINWINDOW_H

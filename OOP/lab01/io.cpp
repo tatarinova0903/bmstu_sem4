@@ -5,29 +5,12 @@
 
 #include <iostream>
 
-
-
-ReturnCode open_file_read(stream_t &stream, const char *filename, const char *open_type)
-{
-     FILE *file = fopen(filename, open_type);
-     if (!file)
-     {
-         return ERR_OPEN_FILE;
-     }
-     stream  = file;
-     return OK;
-}
-void close_file(stream_t stream)
-{
-    fclose(stream);
-}
-
-void rewind_file(stream_t stream)
+void rewind_file(FILE *stream)
 {
     rewind(stream);
 }
 
-ReturnCode read_line_point(stream_t f, point_t &p)
+ReturnCode read_line_point(FILE *f, point_t &p)
 {
    int n;
    double x,y,z;
@@ -39,14 +22,14 @@ ReturnCode read_line_point(stream_t f, point_t &p)
    return ERR_INPUT;
 }
 
-ReturnCode read_line_mt_el(stream_t f, int &mi, int &mj)
+ReturnCode read_line_mt_el(FILE *f, int &mi, int &mj)
 {
-   if (fscanf(f, "%d->%d",&mi, &mj) == 2)
+   if (fscanf(f, "%d->%d", &mi, &mj) == 2)
        return OK;
    return ERR_INPUT;
 }
 
-ReturnCode count_points(size_t &n, stream_t f)
+ReturnCode count_points(size_t &n, FILE *f)
 {
     if (!f)
         return ERR_OPEN_FILE;
@@ -70,7 +53,7 @@ ReturnCode allocate_arr(point_t *&arr, size_t n)
     return OK;
 }
 
-ReturnCode create_arr(point_t *arr, size_t n, stream_t f)
+ReturnCode create_arr(point_t *arr, size_t n, FILE *f)
 {
     if (!f || !n || !arr)
         return ERR_INPUT;
@@ -91,7 +74,7 @@ ReturnCode create_arr(point_t *arr, size_t n, stream_t f)
     return rc;
 }
 
-ReturnCode create_matrix(matrix_t mt, size_t n, stream_t f)
+ReturnCode create_matrix(matrix_t mt, size_t n, FILE *f)
 {
     if (!f || !n || !mt)
         return ERR_INPUT;
@@ -117,7 +100,7 @@ ReturnCode alloc_fig(figure_t &fig, size_t n)
     return rc;
 }
 
-ReturnCode create_fig(figure_t &fig, size_t n, stream_t f)
+ReturnCode create_fig(figure_t &fig, size_t n, FILE *f)
 {
     ReturnCode rc = OK;
     rc = create_arr(fig.arr, n, f);
@@ -126,7 +109,7 @@ ReturnCode create_fig(figure_t &fig, size_t n, stream_t f)
     return rc;
 }
 
-ReturnCode read_from_file(figure &fig, stream_t f)
+ReturnCode read_from_file(figure &fig, FILE *f)
 {
     if (!f)
         return ERR_EMPTY;
