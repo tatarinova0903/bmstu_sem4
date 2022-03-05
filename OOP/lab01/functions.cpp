@@ -116,32 +116,32 @@ ReturnCode rotation_fig(figure_t &fig, action_t act)
     return rc;
 }
 
-void scale(struct point &a, struct point center, double k)
+void scale(struct point &a, double k)
 {
-    double xc = get_point_x(center);
-    double yc = get_point_y(center);
-    double zc = get_point_z(center);
-
-    double x = xc + k*(get_point_x(a) - xc);
-    double y = yc + k*(get_point_y(a) - yc);
-    double z = zc + k*(get_point_z(a) - zc);
-    set_point_x(a,x);
-    set_point_y(a,y);
-    set_point_z(a,z);
+    double x = k * get_point_x(a);
+    double y = k * get_point_y(a);
+    double z = k * get_point_z(a);
+    set_point_x(a, x);
+    set_point_y(a, y);
+    set_point_z(a, z);
 }
 
 ReturnCode scale_fig(figure_t &fig, action_t act)
 {
+    ReturnCode rc = OK;
     if (is_empty(fig))
-        return ERR_EMPTY;
-    double k = get_k(act);
-    struct point center;
-    set_point(center,0,0,0,0);
-    for (size_t i = 0; i < get_fig_n(fig); i++)
     {
-        scale(get_point(fig,i),center,k);
+        rc = ERR_EMPTY;
     }
-    return OK;
+    else
+    {
+        double k = get_k(act);
+        for (size_t i = 0; i < get_fig_n(fig); i++)
+        {
+            scale(get_point(fig, i), k);
+        }
+    }
+    return rc;
 
 }
 
