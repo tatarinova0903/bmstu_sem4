@@ -6,7 +6,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QGraphicsScene>
-#include "io.h"
+#include "input.h"
 #include "points.h"
 #include "myscene.h"
 #include "figure.h"

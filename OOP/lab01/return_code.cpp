@@ -1,5 +1,5 @@
-#include "rc.h"
 #include <QMessageBox>
+#include "return_code.h"
 
 void print_warning(return_code rc)
 {

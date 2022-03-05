@@ -1,6 +1,4 @@
-#include"matrix.h"
-#include"figure.h"
-#include"rc.h"
+#include "matrix.h"
 
 void free_matrix(matrix_t mat, size_t n)
 {

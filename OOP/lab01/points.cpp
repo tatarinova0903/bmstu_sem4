@@ -1,6 +1,5 @@
 #include"points.h"
 
-
 double get_point_x(struct point a)
 {
     return a.x;

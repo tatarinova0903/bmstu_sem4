@@ -1,7 +1,7 @@
 #ifndef MESCENE_H
 #define MESCENE_H
 #include <QGraphicsScene>
-#include"rc.h"
+#include"return_code.h"
 #include "points.h"
 
 typedef struct myscene myscene_t;

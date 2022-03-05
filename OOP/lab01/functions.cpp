@@ -1,9 +1,8 @@
-#include "io.h"
+#include "input.h"
 #include "mainwindow.h"
 #include "functions.h"
 #include "action.h"
 #include "controller.h"
-#include <iostream>
 
 return_code download_model(figure_t &fig, action_t act)
 {

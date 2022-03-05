@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "io.h"
+#include "input.h"
 #include "mainwindow.h"
 #include "points.h"
 

@@ -7,9 +7,9 @@
 #include <iostream>
 #include <QColor>
 #include <QColorDialog>
-#include "io.h"
+#include "input.h"
 #include "controller.h"
-#include "rc.h"
+#include "return_code.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :

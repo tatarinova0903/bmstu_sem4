@@ -56,24 +56,26 @@ SOURCES       = ../lab01/action.cpp \
 		../lab01/controller.cpp \
 		../lab01/figure.cpp \
 		../lab01/functions.cpp \
-		../lab01/io.cpp \
+		../lab01/input.cpp \
 		../lab01/main.cpp \
 		../lab01/mainwindow.cpp \
 		../lab01/matrix.cpp \
+		../lab01/memory.cpp \
 		../lab01/myscene.cpp \
 		../lab01/points.cpp \
-		../lab01/rc.cpp moc_mainwindow.cpp
+		../lab01/return_code.cpp moc_mainwindow.cpp
 OBJECTS       = action.o \
 		controller.o \
 		figure.o \
 		functions.o \
-		io.o \
+		input.o \
 		main.o \
 		mainwindow.o \
 		matrix.o \
+		memory.o \
 		myscene.o \
 		points.o \
-		rc.o \
+		return_code.o \
 		moc_mainwindow.o
 DIST          = ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/qdevice.pri \
@@ -225,6 +227,7 @@ DIST          = ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_pre
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_post.prf \
+		../lab01/.qmake.stash \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/mac/sdk.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/toolchain.prf \
@@ -256,22 +259,24 @@ DIST          = ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_pre
 		../lab01/controller.h \
 		../lab01/figure.h \
 		../lab01/functions.h \
-		../lab01/io.h \
+		../lab01/input.h \
 		../lab01/mainwindow.h \
 		../lab01/matrix.h \
+		../lab01/memory.h \
 		../lab01/myscene.h \
 		../lab01/points.h \
-		../lab01/rc.h ../lab01/action.cpp \
+		../lab01/return_code.h ../lab01/action.cpp \
 		../lab01/controller.cpp \
 		../lab01/figure.cpp \
 		../lab01/functions.cpp \
-		../lab01/io.cpp \
+		../lab01/input.cpp \
 		../lab01/main.cpp \
 		../lab01/mainwindow.cpp \
 		../lab01/matrix.cpp \
+		../lab01/memory.cpp \
 		../lab01/myscene.cpp \
 		../lab01/points.cpp \
-		../lab01/rc.cpp
+		../lab01/return_code.cpp
 QMAKE_TARGET  = lab01
 DESTDIR       = 
 TARGET        = lab01.app/Contents/MacOS/lab01
@@ -444,6 +449,7 @@ Makefile: ../lab01/lab01.pro ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/macx
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/mac/sdk.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/toolchain.prf \
@@ -626,6 +632,7 @@ Makefile: ../lab01/lab01.pro ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/macx
 ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/qt_config.prf:
 ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/mac/sdk.prf:
 ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/toolchain.prf:
@@ -687,8 +694,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../lab01/action.h ../lab01/controller.h ../lab01/figure.h ../lab01/functions.h ../lab01/io.h ../lab01/mainwindow.h ../lab01/matrix.h ../lab01/myscene.h ../lab01/points.h ../lab01/rc.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lab01/action.cpp ../lab01/controller.cpp ../lab01/figure.cpp ../lab01/functions.cpp ../lab01/io.cpp ../lab01/main.cpp ../lab01/mainwindow.cpp ../lab01/matrix.cpp ../lab01/myscene.cpp ../lab01/points.cpp ../lab01/rc.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lab01/action.h ../lab01/controller.h ../lab01/figure.h ../lab01/functions.h ../lab01/input.h ../lab01/mainwindow.h ../lab01/matrix.h ../lab01/memory.h ../lab01/myscene.h ../lab01/points.h ../lab01/return_code.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lab01/action.cpp ../lab01/controller.cpp ../lab01/figure.cpp ../lab01/functions.cpp ../lab01/input.cpp ../lab01/main.cpp ../lab01/mainwindow.cpp ../lab01/matrix.cpp ../lab01/memory.cpp ../lab01/myscene.cpp ../lab01/points.cpp ../lab01/return_code.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../lab01/mainwindow.ui $(DISTDIR)/
 
 
@@ -699,6 +706,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r lab01.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -1014,9 +1022,9 @@ moc_mainwindow.cpp: ../lab01/mainwindow.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtGui.framework/Headers/qtguiversion.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
-		../lab01/io.h \
+		../lab01/input.h \
 		../lab01/points.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/myscene.h \
 		../lab01/figure.h \
 		../lab01/matrix.h \
@@ -1052,20 +1060,20 @@ action.o: ../lab01/action.cpp ../lab01/action.h \
 		../lab01/points.h \
 		../lab01/figure.h \
 		../lab01/matrix.h \
-		../lab01/rc.h
+		../lab01/return_code.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o action.o ../lab01/action.cpp
 
 controller.o: ../lab01/controller.cpp ../lab01/controller.h \
 		../lab01/myscene.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/points.h \
 		../lab01/action.h \
 		../lab01/figure.h \
 		../lab01/matrix.h \
 		../lab01/functions.h \
-		../lab01/io.h \
+		../lab01/input.h \
 		../lab01/mainwindow.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
@@ -1357,12 +1365,14 @@ controller.o: ../lab01/controller.cpp ../lab01/controller.h \
 figure.o: ../lab01/figure.cpp ../lab01/figure.h \
 		../lab01/points.h \
 		../lab01/matrix.h \
-		../lab01/rc.h
+		../lab01/return_code.h \
+		../lab01/input.h \
+		../lab01/memory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o figure.o ../lab01/figure.cpp
 
-functions.o: ../lab01/functions.cpp ../lab01/io.h \
+functions.o: ../lab01/functions.cpp ../lab01/input.h \
 		../lab01/points.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/mainwindow.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
@@ -1659,12 +1669,12 @@ functions.o: ../lab01/functions.cpp ../lab01/io.h \
 		../lab01/controller.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o functions.o ../lab01/functions.cpp
 
-io.o: ../lab01/io.cpp ../lab01/io.h \
+input.o: ../lab01/input.cpp ../lab01/input.h \
 		../lab01/points.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/matrix.h \
 		../lab01/figure.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o io.o ../lab01/io.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o input.o ../lab01/input.cpp
 
 main.o: ../lab01/main.cpp ../lab01/mainwindow.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
@@ -1954,9 +1964,9 @@ main.o: ../lab01/main.cpp ../lab01/mainwindow.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtGui.framework/Headers/qtguiversion.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
-		../lab01/io.h \
+		../lab01/input.h \
 		../lab01/points.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/myscene.h \
 		../lab01/figure.h \
 		../lab01/matrix.h \
@@ -2253,9 +2263,9 @@ mainwindow.o: ../lab01/mainwindow.cpp ../lab01/mainwindow.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtGui.framework/Headers/qtguiversion.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
-		../lab01/io.h \
+		../lab01/input.h \
 		../lab01/points.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/myscene.h \
 		../lab01/figure.h \
 		../lab01/matrix.h \
@@ -2270,25 +2280,30 @@ mainwindow.o: ../lab01/mainwindow.cpp ../lab01/mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lab01/mainwindow.cpp
 
 matrix.o: ../lab01/matrix.cpp ../lab01/matrix.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/figure.h \
 		../lab01/points.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matrix.o ../lab01/matrix.cpp
 
+memory.o: ../lab01/memory.cpp ../lab01/memory.h \
+		../lab01/points.h \
+		../lab01/return_code.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memory.o ../lab01/memory.cpp
+
 myscene.o: ../lab01/myscene.cpp ../lab01/myscene.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
-		../lab01/rc.h \
+		../lab01/return_code.h \
 		../lab01/points.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myscene.o ../lab01/myscene.cpp
 
 points.o: ../lab01/points.cpp ../lab01/points.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o points.o ../lab01/points.cpp
 
-rc.o: ../lab01/rc.cpp ../lab01/rc.h \
+return_code.o: ../lab01/return_code.cpp ../lab01/return_code.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rc.o ../lab01/rc.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o return_code.o ../lab01/return_code.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

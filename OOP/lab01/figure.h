@@ -22,5 +22,7 @@ void set_fig_n(figure_t &fig, size_t n);
 void set_fig_arr(figure_t &fig, point_t *arr);
 void set_fig_matrix(figure_t &fig, matrix_t mt);
 void copy_fig(figure_t &fig, figure_t &work);
+return_code alloc_fig(figure_t &fig, size_t n);
+return_code create_fig(figure_t &fig, size_t n, FILE *f);
 
 #endif // FIGURE_H

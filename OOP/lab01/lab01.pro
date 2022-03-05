@@ -13,25 +13,27 @@ SOURCES += \
     controller.cpp \
     figure.cpp \
     functions.cpp \
-    io.cpp \
+    input.cpp \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
+    memory.cpp \
     myscene.cpp \
     points.cpp \
-    rc.cpp
+    return_code.cpp
 
 HEADERS += \
     action.h \
     controller.h \
     figure.h \
     functions.h \
-    io.h \
+    input.h \
     mainwindow.h \
     matrix.h \
+    memory.h \
     myscene.h \
     points.h \
-    rc.h
+    return_code.h
 
 FORMS += \
     mainwindow.ui

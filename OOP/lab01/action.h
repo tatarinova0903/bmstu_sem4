@@ -2,6 +2,7 @@
 #define ACTION_H
 
 #include "points.h"
+#include "figure.h"
 
 typedef struct data action_t;
 

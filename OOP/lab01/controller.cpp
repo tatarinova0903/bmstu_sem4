@@ -1,15 +1,12 @@
 #include "controller.h"
-#include "rc.h"
 #include "functions.h"
-#include <iostream>
-
 
 return_code controller(myscene_t scene, ActionType action, action_t act)
 {
     static figure_t fig = init_fig();
     return_code rc = OK;
     switch (action) {
-        case DOWNLOAD:
+    case DOWNLOAD:
         rc = download_model(fig, act);
         break;
     case MOVE:
