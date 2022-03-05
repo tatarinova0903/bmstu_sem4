@@ -22,7 +22,7 @@ ReturnCode controller(myscene_t scene, ActionType action, action_t act)
         rc = scale_fig(fig,act);
         break;
     case DELETE:
-        rc = clear_fig(fig);
+        clear_fig(fig);
         break;
     case DRAW:
         rc = draw_fig(fig, scene);

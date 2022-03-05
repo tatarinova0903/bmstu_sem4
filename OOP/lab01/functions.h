@@ -11,7 +11,7 @@ ReturnCode download_model(figure_t &fig, action_t act);
 ReturnCode move_fig(figure_t &fig, action_t act);
 ReturnCode rotation_fig(figure_t &fig, action_t act);
 ReturnCode scale_fig(figure_t &fig, action_t act);
-ReturnCode clear_fig(figure_t &fig);
+void clear_fig(figure_t &fig);
 ReturnCode draw_fig(figure_t &fig, myscene_t scene);
 
 void draw_model(figure_t fig, myscene_t scene);

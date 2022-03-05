@@ -145,10 +145,9 @@ ReturnCode scale_fig(figure_t &fig, action_t act)
 
 }
 
-ReturnCode clear_fig(figure_t &fig)
+void clear_fig(figure_t &fig)
 {
     free_fig(fig);
-    return OK;
 }
 
 ReturnCode draw_fig(figure_t &fig, myscene_t scene)
