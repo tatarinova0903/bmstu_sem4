@@ -56,7 +56,7 @@ void rotation_ax(struct point &a, double ax)
     double alpha = ax * PI / 180;
     double cosa = cos(alpha);
     double sina = sin(alpha);
-    double z = za * cosa + ya * sina;
+    double z = za * cosa - ya * sina;
     double y = za * sina + ya * cosa;
     set_point_z(a, z);
     set_point_y(a, y);
@@ -70,7 +70,7 @@ void rotation_ay(struct point &a, double ay)
     double cosa = cos(alpha);
     double sina = sin(alpha);
     double x = xa * cosa + za * sina;
-    double z = xa * sina + za * cosa;
+    double z = - xa * sina + za * cosa;
     set_point_x(a, x);
     set_point_z(a, z);
 }
@@ -82,7 +82,7 @@ void rotation_az(struct point &a, double az)
     double alpha = az * PI / 180;
     double cosaz = cos(alpha);
     double sinaz = sin(alpha);
-    double x = xa * cosaz + ya * sinaz;
+    double x = xa * cosaz - ya * sinaz;
     double y = xa * sinaz + ya * cosaz;
     set_point_x(a, x);
     set_point_y(a, y);
@@ -150,29 +150,23 @@ void clear_fig(figure_t &fig)
     free_fig(fig);
 }
 
-ReturnCode draw_fig(figure_t &fig, myscene_t scene)
+void draw_fig(figure_t &fig, myscene_t scene)
 {
     clear_scene(scene);
     draw_model(fig,scene);
-    return OK;
 }
 
 void draw_model(figure_t fig, myscene_t scene)
 {
-    if (is_empty(fig))
-        return;
+    scene.scene->addEllipse(0, 0 , 2, 2);
 
-    for (size_t i = 0; i < get_fig_n(fig); i++)
-    {
-        draw_point_scene(scene, get_point(fig,i));
-    }
     for (size_t i = 0; i < get_fig_n(fig); i++)
     {
         for (size_t j = 0; j < i + 1; j++)
         {
-            if (get_matrix_el(fig,i,j) != 0)
+            if (get_matrix_el(fig, i, j) != 0)
             {
-                draw_line_scene(scene, get_point(fig,i), get_point(fig,j));
+                draw_line_scene(scene, get_point(fig, i), get_point(fig, j));
             }
         }
     }

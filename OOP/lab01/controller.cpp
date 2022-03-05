@@ -25,7 +25,7 @@ ReturnCode controller(myscene_t scene, ActionType action, action_t act)
         clear_fig(fig);
         break;
     case DRAW:
-        rc = draw_fig(fig, scene);
+        draw_fig(fig, scene);
         break;
     default:
         rc = ERR_PARAMETR;
