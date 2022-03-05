@@ -20,9 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene.scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene.scene);
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::white, Qt::SolidPattern));
-    fig.arr = NULL;
-    fig.matrix = NULL;
-    fig.n = 0;
+    fig = init_fig();
 }
 
 MainWindow::~MainWindow()

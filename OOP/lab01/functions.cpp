@@ -9,10 +9,13 @@ ReturnCode download_model(figure_t &fig, action_t act)
 {
     FILE *file;
     file = fopen(act.filename, "r");
+    ReturnCode rc = OK;
     if (!file)
-        return ERR_OPEN_FILE;
-    ReturnCode rc = read_from_file(fig, file);
-    fclose(file);
+        rc = ERR_OPEN_FILE;
+    else {
+        rc = read_from_file(fig, file);
+        fclose(file);
+    }
     return rc;
 }
 

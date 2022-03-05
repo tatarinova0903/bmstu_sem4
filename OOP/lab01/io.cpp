@@ -111,27 +111,28 @@ ReturnCode create_fig(figure_t &fig, size_t n, FILE *f)
 
 ReturnCode read_from_file(figure &fig, FILE *f)
 {
-    if (!f)
-        return ERR_EMPTY;
-
     ReturnCode rc = OK;
-    figure work = init_fig();
-
-    rc = count_points(work.n, f);
-    if (rc) return rc;
-    rc = alloc_fig(work, work.n);
-    if (rc) return rc;
-
-    rc = create_fig(work, work.n, f);
-
-    if (rc == OK)
+    if (!f)
     {
-         free_fig(fig);
-         copy_fig(fig,work);
+        rc = ERR_EMPTY;
     }
-    else
-    {
-        free_fig(work);
+    else {
+        free_fig(fig);
+        fig = init_fig();
+
+        rc = count_points(fig.n, f);
+        if (rc == OK)
+        {
+            rc = alloc_fig(fig, fig.n);
+            if (rc == OK)
+            {
+                rc = create_fig(fig, fig.n, f);
+                if (rc != OK)
+                {
+                 free_fig(fig);
+                }
+            }
+        }
     }
     return rc;
 }
