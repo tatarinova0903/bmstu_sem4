@@ -24,23 +24,29 @@ void move(struct point &a, double dx, double dy, double dz)
     double x = get_point_x(a) + dx;
     double y = get_point_y(a) + dy;
     double z = get_point_z(a) + dz;
-    set_point_x(a,x);
-    set_point_y(a,y);
-    set_point_z(a,z);
+    set_point_x(a, x);
+    set_point_y(a, y);
+    set_point_z(a, z);
 }
 
 ReturnCode move_fig(figure_t &fig, action_t act)
 {
+    ReturnCode rc = OK;
     if (is_empty(fig))
-        return ERR_EMPTY;
-    double dx = get_deltax(act);
-    double dy = get_deltay(act);
-    double dz = get_deltaz(act);
-    for (size_t i = 0; i < get_fig_n(fig); i++)
     {
-        move(get_point(fig,i),dx,dy,dz);
+        rc = ERR_EMPTY;
     }
-    return OK;
+    else
+    {
+        double dx = get_deltax(act);
+        double dy = get_deltay(act);
+        double dz = get_deltaz(act);
+        for (size_t i = 0; i < get_fig_n(fig); i++)
+        {
+            move(get_point(fig, i), dx, dy, dz);
+        }
+    }
+    return rc;
 }
 
 void rotation_ax(struct point &a, struct point center, double ax)
@@ -73,6 +79,7 @@ void rotation_ay(struct point &a, struct point center, double ay)
     set_point_x(a,x);
     set_point_z(a,z);
 }
+
 void rotation_az(struct point &a, struct point center, double az)
 {
     double xc = get_point_x(center);
@@ -88,6 +95,7 @@ void rotation_az(struct point &a, struct point center, double az)
     set_point_x(a,x);
     set_point_y(a,y);
 }
+
 void rotation(struct point &a, struct point c, alpha_t alpha)
 {
     double ax = get_alphax(alpha);
@@ -109,8 +117,11 @@ void rotation(struct point &a, struct point c, alpha_t alpha)
 
 ReturnCode rotation_fig(figure_t &fig, action_t act)
 {
+    ReturnCode rc = OK;
     if (is_empty(fig))
-        return ERR_EMPTY;
+    {
+        rc = ERR_EMPTY;
+    }
     alpha_t alpha = get_alpha(act);
 
     struct point center;
@@ -119,7 +130,7 @@ ReturnCode rotation_fig(figure_t &fig, action_t act)
     {
         rotation(get_point(fig,i),center,alpha);
     }
-    return OK;
+    return rc;
 }
 
 void scale(struct point &a, struct point center, double k)
