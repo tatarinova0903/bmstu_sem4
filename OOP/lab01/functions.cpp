@@ -49,70 +49,53 @@ ReturnCode move_fig(figure_t &fig, action_t act)
     return rc;
 }
 
-void rotation_ax(struct point &a, struct point center, double ax)
+void rotation_ax(struct point &a, double ax)
 {
-    double yc = get_point_y(center);
-    double zc = get_point_z(center);
     double ya = get_point_y(a);
     double za = get_point_z(a);
     double alpha = ax * PI / 180;
     double cosa = cos(alpha);
     double sina = sin(alpha);
-    double z = zc + (za- zc) * cosa + (ya - yc) * sina;
-    double y = yc - (za - zc) * sina + (ya - yc) * cosa;
-    set_point_z(a,z);
-    set_point_y(a,y);
+    double z = za * cosa + ya * sina;
+    double y = za * sina + ya * cosa;
+    set_point_z(a, z);
+    set_point_y(a, y);
 }
 
-void rotation_ay(struct point &a, struct point center, double ay)
+void rotation_ay(struct point &a, double ay)
 {
-
-    double xc = get_point_x(center);
-    double zc = get_point_z(center);
     double xa = get_point_x(a);
     double za = get_point_z(a);
     double alpha = ay * PI / 180;
     double cosa = cos(alpha);
     double sina = sin(alpha);
-    double x = xc + (xa- xc) * cosa + (za - zc) * sina;
-    double z = zc - (xa - xc) * sina + (za - zc) * cosa;
-    set_point_x(a,x);
-    set_point_z(a,z);
+    double x = xa * cosa + za * sina;
+    double z = xa * sina + za * cosa;
+    set_point_x(a, x);
+    set_point_z(a, z);
 }
 
-void rotation_az(struct point &a, struct point center, double az)
+void rotation_az(struct point &a, double az)
 {
-    double xc = get_point_x(center);
-    double yc = get_point_y(center);
     double xa = get_point_x(a);
     double ya = get_point_y(a);
     double alpha = az * PI / 180;
     double cosaz = cos(alpha);
     double sinaz = sin(alpha);
-
-    double x = xc + (xa- xc) * cosaz + (ya - yc) * sinaz;
-    double y = yc - (xa - xc) * sinaz + (ya - yc) * cosaz;
-    set_point_x(a,x);
-    set_point_y(a,y);
+    double x = xa * cosaz + ya * sinaz;
+    double y = xa * sinaz + ya * cosaz;
+    set_point_x(a, x);
+    set_point_y(a, y);
 }
 
-void rotation(struct point &a, struct point c, alpha_t alpha)
+void rotation(struct point &a, alpha_t alpha)
 {
     double ax = get_alphax(alpha);
     double ay = get_alphay(alpha);
     double az = get_alphaz(alpha);
-    if (az != 0)
-    {
-         rotation_az(a,c,az);
-    }
-    if (ax != 0)
-    {
-         rotation_ax(a,c,ax);
-    }
-    if (ay != 0)
-    {
-         rotation_ay(a,c,ay);
-    }
+    rotation_az(a, az);
+    rotation_ax(a, ax);
+    rotation_ay(a, ay);
 }
 
 ReturnCode rotation_fig(figure_t &fig, action_t act)
@@ -122,13 +105,13 @@ ReturnCode rotation_fig(figure_t &fig, action_t act)
     {
         rc = ERR_EMPTY;
     }
-    alpha_t alpha = get_alpha(act);
-
-    struct point center;
-    set_point(center,0,0,0,0);
-    for (size_t i = 0; i < get_fig_n(fig); i++)
+    else
     {
-        rotation(get_point(fig,i),center,alpha);
+        alpha_t alpha = get_alpha(act);
+        for (size_t i = 0; i < get_fig_n(fig); i++)
+        {
+            rotation(get_point(fig, i), alpha);
+        }
     }
     return rc;
 }
