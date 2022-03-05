@@ -69,7 +69,7 @@ void MainWindow::on_rotateButton_clicked()
     data_action.rotation.ay = ay;
     data_action.rotation.az = az;
 
-    return_code rc =controller(scene, ROTATE, data_action);
+    return_code rc = controller(scene, ROTATE, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);

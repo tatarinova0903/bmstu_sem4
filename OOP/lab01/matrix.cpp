@@ -4,8 +4,6 @@
 
 void free_matrix(matrix_t mat, size_t n)
 {
-    if (!mat)
-        return;
     for (size_t i = 0; i < n; i++)
         free(mat[i]);
     free(mat);
@@ -13,28 +11,40 @@ void free_matrix(matrix_t mat, size_t n)
 
 return_code allocate_matrix(matrix_t &matrix, size_t n)
 {
-    if (!n)
-        return ERR_MEMORY;
-    int **new_matrix =(int **)calloc(n, sizeof(int *));
-    if (!new_matrix)
-        return ERR_MEMORY;
     return_code rc = OK;
-    size_t i;
-    for (i = 0; i < n && !rc; i++)
+    if (!n)
     {
-        new_matrix[i] = (int *)calloc(n, sizeof(int));
-        if (!new_matrix[i])
+        rc = ERR_MEMORY;
+    }
+    else
+    {
+        int **new_matrix = (int**)calloc(n, sizeof(int*));
+        if (!new_matrix)
         {
             rc = ERR_MEMORY;
         }
+        else
+        {
+            size_t i;
+            for (i = 0; i < n && !rc; i++)
+            {
+                new_matrix[i] = (int *)calloc(n, sizeof(int));
+                if (!new_matrix[i])
+                {
+                    rc = ERR_MEMORY;
+                }
+            }
+            if (rc == OK)
+            {
+                matrix = new_matrix;
+            }
+            else
+            {
+                free_matrix(new_matrix, i);
+            }
+        }
     }
-    if (rc)
-    {
-        free_matrix(new_matrix, i);
-        return rc;
-    }
-    matrix = new_matrix;
-    return OK;
+    return rc;
 }
 
 
