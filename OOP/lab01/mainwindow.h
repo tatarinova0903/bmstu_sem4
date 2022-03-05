@@ -12,6 +12,8 @@
 #include "figure.h"
 #include "action.h"
 
+#define FILE_NAME "/Users/daria/Desktop/sem4/OOP/lab01/1.txt"
+
 namespace Ui {
 class MainWindow;
 }
@@ -25,8 +27,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_loadModelButton_clicked();
-
     void on_scaleButton_clicked();
 
     void on_moveButton_clicked();

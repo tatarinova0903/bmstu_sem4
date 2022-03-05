@@ -21,6 +21,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(scene.scene);
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::white, Qt::SolidPattern));
     fig = init_fig();
+    data_action.filename = FILE_NAME;
+    return_code rc = controller(scene, DOWNLOAD, data_action);
+    if (rc) print_warning(rc);
+    rc = controller(scene, DRAW, data_action);
+    if (rc) print_warning(rc);
 }
 
 MainWindow::~MainWindow()
@@ -28,15 +33,6 @@ MainWindow::~MainWindow()
     delete [] fig.arr;
     free_matrix(fig.matrix, fig.n);
     delete ui;
-}
-
-void MainWindow::on_loadModelButton_clicked()
-{
-    data_action.filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
-    return_code rc = controller(scene, DOWNLOAD, data_action);
-    if (rc) print_warning(rc);
-    rc = controller(scene, DRAW, data_action);
-    if (rc) print_warning(rc);
 }
 
 void MainWindow::on_scaleButton_clicked()
@@ -82,6 +78,9 @@ void MainWindow::on_rotateButton_clicked()
 void MainWindow::on_clearButton_clicked()
 {
     return_code rc = controller(scene, DELETE, data_action);
+    if (rc) print_warning(rc);
+    data_action.filename = FILE_NAME;
+    rc = controller(scene, DOWNLOAD, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);

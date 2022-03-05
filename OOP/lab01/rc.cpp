@@ -3,24 +3,24 @@
 
 void print_warning(return_code rc)
 {
-    if (rc == OK)
-        return;
     QMessageBox mbox;
     switch (rc) {
+    case OK:
+        break;
     case ERR_OPEN_FILE:
-       mbox.setText("При открытии файла произошла ошибка. Попробуйте еще раз.");
+        mbox.setText("Ошибка при открытии файла");
         break;
     case ERR_EMPTY:
-        mbox.setText("Пустая моделью невозможно нарисоввть.");
+        mbox.setText("Задана пустая модель");
         break;
     case ERR_INPUT:
-        mbox.setText("INPUT");
+        mbox.setText("Ошибка входныъ данных");
         break;
     case ERR_MEMORY:
-        mbox.setText("MEMORY");
+        mbox.setText("Ошибка при работе с памятью");
         break;
     case ERR_PARAMETR:
-        mbox.setText("PARAMETR");
+        mbox.setText("Неверно переданный параметр");
         break;
     default:
         mbox.setText("UNKNOWN ERROR");

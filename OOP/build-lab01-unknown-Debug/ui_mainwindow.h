@@ -52,7 +52,6 @@ public:
     QDoubleSpinBox *rotateZField;
     QPushButton *rotateButton;
     QFormLayout *formLayout_5;
-    QPushButton *loadModelButton;
     QPushButton *clearButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -175,15 +174,10 @@ public:
 
         formLayout_5 = new QFormLayout();
         formLayout_5->setObjectName(QString::fromUtf8("formLayout_5"));
-        loadModelButton = new QPushButton(gridLayoutWidget);
-        loadModelButton->setObjectName(QString::fromUtf8("loadModelButton"));
-
-        formLayout_5->setWidget(0, QFormLayout::FieldRole, loadModelButton);
-
         clearButton = new QPushButton(gridLayoutWidget);
         clearButton->setObjectName(QString::fromUtf8("clearButton"));
 
-        formLayout_5->setWidget(1, QFormLayout::FieldRole, clearButton);
+        formLayout_5->setWidget(0, QFormLayout::FieldRole, clearButton);
 
 
         gridLayout_2->addLayout(formLayout_5, 0, 0, 1, 1);
@@ -215,7 +209,6 @@ public:
         label_5->setText(QApplication::translate("MainWindow", "y:", nullptr));
         label_6->setText(QApplication::translate("MainWindow", "z:", nullptr));
         rotateButton->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\265\321\200\320\275\321\203\321\202\321\214", nullptr));
-        loadModelButton->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
         clearButton->setText(QApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201\320\270\321\202\321\214 \320\277\321\200\320\265\320\276\320\261\321\200\320\260\320\267\320\276\320\262\320\260\320\275\320\270\321\217", nullptr));
     } // retranslateUi
 
