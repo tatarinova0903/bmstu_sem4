@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_loadModelButton_clicked()
 {
     data_action.filename = "/Users/daria/Desktop/sem4/OOP/lab01/1.txt";
-    ReturnCode rc = controller(scene, DOWNLOAD, data_action);
+    return_code rc = controller(scene, DOWNLOAD, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
@@ -43,7 +43,7 @@ void MainWindow::on_scaleButton_clicked()
 {
     double km = ui->scaleField->value();
     data_action.scale.k = km;
-    ReturnCode rc = controller(scene, SCALE, data_action);
+    return_code rc = controller(scene, SCALE, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
@@ -58,7 +58,7 @@ void MainWindow::on_moveButton_clicked()
     data_action.move.dy = dy;
     data_action.move.dz = dz;
 
-    ReturnCode rc = controller(scene, MOVE, data_action);
+    return_code rc = controller(scene, MOVE, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
@@ -73,7 +73,7 @@ void MainWindow::on_rotateButton_clicked()
     data_action.rotation.ay = ay;
     data_action.rotation.az = az;
 
-    ReturnCode rc =controller(scene, ROTATE, data_action);
+    return_code rc =controller(scene, ROTATE, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);
@@ -81,7 +81,7 @@ void MainWindow::on_rotateButton_clicked()
 
 void MainWindow::on_clearButton_clicked()
 {
-    ReturnCode rc = controller(scene, DELETE, data_action);
+    return_code rc = controller(scene, DELETE, data_action);
     if (rc) print_warning(rc);
     rc = controller(scene, DRAW, data_action);
     if (rc) print_warning(rc);

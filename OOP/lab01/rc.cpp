@@ -1,7 +1,7 @@
 #include "rc.h"
 #include <QMessageBox>
 
-void print_warning(ReturnCode rc)
+void print_warning(return_code rc)
 {
     if (rc == OK)
         return;

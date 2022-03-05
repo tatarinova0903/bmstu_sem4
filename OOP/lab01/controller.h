@@ -10,6 +10,6 @@ enum ActionType {
 };
 
 
-ReturnCode controller(myscene_t scene, ActionType action, action_t act);
+return_code controller(myscene_t scene, ActionType action, action_t act);
 
 #endif // CONTROLLER_H

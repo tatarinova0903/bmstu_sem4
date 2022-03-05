@@ -5,11 +5,11 @@
 #include "controller.h"
 #include <iostream>
 
-ReturnCode download_model(figure_t &fig, action_t act)
+return_code download_model(figure_t &fig, action_t act)
 {
     FILE *file;
     file = fopen(act.filename, "r");
-    ReturnCode rc = OK;
+    return_code rc = OK;
     if (!file)
         rc = ERR_OPEN_FILE;
     else {
@@ -29,9 +29,9 @@ void move(struct point &a, double dx, double dy, double dz)
     set_point_z(a, z);
 }
 
-ReturnCode move_fig(figure_t &fig, action_t act)
+return_code move_fig(figure_t &fig, action_t act)
 {
-    ReturnCode rc = OK;
+    return_code rc = OK;
     if (is_empty(fig))
     {
         rc = ERR_EMPTY;
@@ -98,9 +98,9 @@ void rotation(struct point &a, alpha_t alpha)
     rotation_ay(a, ay);
 }
 
-ReturnCode rotation_fig(figure_t &fig, action_t act)
+return_code rotation_fig(figure_t &fig, action_t act)
 {
-    ReturnCode rc = OK;
+    return_code rc = OK;
     if (is_empty(fig))
     {
         rc = ERR_EMPTY;
@@ -126,9 +126,9 @@ void scale(struct point &a, double k)
     set_point_z(a, z);
 }
 
-ReturnCode scale_fig(figure_t &fig, action_t act)
+return_code scale_fig(figure_t &fig, action_t act)
 {
-    ReturnCode rc = OK;
+    return_code rc = OK;
     if (is_empty(fig))
     {
         rc = ERR_EMPTY;

@@ -4,6 +4,7 @@ size_t &get_fig_n(struct figure &fig)
 {
     return fig.n;
 }
+
 int is_empty(struct figure &fig)
 {
     return !(fig.arr && fig.matrix && get_fig_n(fig));
@@ -12,7 +13,6 @@ int is_empty(struct figure &fig)
 void free_fig(struct figure &fig)
 {
     if (fig.arr)
-       // free(fig.arr);
         delete [] fig.arr;
     if (fig.matrix)
         free_matrix(fig.matrix, fig.n);

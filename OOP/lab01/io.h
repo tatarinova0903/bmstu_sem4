@@ -8,7 +8,7 @@
 #include "rc.h"
 
 void free_fig(struct figure &fig);
-ReturnCode read_from_file(struct figure &fig, FILE *f);
+return_code read_from_file(struct figure &fig, FILE *f);
 
 #endif // IO_H
 

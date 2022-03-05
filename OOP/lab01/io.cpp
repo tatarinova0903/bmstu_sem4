@@ -10,7 +10,7 @@ void rewind_file(FILE *stream)
     rewind(stream);
 }
 
-ReturnCode read_line_point(FILE *f, point_t &p)
+return_code read_line_point(FILE *f, point_t &p)
 {
    int n;
    double x,y,z;
@@ -22,14 +22,14 @@ ReturnCode read_line_point(FILE *f, point_t &p)
    return ERR_INPUT;
 }
 
-ReturnCode read_line_mt_el(FILE *f, int &mi, int &mj)
+return_code read_line_mt_el(FILE *f, int &mi, int &mj)
 {
    if (fscanf(f, "%d->%d", &mi, &mj) == 2)
        return OK;
    return ERR_INPUT;
 }
 
-ReturnCode count_points(size_t &n, FILE *f)
+return_code count_points(size_t &n, FILE *f)
 {
     if (!f)
         return ERR_OPEN_FILE;
@@ -44,7 +44,7 @@ ReturnCode count_points(size_t &n, FILE *f)
     return OK;
 }
 
-ReturnCode allocate_arr(point_t *&arr, size_t n)
+return_code allocate_arr(point_t *&arr, size_t n)
 {
     point_t *buf = new struct point[n];
     if (!buf)
@@ -53,13 +53,13 @@ ReturnCode allocate_arr(point_t *&arr, size_t n)
     return OK;
 }
 
-ReturnCode create_arr(point_t *arr, size_t n, FILE *f)
+return_code create_arr(point_t *arr, size_t n, FILE *f)
 {
     if (!f || !n || !arr)
         return ERR_INPUT;
     struct point p;
 
-    ReturnCode rc = OK;
+    return_code rc = OK;
     for (size_t i = 0; i < n && !rc; i++)
     {
         if (read_line_point(f,p) != OK)
@@ -74,7 +74,7 @@ ReturnCode create_arr(point_t *arr, size_t n, FILE *f)
     return rc;
 }
 
-ReturnCode create_matrix(matrix_t mt, size_t n, FILE *f)
+return_code create_matrix(matrix_t mt, size_t n, FILE *f)
 {
     if (!f || !n || !mt)
         return ERR_INPUT;
@@ -88,9 +88,9 @@ ReturnCode create_matrix(matrix_t mt, size_t n, FILE *f)
     return OK;
 }
 
-ReturnCode alloc_fig(figure_t &fig, size_t n)
+return_code alloc_fig(figure_t &fig, size_t n)
 {
-    ReturnCode rc = allocate_arr(fig.arr, n);
+    return_code rc = allocate_arr(fig.arr, n);
     if (rc) return rc;
     rc = allocate_matrix(fig.matrix, n);
     if (rc)
@@ -100,18 +100,18 @@ ReturnCode alloc_fig(figure_t &fig, size_t n)
     return rc;
 }
 
-ReturnCode create_fig(figure_t &fig, size_t n, FILE *f)
+return_code create_fig(figure_t &fig, size_t n, FILE *f)
 {
-    ReturnCode rc = OK;
+    return_code rc = OK;
     rc = create_arr(fig.arr, n, f);
     if (rc) return rc;
     rc = create_matrix(fig.matrix,n,f);
     return rc;
 }
 
-ReturnCode read_from_file(figure &fig, FILE *f)
+return_code read_from_file(figure &fig, FILE *f)
 {
-    ReturnCode rc = OK;
+    return_code rc = OK;
     if (!f)
     {
         rc = ERR_EMPTY;

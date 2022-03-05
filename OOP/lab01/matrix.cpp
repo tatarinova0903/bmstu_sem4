@@ -11,14 +11,14 @@ void free_matrix(matrix_t mat, size_t n)
     free(mat);
 }
 
-ReturnCode allocate_matrix(matrix_t &matrix, size_t n)
+return_code allocate_matrix(matrix_t &matrix, size_t n)
 {
     if (!n)
         return ERR_MEMORY;
     int **new_matrix =(int **)calloc(n, sizeof(int *));
     if (!new_matrix)
         return ERR_MEMORY;
-    ReturnCode rc = OK;
+    return_code rc = OK;
     size_t i;
     for (i = 0; i < n && !rc; i++)
     {
