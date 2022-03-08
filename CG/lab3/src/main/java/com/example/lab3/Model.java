@@ -1,8 +1,15 @@
 package com.example.lab3;
 
+import java.util.ArrayList;
+
 public class Model {
+    private ArrayList<Segment> segments = new ArrayList<>();
     private Double currScale = 1.0;
     private TranslateCoords translateCoords = new TranslateCoords(0.0,0.0);
+
+    public ArrayList<Segment> getSegments() {
+        return segments;
+    }
 
     public Double getCurrScale() {
         return currScale;
@@ -22,7 +29,11 @@ public class Model {
         return translateCoords;
     }
 
-    void move() {
+    void addSegment(Segment segment) {
+        segments.add(segment);
+    }
 
+    public void cancelAll() {
+        segments.clear();
     }
 }

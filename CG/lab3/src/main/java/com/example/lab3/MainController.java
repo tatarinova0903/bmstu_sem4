@@ -1,15 +1,12 @@
 package com.example.lab3;
 
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class MainController extends AnchorPane {
@@ -20,7 +17,27 @@ public class MainController extends AnchorPane {
     private final Text currMousePositionLabel = new Text("");
     private final Button cancelBtn = new Button("Отменить");
     private final Button cancelAllBtn = new Button("Сбросить");
+    private final Text segmentColorLabel = new Text("Цвет отрезка:");
+    private final ComboBox segmentColorComboBox = new ComboBox<>();
+    private final Text backgroundColorLabel = new Text("Цвет фона:");
+    private final ComboBox backgroundColorComboBox = new ComboBox<>();
+    private final Text algoritmsColorLabel = new Text("Алгоритм:");
+    private final ComboBox algoritmsComboBox = new ComboBox<>();
+    private final Text startLabel = new Text("НАЧАЛО:");
+    private final Text startXLabel = new Text("x:");
+    private final TextField startXField = new TextField();
+    private final Text startYLabel = new Text("y:");
+    private final TextField startYField = new TextField();
+    private final Text endLabel = new Text("КОНЕЦ:");
+    private final Text endXLabel = new Text("x:");
+    private final TextField endXField = new TextField();
+    private final Text endYLabel = new Text("y:");
+    private final TextField endYField = new TextField();
+    private final Button drawBtn = new Button("Построить");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
+
+    private final CustomColor colors = new CustomColor();
+    private final Algoritm algoritms = new Algoritm();
 
     public MainController() {
         HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
@@ -37,7 +54,44 @@ public class MainController extends AnchorPane {
             element.setFocusTraversable(false);
         });
 
-        VBox main = new VBox(aboutMenu, commonActionsMenu, canvas);
+        colors.getColorsStr().forEach(color -> {
+            backgroundColorComboBox.getItems().add(color);
+            segmentColorComboBox.getItems().add(color);
+        });
+        algoritms.getAlgoritms().forEach(algoritm -> {
+            algoritmsComboBox.getItems().add(algoritm);
+        });
+        backgroundColorComboBox.getSelectionModel().select(1);
+        segmentColorComboBox.getSelectionModel().selectFirst();
+        algoritmsComboBox.getSelectionModel().selectFirst();
+
+        HBox segmentActionsMenu = new HBox(
+                segmentColorLabel, segmentColorComboBox,
+                backgroundColorLabel, backgroundColorComboBox,
+                algoritmsColorLabel, algoritmsComboBox
+        );
+        segmentActionsMenu.setAlignment(Pos.CENTER);
+        segmentActionsMenu.setSpacing(10);
+        segmentActionsMenu.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
+
+        startXField.setMaxWidth(60);
+        startYField.setMaxWidth(60);
+        endXField.setMaxWidth(60);
+        endYField.setMaxWidth(60);
+        HBox inputMenu = new HBox(
+                startLabel, startXLabel, startXField, startYLabel, startYField,
+                endLabel, endXLabel, endXField, endYLabel, endYField,
+                drawBtn
+        );
+        inputMenu.setAlignment(Pos.CENTER);
+        inputMenu.setSpacing(10);
+        inputMenu.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
+
+        VBox main = new VBox(aboutMenu, commonActionsMenu, segmentActionsMenu, inputMenu, canvas);
         main.setSpacing(5);
         this.getChildren().add(main);
 
@@ -82,9 +136,25 @@ public class MainController extends AnchorPane {
         });
         cancelBtn.setOnAction(actionEvent -> {
             canvas.cancelBtnDidTap();
+            canvas.requestFocus();
         });
         cancelAllBtn.setOnAction(actionEvent -> {
             canvas.cancelAllBtnDidTap();
+            canvas.requestFocus();
+        });
+        drawBtn.setOnAction(actionEvent -> {
+            if (startXField.getText().isEmpty() || startYField.getText().isEmpty() ||
+                    endXField.getText().isEmpty() || endYField.getText().isEmpty()) {
+                return;
+            }
+            double startX = Double.parseDouble(startXField.getText());
+            double startY = Double.parseDouble(startYField.getText());
+            double endX = Double.parseDouble(endXField.getText());
+            double endY = Double.parseDouble(endYField.getText());
+            Color color = colors.getColors().get(segmentColorComboBox.getSelectionModel().getSelectedIndex());
+            AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
+            canvas.drawBtnDidTap(new Point(startX, startY), new Point(endX, endY), algoritm, color);
+            canvas.requestFocus();
         });
     }
 

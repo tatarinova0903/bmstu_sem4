@@ -27,6 +27,9 @@ class ResizableCanvas extends Canvas {
         gc.clearRect(0, 0, width * 3, height * 3);
 
         drawAxes();
+        model.getSegments().forEach(segment -> {
+            drawSegment(segment);
+        });
 
         oldWidth = width;
         oldHeight = height;
@@ -41,19 +44,26 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
+    void drawBtnDidTap(Point start, Point end, AlgoritmType algoritmType, Color color) {
+        Segment segment = new Segment(start, end, color, algoritmType);
+        model.addSegment(segment);
+        draw();
+    }
+
     void cancelBtnDidTap() {
 //        model.cancel();
 //        draw();
     }
 
     void cancelAllBtnDidTap() {
-//        model.cancelAll();
-//        draw();
+        model.cancelAll();
+        draw();
     }
 
     void scale(boolean isPlus) {
         if (isPlus) { model.incrementCurrScale(); }
         else { model.decrementCurrScale(); }
+        draw();
     }
 
     void goTo(Direction direction) {
@@ -71,7 +81,6 @@ class ResizableCanvas extends Canvas {
                 model.getTranslateCoords().incrementY();
             }
         }
-        model.move();
         draw();
     }
 
@@ -92,10 +101,19 @@ class ResizableCanvas extends Canvas {
     }
 
     private void drawAxes() {
-        gc.setFill(Color.BLACK);
+        gc.setStroke(Color.BLACK);
         gc.setLineWidth(0.4);
         Point screenCenter = translatePointFromIdeal(new Point(0, 0));
         gc.strokeLine(0, screenCenter.getY(), getWidth(), screenCenter.getY());
         gc.strokeLine(screenCenter.getX(), 0, screenCenter.getX(), getHeight());
+        gc.setLineWidth(1.0);
+    }
+
+    private void drawSegment(Segment segment) {
+        gc.setStroke(segment.getColor());
+        Point startRealPoint = translatePointFromIdeal(segment.getStart());
+        Point endRealPoint = translatePointFromIdeal(segment.getEnd());
+        gc.strokeLine(startRealPoint.getX(), startRealPoint.getY(),
+                endRealPoint.getX(), endRealPoint.getY());
     }
 }
