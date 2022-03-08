@@ -36,4 +36,9 @@ public class Model {
     public void cancelAll() {
         segments.clear();
     }
+
+    public void cancel() {
+        int lastIndex = segments.size() - 1;
+        segments.remove(lastIndex);
+    }
 }

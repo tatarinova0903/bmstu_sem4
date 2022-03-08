@@ -9,6 +9,7 @@ class ResizableCanvas extends Canvas {
     private double oldWidth = getWidth();
     private double oldHeight = getHeight();
     private final Model model = new Model();
+    private Color lastBackgroundColor = Color.WHITE;
     private Color backgroundColor = Color.WHITE;
 
     public ResizableCanvas(MainController controller) {
@@ -50,16 +51,18 @@ class ResizableCanvas extends Canvas {
     void drawBtnDidTap(Point start, Point end, AlgoritmType algoritmType, Color segmentColor, Color backgroundColor) {
         Segment segment = new Segment(start, end, segmentColor, algoritmType);
         model.addSegment(segment);
-        this.backgroundColor = backgroundColor;
+        changeBackgroundColor(backgroundColor);
         draw();
     }
 
     void cancelBtnDidTap() {
-//        model.cancel();
-//        draw();
+        model.cancel();
+        backgroundColor = lastBackgroundColor;
+        draw();
     }
 
     void cancelAllBtnDidTap() {
+        changeBackgroundColor(Color.WHITE);
         model.cancelAll();
         draw();
     }
@@ -102,6 +105,11 @@ class ResizableCanvas extends Canvas {
         newX = newX / model.getCurrScale() - model.getTranslateCoords().getX();
         newY = newY / model.getCurrScale() - model.getTranslateCoords().getY();
         return new Point(newX, newY);
+    }
+
+    private void changeBackgroundColor(Color newColor) {
+        lastBackgroundColor = backgroundColor;
+        backgroundColor = newColor;
     }
 
     private void drawAxes() {
