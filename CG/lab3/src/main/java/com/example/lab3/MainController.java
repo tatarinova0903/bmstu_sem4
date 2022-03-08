@@ -1,5 +1,6 @@
 package com.example.lab3;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -8,6 +9,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainController extends AnchorPane {
     private final Button aboutProgramBtn = new Button("О программе");
@@ -108,7 +112,16 @@ public class MainController extends AnchorPane {
     void keyboardDidTap(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case TAB -> {
-
+                if (startXField.focusedProperty().get()) { startYField.requestFocus(); }
+                else if (startYField.isFocused()) { endXField.requestFocus(); }
+                else if (endXField.isFocused()) { endYField.requestFocus(); }
+                else if (endYField.isFocused()) { startXField.requestFocus(); }
+            }
+            case ENTER -> {
+                if (!startXField.getText().isEmpty() && !startYField.getText().isEmpty() &&
+                !endXField.getText().isEmpty() && !endYField.getText().isEmpty()) {
+                    requestDrawBtn();
+                }
             }
             case LEFT -> canvas.goTo(Direction.LEFT);
             case RIGHT -> canvas.goTo(Direction.RIGHT);
@@ -118,6 +131,15 @@ public class MainController extends AnchorPane {
     }
 
     private void addHandlers() {
+        ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(startXField, startYField, endXField, endYField));
+        textFields.forEach(textField -> {
+            textField.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    keyboardDidTap(event);
+                }
+            });
+        });
         aboutAuthorBtn.setOnAction(actionEvent -> {
             aboutAuthorDidTap();
             canvas.requestFocus();
@@ -143,19 +165,24 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         drawBtn.setOnAction(actionEvent -> {
-            if (startXField.getText().isEmpty() || startYField.getText().isEmpty() ||
-                    endXField.getText().isEmpty() || endYField.getText().isEmpty()) {
-                return;
-            }
-            double startX = Double.parseDouble(startXField.getText());
-            double startY = Double.parseDouble(startYField.getText());
-            double endX = Double.parseDouble(endXField.getText());
-            double endY = Double.parseDouble(endYField.getText());
-            Color color = colors.getColors().get(segmentColorComboBox.getSelectionModel().getSelectedIndex());
-            AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
-            canvas.drawBtnDidTap(new Point(startX, startY), new Point(endX, endY), algoritm, color);
+            requestDrawBtn();
             canvas.requestFocus();
         });
+    }
+
+    private void requestDrawBtn() {
+        if (startXField.getText().isEmpty() || startYField.getText().isEmpty() ||
+                endXField.getText().isEmpty() || endYField.getText().isEmpty()) {
+            return;
+        }
+        double startX = Double.parseDouble(startXField.getText());
+        double startY = Double.parseDouble(startYField.getText());
+        double endX = Double.parseDouble(endXField.getText());
+        double endY = Double.parseDouble(endYField.getText());
+        Color segmentColor = colors.getColors().get(segmentColorComboBox.getSelectionModel().getSelectedIndex());
+        Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
+        AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
+        canvas.drawBtnDidTap(new Point(startX, startY), new Point(endX, endY), algoritm, segmentColor, canvasColor);
     }
 
     private void aboutProgramBtnDidTap() {

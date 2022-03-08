@@ -9,6 +9,7 @@ class ResizableCanvas extends Canvas {
     private double oldWidth = getWidth();
     private double oldHeight = getHeight();
     private final Model model = new Model();
+    private Color backgroundColor = Color.WHITE;
 
     public ResizableCanvas(MainController controller) {
         setOnMouseMoved(mouseEvent -> {
@@ -24,7 +25,9 @@ class ResizableCanvas extends Canvas {
         double height = getHeight();
         if (width == 0 || height == 0) { return; }
 
-        gc.clearRect(0, 0, width * 3, height * 3);
+        gc.clearRect(0, 0, width, height);
+        gc.setFill(backgroundColor);
+        gc.fillRect(0, 0, width, height);
 
         drawAxes();
         model.getSegments().forEach(segment -> {
@@ -44,9 +47,10 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
-    void drawBtnDidTap(Point start, Point end, AlgoritmType algoritmType, Color color) {
-        Segment segment = new Segment(start, end, color, algoritmType);
+    void drawBtnDidTap(Point start, Point end, AlgoritmType algoritmType, Color segmentColor, Color backgroundColor) {
+        Segment segment = new Segment(start, end, segmentColor, algoritmType);
         model.addSegment(segment);
+        this.backgroundColor = backgroundColor;
         draw();
     }
 
@@ -101,7 +105,8 @@ class ResizableCanvas extends Canvas {
     }
 
     private void drawAxes() {
-        gc.setStroke(Color.BLACK);
+        if (backgroundColor == Color.BLACK) { gc.setStroke(Color.WHITE); }
+        else { gc.setStroke(Color.BLACK); }
         gc.setLineWidth(0.4);
         Point screenCenter = translatePointFromIdeal(new Point(0, 0));
         gc.strokeLine(0, screenCenter.getY(), getWidth(), screenCenter.getY());

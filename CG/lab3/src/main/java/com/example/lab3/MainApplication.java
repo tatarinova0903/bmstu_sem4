@@ -15,13 +15,11 @@ public class MainApplication extends Application {
         MainController mainPane = new MainController();
         Scene scene = new Scene(mainPane);
         stage.setScene(scene);
-        stage.setTitle("Лабораторная работа №2");
+        stage.setTitle("Лабораторная работа №3");
         stage.setMinHeight(500);
         stage.setMinWidth(600);
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                mainPane.keyboardDidTap(ke);
-            }
+        scene.setOnKeyPressed(keyEvent -> {
+            mainPane.keyboardDidTap(keyEvent);
         });
         stage.show();
     }
