@@ -47,7 +47,7 @@ return_code fill_matrix(FILE *f, matrix_t matr, size_t n)
     }
 
     size_t i, j;
-    while (read_line_matrix(f, i, j) == OK && i < n && j < n)
+    while (read_line_matrix(f, i, j) == OK && i <= n && j <= n)
     {
         matr[i - 1][j - 1] = 1;
         matr[j - 1][i - 1] = 1;

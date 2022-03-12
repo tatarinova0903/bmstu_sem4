@@ -21,7 +21,7 @@ return_code download_model(figure_t &fig, data_t act)
     return rc;
 }
 
-void move(point_t &a, double dx, double dy, double dz)
+void move_point(point_t &a, double dx, double dy, double dz)
 {
     double x = get_point_x(a) + dx;
     double y = get_point_y(a) + dy;
@@ -45,17 +45,17 @@ return_code move_fig(figure_t &fig, data_t act)
         double dz = get_deltaz(act);
         for (size_t i = 0; i < get_fig_n(fig); i++)
         {
-            move(get_point(fig, i), dx, dy, dz);
+            move_point(get_point(fig, i), dx, dy, dz);
         }
     }
     return rc;
 }
 
-void rotation_ax(point_t &a, double ax)
+void rotate_ax(point_t &a, double ax)
 {
     double ya = get_point_y(a);
     double za = get_point_z(a);
-    double alpha = ax * M_PI / 180;
+    double alpha = ax * M_PI / 180.0;
     double cosa = cos(alpha);
     double sina = sin(alpha);
     double z = za * cosa - ya * sina;
@@ -64,11 +64,11 @@ void rotation_ax(point_t &a, double ax)
     set_point_y(a, y);
 }
 
-void rotation_ay(point_t &a, double ay)
+void rotate_ay(point_t &a, double ay)
 {
     double xa = get_point_x(a);
     double za = get_point_z(a);
-    double alpha = ay * M_PI / 180;
+    double alpha = ay * M_PI / 180.0;
     double cosa = cos(alpha);
     double sina = sin(alpha);
     double x = xa * cosa + za * sina;
@@ -77,11 +77,11 @@ void rotation_ay(point_t &a, double ay)
     set_point_z(a, z);
 }
 
-void rotation_az(point_t &a, double az)
+void rotate_az(point_t &a, double az)
 {
     double xa = get_point_x(a);
     double ya = get_point_y(a);
-    double alpha = az * M_PI / 180;
+    double alpha = az * M_PI / 180.0;
     double cosaz = cos(alpha);
     double sinaz = sin(alpha);
     double x = xa * cosaz - ya * sinaz;
@@ -90,17 +90,17 @@ void rotation_az(point_t &a, double az)
     set_point_y(a, y);
 }
 
-void rotation(point_t &a, alpha_t alpha)
+void rotate_point(point_t &a, alpha_t alpha)
 {
     double ax = get_alphax(alpha);
     double ay = get_alphay(alpha);
     double az = get_alphaz(alpha);
-    rotation_az(a, az);
-    rotation_ax(a, ax);
-    rotation_ay(a, ay);
+    rotate_az(a, az);
+    rotate_ax(a, ax);
+    rotate_ay(a, ay);
 }
 
-return_code rotation_fig(figure_t &fig, data_t act)
+return_code rotate_fig(figure_t &fig, data_t act)
 {
     return_code rc = OK;
     if (is_empty(fig))
@@ -112,13 +112,13 @@ return_code rotation_fig(figure_t &fig, data_t act)
         alpha_t alpha = get_alpha(act);
         for (size_t i = 0; i < get_fig_n(fig); i++)
         {
-            rotation(get_point(fig, i), alpha);
+            rotate_point(get_point(fig, i), alpha);
         }
     }
     return rc;
 }
 
-void scale(point_t &a, double k)
+void scale_point(point_t &a, double k)
 {
     double x = k * get_point_x(a);
     double y = k * get_point_y(a);
@@ -140,7 +140,7 @@ return_code scale_fig(figure_t &fig, data_t act)
         double k = get_k(act);
         for (size_t i = 0; i < get_fig_n(fig); i++)
         {
-            scale(get_point(fig, i), k);
+            scale_point(get_point(fig, i), k);
         }
     }
     return rc;

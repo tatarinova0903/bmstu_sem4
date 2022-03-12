@@ -13,7 +13,7 @@ return_code controller(myscene_t scene, data_type action, data_t act)
         rc = move_fig(fig, act);
         break;
     case ROTATE:
-        rc = rotation_fig(fig, act);
+        rc = rotate_fig(fig, act);
         break;
     case SCALE:
         rc = scale_fig(fig, act);
