@@ -16,7 +16,7 @@ return_code alloc_fig(figure_t &fig, size_t n)
     return rc;
 }
 
-return_code create_arr(point_t *arr, size_t n, FILE *f)
+return_code create_arr(FILE *f, point_t *arr, size_t n)
 {
     if (!f || !n || !arr)
         return ERR_INPUT;
@@ -54,7 +54,7 @@ return_code create_matrix(FILE *f, matrix_t mt, size_t n)
 return_code fill_fig(FILE *f, figure_t &fig, size_t n)
 {
     return_code rc = OK;
-    rc = create_arr(fig.arr, n, f);
+    rc = create_arr(f, fig.arr, n);
     if (rc == OK)
     {
         rc = create_matrix(f, fig.matrix, n);
