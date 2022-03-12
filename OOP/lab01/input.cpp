@@ -3,8 +3,6 @@
 #include "points.h"
 #include "figure.h"
 
-#include <iostream>
-
 void rewind_file(FILE *stream)
 {
     rewind(stream);
@@ -13,25 +11,27 @@ void rewind_file(FILE *stream)
 return_code read_line_point(FILE *f, point_t &p)
 {
    int n;
-   double x,y,z;
-   if (fscanf(f, "%d %lf %lf %lf",&n, &x, &y, &z) == 4)
+   double x, y, z;
+   if (fscanf(f, "%d %lf %lf %lf", &n, &x, &y, &z) == 4)
    {
-       set_point(p,x,y,z,n);
+       set_point(p, x, y, z, n);
        return OK;
    }
    return ERR_INPUT;
 }
 
-return_code read_line_mt_el(FILE *f, int &mi, int &mj)
+return_code read_line_matrix(FILE *f, int &i, int &j)
 {
-   if (fscanf(f, "%d->%d", &mi, &mj) == 2)
+   if (fscanf(f, "%d->%d", &i, &j) == 2)
+   {
        return OK;
+   }
    return ERR_INPUT;
 }
 
-int count_points(FILE *f)
+int points_amount(FILE *f)
 {
-    struct point p;
+    point_t p;
     size_t num = 0;
     while (read_line_point(f, p) == OK)
     {
@@ -41,27 +41,22 @@ int count_points(FILE *f)
     return num;
 }
 
-return_code read_from_file(figure &fig, FILE *f)
+return_code read_from_file(FILE *f, figure &fig)
 {
-    return_code rc = OK;
     if (!f)
     {
-        rc = ERR_EMPTY;
+        return ERR_EMPTY;
     }
-    else
-    {
-        free_fig(fig);
-        fig = init_fig();
 
-        fig.n = count_points(f);
-        rc = alloc_fig(fig, fig.n);
-        if (rc == OK)
+    return_code rc = OK;
+    set_fig_n(fig, points_amount(f));
+    rc = alloc_fig(fig, get_fig_n(fig));
+    if (rc == OK)
+    {
+        rc = fill_fig(f, fig, get_fig_n(fig));
+        if (rc != OK)
         {
-            rc = create_fig(fig, fig.n, f);
-            if (rc != OK)
-            {
-                free_fig(fig);
-            }
+            free_fig(fig);
         }
     }
     return rc;

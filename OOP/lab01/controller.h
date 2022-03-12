@@ -4,10 +4,11 @@
 #include "myscene.h"
 #include "action.h"
 
-enum ActionType {
+enum data_type
+{
     ROTATE, SCALE, MOVE, DOWNLOAD, DELETE, DRAW
 };
 
-return_code controller(myscene_t scene, ActionType action, action_t act);
+return_code controller(myscene_t scene, data_type action, data_t act);
 
 #endif // CONTROLLER_H

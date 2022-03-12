@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     action.cpp \
+    array.cpp \
     controller.cpp \
     figure.cpp \
     functions.cpp \
@@ -17,20 +18,19 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
-    memory.cpp \
     myscene.cpp \
     points.cpp \
     return_code.cpp
 
 HEADERS += \
     action.h \
+    array.h \
     controller.h \
     figure.h \
     functions.h \
     input.h \
     mainwindow.h \
     matrix.h \
-    memory.h \
     myscene.h \
     points.h \
     return_code.h

@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "functions.h"
 
-return_code controller(myscene_t scene, ActionType action, action_t act)
+return_code controller(myscene_t scene, data_type action, data_t act)
 {
     static figure_t fig = init_fig();
     return_code rc = OK;
@@ -10,13 +10,13 @@ return_code controller(myscene_t scene, ActionType action, action_t act)
         rc = download_model(fig, act);
         break;
     case MOVE:
-        rc = move_fig(fig,act);
+        rc = move_fig(fig, act);
         break;
     case ROTATE:
-        rc = rotation_fig(fig,act);
+        rc = rotation_fig(fig, act);
         break;
     case SCALE:
-        rc = scale_fig(fig,act);
+        rc = scale_fig(fig, act);
         break;
     case DELETE:
         clear_fig(fig);

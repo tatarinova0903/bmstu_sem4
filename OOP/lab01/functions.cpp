@@ -4,21 +4,24 @@
 #include "action.h"
 #include "controller.h"
 
-return_code download_model(figure_t &fig, action_t act)
+return_code download_model(figure_t &fig, data_t act)
 {
     FILE *file;
-    file = fopen(act.filename, "r");
+    file = fopen(get_filename(act), "r");
     return_code rc = OK;
     if (!file)
+    {
         rc = ERR_OPEN_FILE;
-    else {
-        rc = read_from_file(fig, file);
+    }
+    else
+    {
+        rc = read_from_file(file, fig);
         fclose(file);
     }
     return rc;
 }
 
-void move(struct point &a, double dx, double dy, double dz)
+void move(point_t &a, double dx, double dy, double dz)
 {
     double x = get_point_x(a) + dx;
     double y = get_point_y(a) + dy;
@@ -28,7 +31,7 @@ void move(struct point &a, double dx, double dy, double dz)
     set_point_z(a, z);
 }
 
-return_code move_fig(figure_t &fig, action_t act)
+return_code move_fig(figure_t &fig, data_t act)
 {
     return_code rc = OK;
     if (is_empty(fig))
@@ -48,11 +51,11 @@ return_code move_fig(figure_t &fig, action_t act)
     return rc;
 }
 
-void rotation_ax(struct point &a, double ax)
+void rotation_ax(point_t &a, double ax)
 {
     double ya = get_point_y(a);
     double za = get_point_z(a);
-    double alpha = ax * PI / 180;
+    double alpha = ax * M_PI / 180;
     double cosa = cos(alpha);
     double sina = sin(alpha);
     double z = za * cosa - ya * sina;
@@ -61,24 +64,24 @@ void rotation_ax(struct point &a, double ax)
     set_point_y(a, y);
 }
 
-void rotation_ay(struct point &a, double ay)
+void rotation_ay(point_t &a, double ay)
 {
     double xa = get_point_x(a);
     double za = get_point_z(a);
-    double alpha = ay * PI / 180;
+    double alpha = ay * M_PI / 180;
     double cosa = cos(alpha);
     double sina = sin(alpha);
     double x = xa * cosa + za * sina;
-    double z = - xa * sina + za * cosa;
+    double z = -xa * sina + za * cosa;
     set_point_x(a, x);
     set_point_z(a, z);
 }
 
-void rotation_az(struct point &a, double az)
+void rotation_az(point_t &a, double az)
 {
     double xa = get_point_x(a);
     double ya = get_point_y(a);
-    double alpha = az * PI / 180;
+    double alpha = az * M_PI / 180;
     double cosaz = cos(alpha);
     double sinaz = sin(alpha);
     double x = xa * cosaz - ya * sinaz;
@@ -87,7 +90,7 @@ void rotation_az(struct point &a, double az)
     set_point_y(a, y);
 }
 
-void rotation(struct point &a, alpha_t alpha)
+void rotation(point_t &a, alpha_t alpha)
 {
     double ax = get_alphax(alpha);
     double ay = get_alphay(alpha);
@@ -97,7 +100,7 @@ void rotation(struct point &a, alpha_t alpha)
     rotation_ay(a, ay);
 }
 
-return_code rotation_fig(figure_t &fig, action_t act)
+return_code rotation_fig(figure_t &fig, data_t act)
 {
     return_code rc = OK;
     if (is_empty(fig))
@@ -115,7 +118,7 @@ return_code rotation_fig(figure_t &fig, action_t act)
     return rc;
 }
 
-void scale(struct point &a, double k)
+void scale(point_t &a, double k)
 {
     double x = k * get_point_x(a);
     double y = k * get_point_y(a);
@@ -125,7 +128,7 @@ void scale(struct point &a, double k)
     set_point_z(a, z);
 }
 
-return_code scale_fig(figure_t &fig, action_t act)
+return_code scale_fig(figure_t &fig, data_t act)
 {
     return_code rc = OK;
     if (is_empty(fig))
@@ -152,16 +155,14 @@ void clear_fig(figure_t &fig)
 void draw_fig(figure_t &fig, myscene_t scene)
 {
     clear_scene(scene);
-    draw_model(fig,scene);
+    draw_model(fig, scene);
 }
 
 void draw_model(figure_t fig, myscene_t scene)
 {
-    scene.scene->addEllipse(0, 0 , 2, 2);
-
-    for (size_t i = 0; i < get_fig_n(fig); i++)
+    for (size_t i = 1; i < get_fig_n(fig); i++)
     {
-        for (size_t j = 0; j < i + 1; j++)
+        for (size_t j = 0; j < i; j++)
         {
             if (get_matrix_el(fig, i, j) != 0)
             {

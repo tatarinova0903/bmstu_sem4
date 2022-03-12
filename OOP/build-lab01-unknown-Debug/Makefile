@@ -53,6 +53,7 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../lab01/action.cpp \
+		../lab01/array.cpp \
 		../lab01/controller.cpp \
 		../lab01/figure.cpp \
 		../lab01/functions.cpp \
@@ -60,11 +61,11 @@ SOURCES       = ../lab01/action.cpp \
 		../lab01/main.cpp \
 		../lab01/mainwindow.cpp \
 		../lab01/matrix.cpp \
-		../lab01/memory.cpp \
 		../lab01/myscene.cpp \
 		../lab01/points.cpp \
 		../lab01/return_code.cpp moc_mainwindow.cpp
 OBJECTS       = action.o \
+		array.o \
 		controller.o \
 		figure.o \
 		functions.o \
@@ -72,7 +73,6 @@ OBJECTS       = action.o \
 		main.o \
 		mainwindow.o \
 		matrix.o \
-		memory.o \
 		myscene.o \
 		points.o \
 		return_code.o \
@@ -256,16 +256,17 @@ DIST          = ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_pre
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/yacc.prf \
 		../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/lex.prf \
 		../lab01/lab01.pro ../lab01/action.h \
+		../lab01/array.h \
 		../lab01/controller.h \
 		../lab01/figure.h \
 		../lab01/functions.h \
 		../lab01/input.h \
 		../lab01/mainwindow.h \
 		../lab01/matrix.h \
-		../lab01/memory.h \
 		../lab01/myscene.h \
 		../lab01/points.h \
 		../lab01/return_code.h ../lab01/action.cpp \
+		../lab01/array.cpp \
 		../lab01/controller.cpp \
 		../lab01/figure.cpp \
 		../lab01/functions.cpp \
@@ -273,7 +274,6 @@ DIST          = ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/spec_pre
 		../lab01/main.cpp \
 		../lab01/mainwindow.cpp \
 		../lab01/matrix.cpp \
-		../lab01/memory.cpp \
 		../lab01/myscene.cpp \
 		../lab01/points.cpp \
 		../lab01/return_code.cpp
@@ -694,8 +694,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt5.12.12/5.12.12/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../lab01/action.h ../lab01/controller.h ../lab01/figure.h ../lab01/functions.h ../lab01/input.h ../lab01/mainwindow.h ../lab01/matrix.h ../lab01/memory.h ../lab01/myscene.h ../lab01/points.h ../lab01/return_code.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lab01/action.cpp ../lab01/controller.cpp ../lab01/figure.cpp ../lab01/functions.cpp ../lab01/input.cpp ../lab01/main.cpp ../lab01/mainwindow.cpp ../lab01/matrix.cpp ../lab01/memory.cpp ../lab01/myscene.cpp ../lab01/points.cpp ../lab01/return_code.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lab01/action.h ../lab01/array.h ../lab01/controller.h ../lab01/figure.h ../lab01/functions.h ../lab01/input.h ../lab01/mainwindow.h ../lab01/matrix.h ../lab01/myscene.h ../lab01/points.h ../lab01/return_code.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lab01/action.cpp ../lab01/array.cpp ../lab01/controller.cpp ../lab01/figure.cpp ../lab01/functions.cpp ../lab01/input.cpp ../lab01/main.cpp ../lab01/mainwindow.cpp ../lab01/matrix.cpp ../lab01/myscene.cpp ../lab01/points.cpp ../lab01/return_code.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../lab01/mainwindow.ui $(DISTDIR)/
 
 
@@ -1063,6 +1063,11 @@ action.o: ../lab01/action.cpp ../lab01/action.h \
 		../lab01/return_code.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o action.o ../lab01/action.cpp
 
+array.o: ../lab01/array.cpp ../lab01/array.h \
+		../lab01/points.h \
+		../lab01/return_code.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o array.o ../lab01/array.cpp
+
 controller.o: ../lab01/controller.cpp ../lab01/controller.h \
 		../lab01/myscene.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
@@ -1367,7 +1372,7 @@ figure.o: ../lab01/figure.cpp ../lab01/figure.h \
 		../lab01/matrix.h \
 		../lab01/return_code.h \
 		../lab01/input.h \
-		../lab01/memory.h
+		../lab01/array.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o figure.o ../lab01/figure.cpp
 
 functions.o: ../lab01/functions.cpp ../lab01/input.h \
@@ -2280,15 +2285,8 @@ mainwindow.o: ../lab01/mainwindow.cpp ../lab01/mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lab01/mainwindow.cpp
 
 matrix.o: ../lab01/matrix.cpp ../lab01/matrix.h \
-		../lab01/return_code.h \
-		../lab01/figure.h \
-		../lab01/points.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matrix.o ../lab01/matrix.cpp
-
-memory.o: ../lab01/memory.cpp ../lab01/memory.h \
-		../lab01/points.h \
 		../lab01/return_code.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memory.o ../lab01/memory.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matrix.o ../lab01/matrix.cpp
 
 myscene.o: ../lab01/myscene.cpp ../lab01/myscene.h \
 		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
@@ -2300,9 +2298,9 @@ myscene.o: ../lab01/myscene.cpp ../lab01/myscene.h \
 points.o: ../lab01/points.cpp ../lab01/points.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o points.o ../lab01/points.cpp
 
-return_code.o: ../lab01/return_code.cpp ../lab01/return_code.h \
-		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
-		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h
+return_code.o: ../lab01/return_code.cpp ../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
+		../../../../Qt5.12.12/5.12.12/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../lab01/return_code.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o return_code.o ../lab01/return_code.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 

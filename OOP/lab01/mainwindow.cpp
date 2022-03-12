@@ -23,15 +23,21 @@ MainWindow::MainWindow(QWidget *parent) :
     fig = init_fig();
     data_action.filename = FILE_NAME;
     return_code rc = controller(scene, DOWNLOAD, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
     rc = controller(scene, DRAW, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete [] fig.arr;
-    free_matrix(fig.matrix, fig.n);
+    free_matrix(fig.matrix, get_fig_n(fig));
     delete ui;
 }
 
@@ -40,9 +46,15 @@ void MainWindow::on_scaleButton_clicked()
     double km = ui->scaleField->value();
     data_action.scale.k = km;
     return_code rc = controller(scene, SCALE, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
     rc = controller(scene, DRAW, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
 }
 
 void MainWindow::on_moveButton_clicked()
@@ -55,9 +67,15 @@ void MainWindow::on_moveButton_clicked()
     data_action.move.dz = dz;
 
     return_code rc = controller(scene, MOVE, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
     rc = controller(scene, DRAW, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
 }
 
 void MainWindow::on_rotateButton_clicked()
@@ -70,9 +88,15 @@ void MainWindow::on_rotateButton_clicked()
     data_action.rotation.az = az;
 
     return_code rc = controller(scene, ROTATE, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
     rc = controller(scene, DRAW, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
 }
 
 void MainWindow::on_clearButton_clicked()
@@ -81,8 +105,14 @@ void MainWindow::on_clearButton_clicked()
     if (rc) print_warning(rc);
     data_action.filename = FILE_NAME;
     rc = controller(scene, DOWNLOAD, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
     rc = controller(scene, DRAW, data_action);
-    if (rc) print_warning(rc);
+    if (rc)
+    {
+        print_warning(rc);
+    }
 }
 

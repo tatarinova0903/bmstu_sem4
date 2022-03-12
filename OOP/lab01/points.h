@@ -1,7 +1,6 @@
 #ifndef POINTS_H
 #define POINTS_H
 
-
 typedef struct point point_t;
 
 struct point

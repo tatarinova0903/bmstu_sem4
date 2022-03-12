@@ -1,21 +1,21 @@
 #include"points.h"
 
-double get_point_x(struct point a)
+double get_point_x(point_t a)
 {
     return a.x;
 }
 
-double get_point_y(struct point a)
+double get_point_y(point_t a)
 {
     return a.y;
 }
 
-double get_point_z(struct point a)
+double get_point_z(point_t a)
 {
     return a.z;
 }
 
-int get_point_n(struct point a)
+int get_point_n(point_t a)
 {
     return a.n;
 }

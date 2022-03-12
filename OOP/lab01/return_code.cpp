@@ -14,7 +14,7 @@ void print_warning(return_code rc)
         mbox.setText("Задана пустая модель");
         break;
     case ERR_INPUT:
-        mbox.setText("Ошибка входныъ данных");
+        mbox.setText("Ошибка входных данных");
         break;
     case ERR_MEMORY:
         mbox.setText("Ошибка при работе с памятью");
