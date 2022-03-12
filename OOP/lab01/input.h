@@ -7,9 +7,9 @@
 #include "return_code.h"
 #include "figure.h"
 
-return_code read_from_file(FILE *f, figure_t &fig);
-return_code read_line_point(FILE *f, point_t &p);
-return_code read_line_matrix(FILE *f, size_t &i, size_t &j);
+return_code read_from_file(figure_t &fig, FILE *f);
+return_code read_line_point(point_t &p, FILE *f);
+return_code read_line_matrix(size_t &i, size_t &j, FILE *f);
 
 #endif // INPUT_H
 

@@ -1,6 +1,6 @@
 #include "action.h"
 
-point_t &get_point(figure_t &fig, int i)
+point_t &get_point(figure_t fig, int i)
 {
     return get_array_el(fig, i);
 }

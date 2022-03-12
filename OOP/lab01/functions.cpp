@@ -6,17 +6,26 @@
 
 return_code download_model(figure_t &fig, data_t act)
 {
-    FILE *file;
-    file = fopen(get_filename(act), "r");
+    FILE *f;
+    f = fopen(get_filename(act), "r");
     return_code rc = OK;
-    if (!file)
+    if (!f)
     {
         rc = ERR_OPEN_FILE;
     }
     else
     {
-        rc = read_from_file(file, fig);
-        fclose(file);
+        figure_t temp = init_fig();
+        rc = read_from_file(temp, f);
+        fclose(f);
+        if (rc == OK)
+        {
+            fig = temp;
+        }
+        else
+        {
+            clear_fig(temp);
+        }
     }
     return rc;
 }
@@ -51,17 +60,23 @@ return_code move_fig(figure_t &fig, data_t act)
     return rc;
 }
 
+void rotate(double &a, double &b, double alpha)
+{
+    double radians = alpha * M_PI / 180.0;
+    double cosa = cos(radians);
+    double sina = sin(radians);
+    double copy_a = a;
+    a = a * cosa - b * sina;
+    b = copy_a * sina + b * cosa;
+}
+
 void rotate_ax(point_t &a, double ax)
 {
     double ya = get_point_y(a);
     double za = get_point_z(a);
-    double alpha = ax * M_PI / 180.0;
-    double cosa = cos(alpha);
-    double sina = sin(alpha);
-    double z = za * cosa - ya * sina;
-    double y = za * sina + ya * cosa;
-    set_point_z(a, z);
-    set_point_y(a, y);
+    rotate(za, ya, ax);
+    set_point_z(a, za);
+    set_point_y(a, ya);
 }
 
 void rotate_ay(point_t &a, double ay)
@@ -81,13 +96,9 @@ void rotate_az(point_t &a, double az)
 {
     double xa = get_point_x(a);
     double ya = get_point_y(a);
-    double alpha = az * M_PI / 180.0;
-    double cosaz = cos(alpha);
-    double sinaz = sin(alpha);
-    double x = xa * cosaz - ya * sinaz;
-    double y = xa * sinaz + ya * cosaz;
-    set_point_x(a, x);
-    set_point_y(a, y);
+    rotate(xa, ya, az);
+    set_point_x(a, xa);
+    set_point_y(a, ya);
 }
 
 void rotate_point(point_t &a, alpha_t alpha)
@@ -152,13 +163,13 @@ void clear_fig(figure_t &fig)
     free_fig(fig);
 }
 
-void draw_fig(figure_t &fig, myscene_t scene)
+void draw_fig(const figure_t &fig, const myscene_t scene)
 {
     clear_scene(scene);
     draw_model(fig, scene);
 }
 
-void draw_model(figure_t fig, myscene_t scene)
+void draw_model(const figure_t fig, const myscene_t scene)
 {
     for (size_t i = 1; i < get_fig_n(fig); i++)
     {

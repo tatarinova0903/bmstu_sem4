@@ -8,7 +8,7 @@ void rewind_file(FILE *stream)
     rewind(stream);
 }
 
-return_code read_line_point(FILE *f, point_t &p)
+return_code read_line_point(point_t &p, FILE *f)
 {
    int n;
    double x, y, z;
@@ -20,7 +20,7 @@ return_code read_line_point(FILE *f, point_t &p)
    return ERR_INPUT;
 }
 
-return_code read_line_matrix(FILE *f, size_t &i, size_t &j)
+return_code read_line_matrix(size_t &i, size_t &j, FILE *f)
 {
    if (fscanf(f, "%zd->%zd", &i, &j) == 2)
    {
@@ -33,7 +33,7 @@ int points_amount(FILE *f)
 {
     point_t p;
     size_t num = 0;
-    while (read_line_point(f, p) == OK)
+    while (read_line_point(p, f) == OK)
     {
         num++;
     }
@@ -41,7 +41,7 @@ int points_amount(FILE *f)
     return num;
 }
 
-return_code read_from_file(FILE *f, figure &fig)
+return_code read_from_file(figure &fig, FILE *f)
 {
     if (!f)
     {
@@ -52,7 +52,7 @@ return_code read_from_file(FILE *f, figure &fig)
     rc = alloc_fig(fig, get_fig_n(fig));
     if (rc == OK)
     {
-        rc = fill_fig(f, fig, get_fig_n(fig));
+        rc = fill_fig(fig, get_fig_n(fig), f);
         if (rc != OK)
         {
             free_fig(fig);
