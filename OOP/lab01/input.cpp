@@ -20,9 +20,9 @@ return_code read_line_point(FILE *f, point_t &p)
    return ERR_INPUT;
 }
 
-return_code read_line_matrix(FILE *f, int &i, int &j)
+return_code read_line_matrix(FILE *f, size_t &i, size_t &j)
 {
-   if (fscanf(f, "%d->%d", &i, &j) == 2)
+   if (fscanf(f, "%zd->%zd", &i, &j) == 2)
    {
        return OK;
    }
@@ -47,7 +47,6 @@ return_code read_from_file(FILE *f, figure &fig)
     {
         return ERR_EMPTY;
     }
-
     return_code rc = OK;
     set_fig_n(fig, points_amount(f));
     rc = alloc_fig(fig, get_fig_n(fig));
