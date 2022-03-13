@@ -1,10 +1,14 @@
 package com.example.lab3;
 
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.lang.Math;
+import java.util.ArrayList;
 
 class ResizableCanvas extends Canvas {
     private final int INTENSITY = 255;
@@ -72,6 +76,20 @@ class ResizableCanvas extends Canvas {
             curDegree += radiansStep;
         }
         draw();
+    }
+
+    void drawChartBtnDidTap(int length, double angle, AlgoritmType algoritm) {
+        ArrayList<Integer> angles = new ArrayList<>();
+        ArrayList<Integer> steps = new ArrayList<>();
+        int curAngle = 0;
+        while (curAngle < 90) {
+            Point startPoint = new Point(0.0, 0.0);
+            Point endPoint = getPoint(length, curAngle);
+            angles.add(curAngle);
+            steps.add(stepCount(translatePointFromIdeal(startPoint), translatePointFromIdeal(endPoint), algoritm));
+            curAngle += angle;
+        }
+        showChart(algoritm, angles, steps);
     }
 
     void cancelBtnDidTap() {
@@ -486,5 +504,36 @@ class ResizableCanvas extends Canvas {
 
     private Point getPoint(int length, double angle) {
         return new Point(Math.cos(angle) * length, Math.sin(angle) * length);
+    }
+
+    private void showChart(AlgoritmType algoritm, ArrayList<Integer> angles, ArrayList<Integer> steps) {
+        ChartController chartControllerPane = new ChartController(algoritm, angles, steps);
+        Scene scene = new Scene(chartControllerPane);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setMinHeight(500);
+        stage.setMinWidth(600);
+        stage.show();
+    }
+
+    private int stepCount(Point start, Point end, AlgoritmType algoritm) {
+        switch (algoritm) {
+            case CDA -> {
+                return CDA(start, end, false, backgroundColor);
+            }
+            case BREZ_INT -> {
+                return BREZ_INT(start, end, false, backgroundColor);
+            }
+            case BREZ_DOUBLE -> {
+                return BREZ_DOUBLE(start, end, false, backgroundColor);
+            }
+            case BREZ_SMOOTH -> {
+                return BREZ_SMOOTH(start, end, false, backgroundColor);
+            }
+            case VU -> {
+                return VU(start, end, false, backgroundColor);
+            }
+        }
+        return 0;
     }
 }

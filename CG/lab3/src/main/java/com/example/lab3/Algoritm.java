@@ -31,4 +31,16 @@ public class Algoritm {
         if (alg == "ВУ") { return AlgoritmType.VU; }
         return AlgoritmType.STANDARD;
     }
+
+    public static String getName(AlgoritmType algoritmType) {
+        switch (algoritmType) {
+            case STANDARD -> { return "Стандартный"; }
+            case VU -> { return "ВУ"; }
+            case CDA -> { return "ЦДА"; }
+            case BREZ_INT -> { return "Брезенхем целые числа"; }
+            case BREZ_DOUBLE -> { return "Брезенхем действительные числа"; }
+            case BREZ_SMOOTH -> { return "Брезенхем с устранением ступенчатости"; }
+        }
+        return "";
+    }
 }

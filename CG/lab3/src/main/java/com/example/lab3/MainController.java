@@ -43,6 +43,7 @@ public class MainController extends AnchorPane {
     private final Text stepLabel = new Text("ШАГ:");
     private final TextField stepField = new TextField();
     private final Button drawPuchokBtn = new Button("Построить пучок");
+    private final Button drawChartBtn = new Button("Построить диаграмму");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     private final CustomColor colors = new CustomColor();
@@ -98,7 +99,7 @@ public class MainController extends AnchorPane {
         HBox puchokMenu = new HBox(
                 lengthLabel, lengthField,
                 stepLabel, stepField,
-                drawPuchokBtn
+                drawPuchokBtn, drawChartBtn
         );
         puchokMenu.setAlignment(Pos.CENTER);
         puchokMenu.setSpacing(10);
@@ -185,6 +186,16 @@ public class MainController extends AnchorPane {
         });
         drawPuchokBtn.setOnAction(actionEvent -> {
             requestDrawPuchokBtn();
+            canvas.requestFocus();
+        });
+        drawChartBtn.setOnAction(actionEvent -> {
+            if (lengthField.getText().isEmpty() || stepField.getText().isEmpty()) {
+                return;
+            }
+            int length = Integer.parseInt(lengthField.getText());
+            double step = Double.parseDouble(stepField.getText());
+            AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
+            canvas.drawChartBtnDidTap(length, step, algoritm);
             canvas.requestFocus();
         });
     }
