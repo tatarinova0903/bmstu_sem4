@@ -417,7 +417,7 @@ class ResizableCanvas extends Canvas {
                 m1 *= -1;
                 shag *= -1;
             }
-            for(int y = (int) Math.round(p_start.getY()); y < Math.round(p_end.getY()) + 1; y += shag) {
+            for(int y = (int) Math.round(p_start.getY()); shag < 0 ? (y > Math.round(p_end.getY()) + 1) : (y < Math.round(p_end.getY()) + 1); y += shag) {
                 double d1 = p_start.getX() - Math.floor(p_start.getX());
                 double d2 = 1 - d1;
                 if (draw) {
@@ -443,7 +443,7 @@ class ResizableCanvas extends Canvas {
                 shag *= -1;
                 m1 *= -1;
             }
-            for (int x = (int) Math.round(p_start.getX()); x < Math.round(p_end.getX()) + 1; x += shag) {
+            for (int x = (int) Math.round(p_start.getX()); shag < 0 ? (x > Math.round(p_end.getX()) + 1) : (x < Math.round(p_end.getX()) + 1); x += shag) {
                 double d1 = p_start.getY() - Math.floor(p_start.getY());
                 double d2 = 1 - d1;
                 if (draw) {
