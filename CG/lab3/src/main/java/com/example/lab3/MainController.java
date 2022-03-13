@@ -37,21 +37,19 @@ public class MainController extends AnchorPane {
     private final TextField endXField = new TextField();
     private final Text endYLabel = new Text("y:");
     private final TextField endYField = new TextField();
-    private final Button drawBtn = new Button("Построить");
+    private final Button drawBtn = new Button("Построить отрезок");
+    private final Text lengthLabel = new Text("ДЛИНА:");
+    private final TextField lengthField = new TextField();
+    private final Text stepLabel = new Text("ШАГ:");
+    private final TextField stepField = new TextField();
+    private final Button drawPuchokBtn = new Button("Построить пучок");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     private final CustomColor colors = new CustomColor();
     private final Algoritm algoritms = new Algoritm();
 
     public MainController() {
-        HBox aboutMenu = new HBox(aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
-        aboutMenu.setAlignment(Pos.CENTER);
-        aboutMenu.setSpacing(10);
-        aboutMenu.getChildren().forEach(element -> {
-            element.setFocusTraversable(false);
-        });
-
-        HBox commonActionsMenu = new HBox(cancelBtn, cancelAllBtn, plusBtn, minusBtn);
+        HBox commonActionsMenu = new HBox(cancelBtn, cancelAllBtn, plusBtn, minusBtn, aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
         commonActionsMenu.setAlignment(Pos.CENTER);
         commonActionsMenu.setSpacing(10);
         commonActionsMenu.getChildren().forEach(element -> {
@@ -95,7 +93,20 @@ public class MainController extends AnchorPane {
             element.setFocusTraversable(false);
         });
 
-        VBox main = new VBox(aboutMenu, commonActionsMenu, segmentActionsMenu, inputMenu, canvas);
+        lengthField.setMaxWidth(60);
+        stepField.setMaxWidth(60);
+        HBox puchokMenu = new HBox(
+                lengthLabel, lengthField,
+                stepLabel, stepField,
+                drawPuchokBtn
+        );
+        puchokMenu.setAlignment(Pos.CENTER);
+        puchokMenu.setSpacing(10);
+        puchokMenu.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+        });
+
+        VBox main = new VBox(commonActionsMenu, segmentActionsMenu, inputMenu, puchokMenu, canvas);
         main.setSpacing(5);
         this.getChildren().add(main);
 
@@ -116,11 +127,15 @@ public class MainController extends AnchorPane {
                 else if (startYField.isFocused()) { endXField.requestFocus(); }
                 else if (endXField.isFocused()) { endYField.requestFocus(); }
                 else if (endYField.isFocused()) { startXField.requestFocus(); }
+                else if (lengthField.isFocused()) { stepField.requestFocus(); }
+                else if (stepField.isFocused()) { lengthField.requestFocus(); }
             }
             case ENTER -> {
-                if (!startXField.getText().isEmpty() && !startYField.getText().isEmpty() &&
-                !endXField.getText().isEmpty() && !endYField.getText().isEmpty()) {
+                if (startXField.isFocused() || startYField.isFocused() || endXField.isFocused() || endYField.isFocused()) {
                     requestDrawBtn();
+                }
+                else if (lengthField.isFocused() || stepField.isFocused()) {
+                    requestDrawPuchokBtn();
                 }
             }
             case LEFT -> canvas.goTo(Direction.LEFT);
@@ -131,7 +146,7 @@ public class MainController extends AnchorPane {
     }
 
     private void addHandlers() {
-        ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(startXField, startYField, endXField, endYField));
+        ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(startXField, startYField, endXField, endYField, lengthField, stepField));
         textFields.forEach(textField -> {
             textField.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
                 @Override
@@ -168,6 +183,10 @@ public class MainController extends AnchorPane {
             requestDrawBtn();
             canvas.requestFocus();
         });
+        drawPuchokBtn.setOnAction(actionEvent -> {
+            requestDrawPuchokBtn();
+            canvas.requestFocus();
+        });
     }
 
     private void requestDrawBtn() {
@@ -183,6 +202,18 @@ public class MainController extends AnchorPane {
         Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
         AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
         canvas.drawBtnDidTap(new Point(startX, startY), new Point(endX, endY), algoritm, segmentColor, canvasColor);
+    }
+
+    private void requestDrawPuchokBtn() {
+        if (lengthField.getText().isEmpty() || stepField.getText().isEmpty()) {
+            return;
+        }
+        int length = Integer.parseInt(lengthField.getText());
+        double step = Math.toRadians(Double.parseDouble(stepField.getText()));
+        Color segmentColor = colors.getColors().get(segmentColorComboBox.getSelectionModel().getSelectedIndex());
+        Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
+        AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
+        canvas.drawPuchokBtnDidTap(length, step, algoritm, segmentColor, canvasColor);
     }
 
     private void aboutProgramBtnDidTap() {

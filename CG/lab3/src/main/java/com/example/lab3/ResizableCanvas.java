@@ -61,6 +61,10 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
+    void drawPuchokBtnDidTap(int length, double radians, AlgoritmType algoritmType, Color segmentColor, Color backgroundColor) {
+
+    }
+
     void cancelBtnDidTap() {
         model.cancel();
         backgroundColor = lastBackgroundColor;
@@ -154,7 +158,7 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    int CDA(Point start, Point end, boolean draw, Color color) {
+    private int CDA(Point start, Point end, boolean draw, Color color) {
         if (isSegmentDegenerate(start, end, draw)) {
             return -1;
         }
@@ -189,7 +193,7 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    int BREZ_INT(Point p_start, Point p_end, boolean draw, Color color) {
+    private int BREZ_INT(Point p_start, Point p_end, boolean draw, Color color) {
         if (isSegmentDegenerate(p_start, p_end, draw)) {
             return -1;
         }
@@ -254,7 +258,7 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    int BREZ_DOUBLE(Point p_start, Point p_end, boolean draw, Color color) {
+    private int BREZ_DOUBLE(Point p_start, Point p_end, boolean draw, Color color) {
         if (isSegmentDegenerate(p_start, p_end, draw)) {
             return -1;
         }
@@ -320,7 +324,7 @@ class ResizableCanvas extends Canvas {
         return -1;
     }
 
-    int BREZ_SMOOTH(Point p_start, Point p_end, boolean draw, Color color) {
+    private int BREZ_SMOOTH(Point p_start, Point p_end, boolean draw, Color color) {
         if (isSegmentDegenerate(p_start, p_end, draw)) {
             return -1;
         }
@@ -386,7 +390,7 @@ class ResizableCanvas extends Canvas {
         return -1;
     }
 
-    int VU(Point p_start, Point p_end, boolean draw, Color color) {
+    private int VU(Point p_start, Point p_end, boolean draw, Color color) {
         if (isSegmentDegenerate(p_start, p_end, draw)) {
             return -1;
         }
