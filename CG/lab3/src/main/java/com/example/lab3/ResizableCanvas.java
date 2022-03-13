@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.lang.Math;
@@ -19,6 +20,7 @@ class ResizableCanvas extends Canvas {
     private final Model model = new Model();
     private Color lastBackgroundColor = Color.WHITE;
     private Color backgroundColor = Color.WHITE;
+    private double scale = 1.0;
     private MainController controller;
 
     public ResizableCanvas(MainController controller) {
@@ -105,8 +107,18 @@ class ResizableCanvas extends Canvas {
     }
 
     void scale(boolean isPlus) {
-        if (isPlus) { model.incrementCurrScale(); }
-        else { model.decrementCurrScale(); }
+        if (isPlus) { scale += 0.1; }
+        else if (scale > 1) { scale -= 0.1; }
+        this.setScaleX(scale);
+        this.setScaleY(scale);
+        double newWidth = getWidth() * 3;
+        double newX = newXForScale(scale);
+        double newHeight = getHeight() * 3;
+        double newY = newYForScale(scale);
+        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
+        this.setClip(rect);
+//        if (isPlus) { model.incrementCurrScale(); }
+//        else { model.decrementCurrScale(); }
         draw();
     }
 
@@ -484,8 +496,7 @@ class ResizableCanvas extends Canvas {
         return -1;
     }
 
-    private void drawPoint(double x, double y, Color color, double intensity)
-    {
+    private void drawPoint(double x, double y, Color color, double intensity) {
         Color newColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), intensity / 255);
         pixelWriter.setColor((int)x, (int)y, newColor);
     }
@@ -535,5 +546,19 @@ class ResizableCanvas extends Canvas {
             }
         }
         return 0;
+    }
+
+    private double newXForScale(Double scale) {
+        double oldWidth = getWidth();
+        double newWidth = oldWidth * scale;
+        double newX = (newWidth - oldWidth) / 2;
+        return newX * oldWidth / newWidth;
+    }
+
+    private double newYForScale(Double scale) {
+        double oldHeight = getHeight();
+        double newHeight = oldHeight * scale;
+        double newY = (newHeight - oldHeight) / 2;
+        return newY * oldHeight / newHeight;
     }
 }
