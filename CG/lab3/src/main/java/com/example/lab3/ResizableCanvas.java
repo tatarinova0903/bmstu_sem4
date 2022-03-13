@@ -61,8 +61,17 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    void drawPuchokBtnDidTap(int length, double radians, AlgoritmType algoritmType, Color segmentColor, Color backgroundColor) {
-
+    void drawPuchokBtnDidTap(int length, double radiansStep, AlgoritmType algoritmType, Color segmentColor, Color backgroundColor) {
+        double curDegree = 0.0;
+        while (curDegree < 2 * Math.PI) {
+            Point startPoint = new Point(0.0, 0.0);
+            Point endPoint = getPoint(length, curDegree);
+            Segment segment = new Segment(startPoint, endPoint, segmentColor, algoritmType);
+            model.addSegment(segment);
+            changeBackgroundColor(backgroundColor);
+            curDegree += radiansStep;
+        }
+        draw();
     }
 
     void cancelBtnDidTap() {
@@ -473,5 +482,9 @@ class ResizableCanvas extends Canvas {
             return true;
         }
         return false;
+    }
+
+    private Point getPoint(int length, double angle) {
+        return new Point(Math.cos(angle) * length, Math.sin(angle) * length);
     }
 }
