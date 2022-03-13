@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import java.lang.Math;
 
 class ResizableCanvas extends Canvas {
+    private final int INTENSITY = 255;
     private final GraphicsContext gc = getGraphicsContext2D();
     private final PixelWriter pixelWriter = gc.getPixelWriter();
     private double oldWidth = getWidth();
@@ -145,7 +146,7 @@ class ResizableCanvas extends Canvas {
                 BREZ_DOUBLE(startRealPoint, endRealPoint, true, segment.getColor());
             }
             case BREZ_SMOOTH -> {
-
+                BREZ_SMOOTH(startRealPoint, endRealPoint, true, segment.getColor());
             }
             case VU -> {
 
@@ -169,7 +170,7 @@ class ResizableCanvas extends Canvas {
         int i = 1, step = 1;
         while (i <= L + 1) {
             if (draw) {
-                drawPoint(Math.round(x), Math.round(y),color);
+                drawPoint(Math.round(x), Math.round(y), color, INTENSITY);
             }
             if (!draw && i <= L) {
                 if (!((Math.round(x + sx) == Math.round(x) && Math.round(y + sy) != Math.round(y)) ||
@@ -219,7 +220,7 @@ class ResizableCanvas extends Canvas {
         int i = 1, step = 1, x_buf = x, y_buf = y;
         while (i <= dx + 1) {
             if (draw) {
-                drawPoint(x, y, color);
+                drawPoint(x, y, color, INTENSITY);
             }
             if (e >= 0) {
                 if (change == 1) {
@@ -284,7 +285,7 @@ class ResizableCanvas extends Canvas {
         int i = 1, step = 1, x_buf = x, y_buf = y;
         while (i <= dx + 10) {
             if (draw) {
-                drawPoint(x, y, color);
+                drawPoint(x, y, color, INTENSITY);
             }
 //            Вычисление координат и ошибки для след пикселя.
             if (e >= 0) {
@@ -319,11 +320,76 @@ class ResizableCanvas extends Canvas {
         return -1;
     }
 
-//    int BREZ_SMOOTH(Point p_start, Point p_end, boolean draw, Color color) {}
+    int BREZ_SMOOTH(Point p_start, Point p_end, boolean draw, Color color) {
+        if (isSegmentDegenerate(p_start, p_end, draw)) {
+            return -1;
+        }
+        int I = 255;
+        double dx = p_end.getX() - p_start.getX();
+        double dy = p_end.getY() - p_start.getY();
 
-    private void drawPoint(double x, double y, Color color)
+        int s_x = (int) Math.signum(dx);
+        int s_y = (int) Math.signum(dy);
+        dx = Math.abs(dx);
+        dy = Math.abs(dy);
+//        Обмен местами координат в случае m > 1 (тангенс)
+        int change = 0;
+        if (dy >= dx) {
+            double temp = dx;
+            dx = dy;
+            dy = temp;
+            change = 1;
+        }
+//        Иницилизация начального значения ошибки.
+        double m = dy / dx;
+        double e = I / 2;
+//        Инициализации начальных значений текущего пикселя
+        int x = (int) Math.round(p_start.getX());
+        int y = (int) Math.round(p_start.getY());
+//        Вычисление скорректированного  значения  тангенса  угла наклона m и коэффициента W.
+        m *= I;
+        double W = I - m;
+//        Высвечивание пиксела  с координатами  (X,Y) интенсивностью E(f).
+        if (draw) {
+            drawPoint(x, y, color, Math.round(e));
+        }
+//        Цикл от i = 1 до i = dx + 1 с шагом 1
+        int i = 1, step = 1, x_buf = x, y_buf = y;
+        while (i <= dx) {
+            if (e < W) {
+                if (change == 0) {
+                    x += s_x;
+                } else {
+                    y += s_y;
+                }
+                e += m;
+            } else {
+                x += s_x;
+                y += s_y;
+                e -= W;
+            }
+            if (draw) {
+                drawPoint(x, y, color, Math.round(e));
+            }
+            if (!draw) {
+                if (!((x_buf == x && y_buf != y) || (x_buf != x && y_buf == y))) {
+                    step += 1;
+                }
+                x_buf = x;
+                y_buf = y;
+            }
+            i += 1;
+        }
+        if (!draw) {
+            return step;
+        }
+        return -1;
+    }
+
+    private void drawPoint(double x, double y, Color color, double intensity)
     {
-        pixelWriter.setColor((int)x, (int)y, color);
+        Color newColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), intensity / 255);
+        pixelWriter.setColor((int)x, (int)y, newColor);
     }
 
     private boolean isSegmentDegenerate(Point start, Point end, boolean draw) {
