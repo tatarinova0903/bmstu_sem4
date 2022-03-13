@@ -205,7 +205,7 @@ public class MainController extends AnchorPane {
         showInfoAlert("Татаринова Дарья ИУ7-44Б");
     }
 
-    private void showInfoAlert(String message) {
+    void showInfoAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
         alert.show();
     }

@@ -17,7 +17,7 @@ public class Model {
 
     public void incrementCurrScale() {
         if (currScale < 0.2) { currScale += 0.01; }
-        else { currScale += 0.1; }
+        else { currScale += 0.5; }
     }
 
     public void decrementCurrScale() {
