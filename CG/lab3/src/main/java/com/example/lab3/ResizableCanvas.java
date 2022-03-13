@@ -149,7 +149,7 @@ class ResizableCanvas extends Canvas {
                 BREZ_SMOOTH(startRealPoint, endRealPoint, true, segment.getColor());
             }
             case VU -> {
-
+                VU(startRealPoint, endRealPoint, true, segment.getColor());
             }
         }
     }
@@ -379,6 +379,73 @@ class ResizableCanvas extends Canvas {
                 y_buf = y;
             }
             i += 1;
+        }
+        if (!draw) {
+            return step;
+        }
+        return -1;
+    }
+
+    int VU(Point p_start, Point p_end, boolean draw, Color color) {
+        if (isSegmentDegenerate(p_start, p_end, draw)) {
+            return -1;
+        }
+        int Imax = 255;
+        double dx = p_end.getX() - p_start.getX();
+        double dy = p_end.getY() - p_start.getY();
+        double m = 1;
+        int shag = 1, step = 1;
+        if (Math.abs(dy) > Math.abs(dx)) {
+            if (dy != 0) {
+                m = dx / dy;
+            }
+            double m1 = m;
+            if (p_start.getY() > p_end.getY()) {
+                m1 *= -1;
+                shag *= -1;
+            }
+            for(int y = (int) Math.round(p_start.getY()); y < Math.round(p_end.getY()) + 1; y += shag) {
+                double d1 = p_start.getX() - Math.floor(p_start.getX());
+                double d2 = 1 - d1;
+                if (draw) {
+                    // нижняя точка
+                    drawPoint(p_start.getX(), y, color, Math.round(Math.abs(d2) * Imax));
+                    // верхняя точка
+                    drawPoint(p_start.getX() + 1, y, color, Math.round(Math.abs(d1) * Imax));
+                }
+                if (!draw && y < Math.round(p_end.getY())) {
+                    if ((int)p_start.getX() != (int)(p_start.getX() + m)) {
+                        step += 1;
+                    }
+                }
+                p_start.setX(p_start.getX() + m1);
+            }
+        }
+        else {
+            if (dx != 0) {
+                m = dy / dx;
+            }
+            double m1 = m;
+            if (p_start.getX() > p_end.getX()) {
+                shag *= -1;
+                m1 *= -1;
+            }
+            for (int x = (int) Math.round(p_start.getX()); x < Math.round(p_end.getX()) + 1; x += shag) {
+                double d1 = p_start.getY() - Math.floor(p_start.getY());
+                double d2 = 1 - d1;
+                if (draw) {
+                    //нижняя точка
+                    drawPoint(x, p_start.getY(), color, Math.round(Math.abs(d2) * Imax));
+                    //верхняя точка
+                    drawPoint(x, p_start.getY() + 1, color, Math.round(Math.abs(d1) * Imax));
+                }
+                if (!draw && x < Math.round(p_end.getX())) {
+                    if ((int) p_start.getY() != (int) (p_start.getY() + m)) {
+                        step += 1;
+                    }
+                }
+                p_start.setY(p_start.getY() + m1);
+            }
         }
         if (!draw) {
             return step;
