@@ -3,7 +3,7 @@ package com.example.lab3;
 import java.util.ArrayList;
 
 enum AlgoritmType {
-    STANDARD, CDA, BREZ_DOUBLE, BREZ_INT, BREZ_STEP, VU
+    STANDARD, CDA, BREZ_DOUBLE, BREZ_INT, BREZ_SMOOTH, VU
 }
 
 public class Algoritm {
@@ -27,7 +27,7 @@ public class Algoritm {
         if (alg == "ЦДА") { return AlgoritmType.CDA; }
         if (alg == "Брезенхем действительные числа") { return AlgoritmType.BREZ_DOUBLE; }
         if (alg == "Брезенхем целые числа") { return AlgoritmType.BREZ_INT; }
-        if (alg == "Брезенхем с устранением ступенчатости") { return AlgoritmType.BREZ_STEP; }
+        if (alg == "Брезенхем с устранением ступенчатости") { return AlgoritmType.BREZ_SMOOTH; }
         if (alg == "ВУ") { return AlgoritmType.VU; }
         return AlgoritmType.STANDARD;
     }

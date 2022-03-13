@@ -142,9 +142,9 @@ class ResizableCanvas extends Canvas {
                 BREZ_INT(startRealPoint, endRealPoint, true, segment.getColor());
             }
             case BREZ_DOUBLE -> {
-
+                BREZ_DOUBLE(startRealPoint, endRealPoint, true, segment.getColor());
             }
-            case BREZ_STEP -> {
+            case BREZ_SMOOTH -> {
 
             }
             case VU -> {
@@ -252,6 +252,74 @@ class ResizableCanvas extends Canvas {
             return -1;
         }
     }
+
+    int BREZ_DOUBLE(Point p_start, Point p_end, boolean draw, Color color) {
+        if (isSegmentDegenerate(p_start, p_end, draw)) {
+            return -1;
+        }
+        double dx = p_end.getX() - p_start.getX();
+        double dy = p_end.getY() - p_start.getY();
+
+        int s_x = (int) Math.signum(dx);
+        int s_y = (int) Math.signum(dy);
+
+        dx = Math.abs(dx);
+        dy = Math.abs(dy);
+//        Обмен местами координат в случае m > 1 (тангенс)
+        int change = 0;
+        if (dy >= dx) {
+            double temp = dx;
+            dx = dy;
+            dy = temp;
+            change = 1;
+        }
+
+//        Иницилизация начального значения ошибки.
+        double m = dy / dx; // в случае INT m = 2 * dy
+        double e = m - 0.5; // в случае INT e = m - dx
+//        Инициализации начальных значений текущего пикселя
+        int x = (int) Math.round(p_start.getX());
+        int y = (int) Math.round(p_start.getY());
+//        Цикл от i = 1 до i = dx + 1 с шагом 1
+        int i = 1, step = 1, x_buf = x, y_buf = y;
+        while (i <= dx + 10) {
+            if (draw) {
+                drawPoint(x, y, color);
+            }
+//            Вычисление координат и ошибки для след пикселя.
+            if (e >= 0) {
+                if (change == 1) {
+                    x += s_x;
+                }
+                else {
+                    y += s_y;
+                }
+                e -= 1; //в случае INT e -=2 * dx
+            }
+            if (e <= 0) {
+                if (change == 1) {
+                    y += s_y;
+                } else {
+                    x += s_x;
+                }
+                e += m;
+            }
+            i += 1;
+            if (!draw) {
+                if (!((x_buf == x && y_buf != y) || (x_buf != x && y_buf == y))) {
+                    step += 1;
+                }
+                x_buf = x;
+                y_buf = y;
+            }
+        }
+        if (!draw) {
+            return step;
+        }
+        return -1;
+    }
+
+//    int BREZ_SMOOTH(Point p_start, Point p_end, boolean draw, Color color) {}
 
     private void drawPoint(double x, double y, Color color)
     {
