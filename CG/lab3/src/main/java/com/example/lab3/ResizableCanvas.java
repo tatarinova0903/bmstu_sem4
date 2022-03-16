@@ -304,8 +304,8 @@ class ResizableCanvas extends Canvas {
         double dx = p_end.getX() - p_start.getX();
         double dy = p_end.getY() - p_start.getY();
 
-        int s_x = (int) Math.signum(dx);
-        int s_y = (int) Math.signum(dy);
+        int sx = (int) Math.signum(dx);
+        int sy = (int) Math.signum(dy);
 
         dx = Math.abs(dx);
         dy = Math.abs(dy);
@@ -331,18 +331,18 @@ class ResizableCanvas extends Canvas {
             }
             if (e >= 0) {
                 if (change == 1) {
-                    x += s_x;
+                    x += sx;
                 }
                 else {
-                    y += s_y;
+                    y += sy;
                 }
                 e -= 1;
             }
             if (e <= 0) {
                 if (change == 1) {
-                    y += s_y;
+                    y += sy;
                 } else {
-                    x += s_x;
+                    x += sx;
                 }
                 e += m;
             }
@@ -412,8 +412,7 @@ class ResizableCanvas extends Canvas {
             }
             if (draw) {
                 drawPoint(x, y, color, Math.round(e));
-            }
-            if (!draw) {
+            } else {
                 if (!((xPrev == x && yPrev != y) || (xPrev != x && yPrev == y))) {
                     steps += 1;
                 }
@@ -468,8 +467,8 @@ class ResizableCanvas extends Canvas {
             }
             double m1 = m;
             if (start.getX() > end.getX()) {
-                d *= -1;
                 m1 *= -1;
+                d *= -1;
             }
             for (int x = (int) Math.round(start.getX()); d < 0 ? (x > Math.round(end.getX()) + 1) : (x < Math.round(end.getX()) + 1); x += d) {
                 double d1 = start.getY() - Math.floor(start.getY());
