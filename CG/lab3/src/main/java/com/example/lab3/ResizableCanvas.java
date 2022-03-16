@@ -185,8 +185,8 @@ class ResizableCanvas extends Canvas {
             case BREZ_INT -> {
                 BREZ_INT(startRealPoint, endRealPoint, true, segment.getColor());
             }
-            case BREZ_DOUBLE -> {
-                BREZ_DOUBLE(startRealPoint, endRealPoint, true, segment.getColor());
+            case BREZ_FLOAT -> {
+                BREZ_FLOAT(startRealPoint, endRealPoint, true, segment.getColor());
             }
             case BREZ_SMOOTH -> {
                 BREZ_SMOOTH(startRealPoint, endRealPoint, true, segment.getColor());
@@ -210,7 +210,7 @@ class ResizableCanvas extends Canvas {
 
         double x = start.getX();
         double y = start.getY();
-        int i = 1, step = 1;
+        int i = 1, steps = 1;
         while (i <= L + 1) {
             if (draw) {
                 drawPoint(Math.round(x), Math.round(y), color, INTENSITY);
@@ -218,7 +218,7 @@ class ResizableCanvas extends Canvas {
             if (!draw && i <= L) {
                 if (!((Math.round(x + sx) == Math.round(x) && Math.round(y + sy) != Math.round(y)) ||
                         (Math.round(x + sx) != Math.round(x) && Math.round(y + sy) == Math.round(y)))) {
-                    step += 1;
+                    steps += 1;
                 }
             }
             x += sx;
@@ -226,25 +226,25 @@ class ResizableCanvas extends Canvas {
             i += 1;
         }
         if (!draw) {
-            return step;
+            return steps;
         } else {
             return -1;
         }
     }
 
-    private int BREZ_INT(Point p_start, Point p_end, boolean draw, Color color) {
-        if (isSegmentDegenerate(p_start, p_end, draw)) {
+    private int BREZ_INT(Point start, Point end, boolean draw, Color color) {
+        if (isSegmentDegenerate(start, end, draw)) {
             return -1;
         }
-        double dx = p_end.getX() - p_start.getX();
-        double dy = p_end.getY() - p_start.getY();
-//        Вычисление шага изменение каждой координаты пикселя
-        int s_x = (int) Math.signum(dx);
-        int s_y = (int) Math.signum(dy);
-//        Вычисление модуля приращения.
+        double dx = end.getX() - start.getX();
+        double dy = end.getY() - start.getY();
+
+        int sx = (int) Math.signum(dx);
+        int sy = (int) Math.signum(dy);
+
         dx = Math.abs(dx);
         dy = Math.abs(dy);
-//        Обмен местами координат в случае m > 1 (тангенс)
+
         int change = 0;
         if (dy >= dx) {
             double temp = dx;
@@ -252,52 +252,52 @@ class ResizableCanvas extends Canvas {
             dy = temp;
             change = 1;
         }
-//        Иницилизация начального значения ошибки.
-        double m = 2 * dy; // в случае FLOAT m = dy / dx
+
+        double m = 2 * dy;
         double m1 = 2 * dx;
-        double e = m - dx; // в случае FLOAT e = m - 0.5
-//        Инициализации начальных значений текущего пикселя
-        int x = (int) Math.round(p_start.getX());
-        int y = (int) Math.round(p_start.getY());
-//        Цикл от i = 1 до i = dx + 1 с шагом 1
-        int i = 1, step = 1, x_buf = x, y_buf = y;
+        double e = m - dx;
+
+        int x = (int) Math.round(start.getX());
+        int y = (int) Math.round(start.getY());
+
+        int i = 1, steps = 1, xPrev = x, yPrev = y;
         while (i <= dx + 1) {
             if (draw) {
                 drawPoint(x, y, color, INTENSITY);
             }
             if (e >= 0) {
                 if (change == 1) {
-                    x += s_x;
+                    x += sx;
                 } else {
-                    y += s_y;
+                    y += sy;
                 }
-                e -= m1; // в случае FLOAT e -=1
+                e -= m1;
             }
             if (e <= 0) {
                 if (change == 1) {
-                    y += s_y;
+                    y += sy;
                 } else {
-                    x += s_x;
+                    x += sx;
                 }
                 e += m;
             }
             i += 1;
             if (!draw) {
-                if (!((x_buf == x && y_buf != y) || (x_buf != x && y_buf == y))) {
-                    step += 1;
+                if (!((xPrev == x && yPrev != y) || (xPrev != x && yPrev == y))) {
+                    steps += 1;
                 }
-                x_buf = x;
-                y_buf = y;
+                xPrev = x;
+                yPrev = y;
             }
         }
         if (!draw) {
-            return step;
+            return steps;
         } else {
             return -1;
         }
     }
 
-    private int BREZ_DOUBLE(Point p_start, Point p_end, boolean draw, Color color) {
+    private int BREZ_FLOAT(Point p_start, Point p_end, boolean draw, Color color) {
         if (isSegmentDegenerate(p_start, p_end, draw)) {
             return -1;
         }
@@ -309,7 +309,7 @@ class ResizableCanvas extends Canvas {
 
         dx = Math.abs(dx);
         dy = Math.abs(dy);
-//        Обмен местами координат в случае m > 1 (тангенс)
+
         int change = 0;
         if (dy >= dx) {
             double temp = dx;
@@ -318,19 +318,17 @@ class ResizableCanvas extends Canvas {
             change = 1;
         }
 
-//        Иницилизация начального значения ошибки.
-        double m = dy / dx; // в случае INT m = 2 * dy
-        double e = m - 0.5; // в случае INT e = m - dx
-//        Инициализации начальных значений текущего пикселя
+        double m = dy / dx;
+        double e = m - 0.5;
+
         int x = (int) Math.round(p_start.getX());
         int y = (int) Math.round(p_start.getY());
-//        Цикл от i = 1 до i = dx + 1 с шагом 1
-        int i = 1, step = 1, x_buf = x, y_buf = y;
+
+        int i = 1, steps = 1, xPrev = x, yPrev = y;
         while (i <= dx + 10) {
             if (draw) {
                 drawPoint(x, y, color, INTENSITY);
             }
-//            Вычисление координат и ошибки для след пикселя.
             if (e >= 0) {
                 if (change == 1) {
                     x += s_x;
@@ -338,7 +336,7 @@ class ResizableCanvas extends Canvas {
                 else {
                     y += s_y;
                 }
-                e -= 1; //в случае INT e -=2 * dx
+                e -= 1;
             }
             if (e <= 0) {
                 if (change == 1) {
@@ -350,32 +348,33 @@ class ResizableCanvas extends Canvas {
             }
             i += 1;
             if (!draw) {
-                if (!((x_buf == x && y_buf != y) || (x_buf != x && y_buf == y))) {
-                    step += 1;
+                if (!((xPrev == x && yPrev != y) || (xPrev != x && yPrev == y))) {
+                    steps += 1;
                 }
-                x_buf = x;
-                y_buf = y;
+                xPrev = x;
+                yPrev = y;
             }
         }
         if (!draw) {
-            return step;
+            return steps;
         }
         return -1;
     }
 
-    private int BREZ_SMOOTH(Point p_start, Point p_end, boolean draw, Color color) {
-        if (isSegmentDegenerate(p_start, p_end, draw)) {
+    private int BREZ_SMOOTH(Point start, Point end, boolean draw, Color color) {
+        if (isSegmentDegenerate(start, end, draw)) {
             return -1;
         }
-        int I = 255;
-        double dx = p_end.getX() - p_start.getX();
-        double dy = p_end.getY() - p_start.getY();
 
-        int s_x = (int) Math.signum(dx);
-        int s_y = (int) Math.signum(dy);
+        double dx = end.getX() - start.getX();
+        double dy = end.getY() - start.getY();
+
+        int sx = (int) Math.signum(dx);
+        int sy = (int) Math.signum(dy);
+
         dx = Math.abs(dx);
         dy = Math.abs(dy);
-//        Обмен местами координат в случае m > 1 (тангенс)
+
         int change = 0;
         if (dy >= dx) {
             double temp = dx;
@@ -383,85 +382,84 @@ class ResizableCanvas extends Canvas {
             dy = temp;
             change = 1;
         }
-//        Иницилизация начального значения ошибки.
+
         double m = dy / dx;
-        double e = I / 2;
-//        Инициализации начальных значений текущего пикселя
-        int x = (int) Math.round(p_start.getX());
-        int y = (int) Math.round(p_start.getY());
-//        Вычисление скорректированного  значения  тангенса  угла наклона m и коэффициента W.
-        m *= I;
-        double W = I - m;
-//        Высвечивание пиксела  с координатами  (X,Y) интенсивностью E(f).
+        double e = INTENSITY / 2.0;
+
+        int x = (int) Math.round(start.getX());
+        int y = (int) Math.round(start.getY());
+
+        m *= INTENSITY;
+        double W = INTENSITY - m;
+
         if (draw) {
             drawPoint(x, y, color, Math.round(e));
         }
-//        Цикл от i = 1 до i = dx + 1 с шагом 1
-        int i = 1, step = 1, x_buf = x, y_buf = y;
+
+        int i = 1, steps = 1, xPrev = x, yPrev = y;
         while (i <= dx) {
             if (e < W) {
                 if (change == 0) {
-                    x += s_x;
+                    x += sx;
                 } else {
-                    y += s_y;
+                    y += sy;
                 }
                 e += m;
             } else {
-                x += s_x;
-                y += s_y;
+                x += sx;
+                y += sy;
                 e -= W;
             }
             if (draw) {
                 drawPoint(x, y, color, Math.round(e));
             }
             if (!draw) {
-                if (!((x_buf == x && y_buf != y) || (x_buf != x && y_buf == y))) {
-                    step += 1;
+                if (!((xPrev == x && yPrev != y) || (xPrev != x && yPrev == y))) {
+                    steps += 1;
                 }
-                x_buf = x;
-                y_buf = y;
+                xPrev = x;
+                yPrev = y;
             }
             i += 1;
         }
         if (!draw) {
-            return step;
+            return steps;
         }
         return -1;
     }
 
-    private int VU(Point p_start, Point p_end, boolean draw, Color color) {
-        if (isSegmentDegenerate(p_start, p_end, draw)) {
+    private int VU(Point start, Point end, boolean draw, Color color) {
+        if (isSegmentDegenerate(start, end, draw)) {
             return -1;
         }
-        int Imax = 255;
-        double dx = p_end.getX() - p_start.getX();
-        double dy = p_end.getY() - p_start.getY();
+
+        double dx = end.getX() - start.getX();
+        double dy = end.getY() - start.getY();
+
         double m = 1;
-        int shag = 1, step = 1;
+        int d = 1, steps = 1;
         if (Math.abs(dy) > Math.abs(dx)) {
             if (dy != 0) {
                 m = dx / dy;
             }
             double m1 = m;
-            if (p_start.getY() > p_end.getY()) {
+            if (start.getY() > end.getY()) {
                 m1 *= -1;
-                shag *= -1;
+                d *= -1;
             }
-            for(int y = (int) Math.round(p_start.getY()); shag < 0 ? (y > Math.round(p_end.getY()) + 1) : (y < Math.round(p_end.getY()) + 1); y += shag) {
-                double d1 = p_start.getX() - Math.floor(p_start.getX());
+            for (int y = (int) Math.round(start.getY()); d < 0 ? (y > Math.round(end.getY()) + 1) : (y < Math.round(end.getY()) + 1); y += d) {
+                double d1 = start.getX() - Math.floor(start.getX());
                 double d2 = 1 - d1;
                 if (draw) {
-                    // нижняя точка
-                    drawPoint(p_start.getX(), y, color, Math.round(Math.abs(d2) * Imax));
-                    // верхняя точка
-                    drawPoint(p_start.getX() + 1, y, color, Math.round(Math.abs(d1) * Imax));
+                    drawPoint(start.getX(), y, color, Math.round(Math.abs(d2) * INTENSITY));
+                    drawPoint(start.getX() + 1, y, color, Math.round(Math.abs(d1) * INTENSITY));
                 }
-                if (!draw && y < Math.round(p_end.getY())) {
-                    if ((int)p_start.getX() != (int)(p_start.getX() + m)) {
-                        step += 1;
+                if (!draw && y < Math.round(end.getY())) {
+                    if ((int) start.getX() != (int)(start.getX() + m)) {
+                        steps += 1;
                     }
                 }
-                p_start.setX(p_start.getX() + m1);
+                start.setX(start.getX() + m1);
             }
         }
         else {
@@ -469,29 +467,27 @@ class ResizableCanvas extends Canvas {
                 m = dy / dx;
             }
             double m1 = m;
-            if (p_start.getX() > p_end.getX()) {
-                shag *= -1;
+            if (start.getX() > end.getX()) {
+                d *= -1;
                 m1 *= -1;
             }
-            for (int x = (int) Math.round(p_start.getX()); shag < 0 ? (x > Math.round(p_end.getX()) + 1) : (x < Math.round(p_end.getX()) + 1); x += shag) {
-                double d1 = p_start.getY() - Math.floor(p_start.getY());
+            for (int x = (int) Math.round(start.getX()); d < 0 ? (x > Math.round(end.getX()) + 1) : (x < Math.round(end.getX()) + 1); x += d) {
+                double d1 = start.getY() - Math.floor(start.getY());
                 double d2 = 1 - d1;
                 if (draw) {
-                    //нижняя точка
-                    drawPoint(x, p_start.getY(), color, Math.round(Math.abs(d2) * Imax));
-                    //верхняя точка
-                    drawPoint(x, p_start.getY() + 1, color, Math.round(Math.abs(d1) * Imax));
+                    drawPoint(x, start.getY(), color, Math.round(Math.abs(d2) * INTENSITY));
+                    drawPoint(x, start.getY() + 1, color, Math.round(Math.abs(d1) * INTENSITY));
                 }
-                if (!draw && x < Math.round(p_end.getX())) {
-                    if ((int) p_start.getY() != (int) (p_start.getY() + m)) {
-                        step += 1;
+                if (!draw && x < Math.round(end.getX())) {
+                    if ((int) start.getY() != (int) (start.getY() + m)) {
+                        steps += 1;
                     }
                 }
-                p_start.setY(p_start.getY() + m1);
+                start.setY(start.getY() + m1);
             }
         }
         if (!draw) {
-            return step;
+            return steps;
         }
         return -1;
     }
@@ -535,8 +531,8 @@ class ResizableCanvas extends Canvas {
             case BREZ_INT -> {
                 return BREZ_INT(start, end, false, backgroundColor);
             }
-            case BREZ_DOUBLE -> {
-                return BREZ_DOUBLE(start, end, false, backgroundColor);
+            case BREZ_FLOAT -> {
+                return BREZ_FLOAT(start, end, false, backgroundColor);
             }
             case BREZ_SMOOTH -> {
                 return BREZ_SMOOTH(start, end, false, backgroundColor);
