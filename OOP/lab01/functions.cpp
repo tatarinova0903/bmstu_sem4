@@ -20,6 +20,7 @@ return_code download_model(figure_t &fig, data_t act)
         fclose(f);
         if (rc == OK)
         {
+            clear_fig(fig);
             fig = temp;
         }
         else

@@ -53,10 +53,6 @@ return_code read_from_file(figure &fig, FILE *f)
     if (rc == OK)
     {
         rc = fill_fig(fig, get_fig_n(fig), f);
-        if (rc != OK)
-        {
-            free_fig(fig);
-        }
     }
     return rc;
 }

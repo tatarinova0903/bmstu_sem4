@@ -48,6 +48,7 @@ return_code fill_matrix(matrix_t matr, size_t n, FILE *f)
         matr[i - 1][j - 1] = 1;
         matr[j - 1][i - 1] = 1;
     }
+
     if (i > n || j > n)
     {
         rc = ERR_INPUT;
