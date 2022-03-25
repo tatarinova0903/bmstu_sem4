@@ -43,17 +43,19 @@ return_code fill_matrix(matrix_t matr, size_t n, FILE *f)
 
     return_code rc = OK;
     size_t i, j;
+    size_t links_count, read_count = 0;
+    if (fscanf(f, "%zu", &links_count) != 1)
+    {
+        rc = ERR_INPUT;
+    }
     while ((rc = read_line_matrix(i, j, f)) == OK && i <= n && j <= n)
     {
         matr[i - 1][j - 1] = 1;
         matr[j - 1][i - 1] = 1;
+        read_count++;
     }
 
-    if (i > n || j > n)
-    {
-        rc = ERR_INPUT;
-    }
-    else if (feof(f))
+    if (read_count == links_count)
     {
         rc = OK;
     }
