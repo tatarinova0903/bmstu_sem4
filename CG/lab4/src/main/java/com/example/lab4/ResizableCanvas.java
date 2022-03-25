@@ -151,12 +151,50 @@ class ResizableCanvas extends Canvas {
                 gc.strokeOval(centerRealPoint.getX() - oval.getxAxis() / 2, centerRealPoint.getY() - oval.getyAxis() / 2,
                         oval.getxAxis(), oval.getyAxis());
             }
+            case CANONICAL -> {
+                CANONICAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+            }
+            case PARAMETER -> {
+                PARAMETER(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+            }
         }
     }
 
-    private void drawPoint(double x, double y, Color color, double intensity) {
-        Color newColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), intensity / 255);
-        pixelWriter.setColor((int)x, (int)y, newColor);
+    private void CANONICAL(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+        ArrayList<Point> points = new ArrayList<>();
+        double a_pow = a * a;
+        double b_pow = b * b;
+        //Производная при y`=-1, является границей для оптимального рисования
+        double limit = Math.round(a_pow / Math.sqrt(a_pow + b_pow));
+        for (double x = 0; x < limit + 1; x++) {
+            double y = Math.round(Math.sqrt(1 - x * x / a_pow) * b);
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+        }
+        limit = Math.round(b_pow / Math.sqrt(a_pow + b_pow));
+        for (double y = limit; y > -1; y--) {
+            double x = Math.round(Math.sqrt(1 - y * y / b_pow) * a);
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+        }
+
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+    private void PARAMETER(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+        
+    }
+
+    private void drawPoint(double x, double y, Color color) {
+        pixelWriter.setColor((int)x, (int)y, color);
     }
 
     private void showChart(AlgoritmType algoritm, ArrayList<Integer> angles, ArrayList<Integer> steps) {
