@@ -81,7 +81,7 @@ class ResizableCanvas extends Canvas {
     }
 
     void scale(boolean isPlus) {
-        if (isPlus) { scale += 0.1; }
+        if (isPlus) { scale += 0.2; }
         else if (scale > 1) { scale -= 0.1; }
         this.setScaleX(scale);
         this.setScaleY(scale);
@@ -190,7 +190,27 @@ class ResizableCanvas extends Canvas {
     }
 
     private void PARAMETER(double x_center, double y_center, double a, double b, Color color, boolean draw) {
-        
+        ArrayList<Point> points = new ArrayList<>();
+        double step;
+        if (a > b) {
+             step = 1 / a;
+        }
+        else {
+            step = 1 / b;
+        }
+        for (double teta = 0; teta < Math.PI / 2 + step; teta += step) {
+            double x = Math.round(a * Math.cos(teta));
+            double y = Math.round(b * Math.sin(teta));
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+        }
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
     }
 
     private void drawPoint(double x, double y, Color color) {

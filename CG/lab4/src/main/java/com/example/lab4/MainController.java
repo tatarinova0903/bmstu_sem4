@@ -21,7 +21,7 @@ public class MainController extends AnchorPane {
     private final Text currMousePositionLabel = new Text("");
     private final Button cancelBtn = new Button("Отменить");
     private final Button cancelAllBtn = new Button("Сбросить");
-    private final Text segmentColorLabel = new Text("Цвет окружности:");
+    private final Text segmentColorLabel = new Text("Цвет эллипса:");
     private final ComboBox ovalColorComboBox = new ComboBox<>();
     private final Text backgroundColorLabel = new Text("Цвет фона:");
     private final ComboBox backgroundColorComboBox = new ComboBox<>();
@@ -37,12 +37,12 @@ public class MainController extends AnchorPane {
     private final TextField xAxisField = new TextField();
     private final Text yAxisLabel = new Text("y:");
     private final TextField yAxisField = new TextField();
-    private final Button drawBtn = new Button("Построить окружность");
+    private final Button drawBtn = new Button("Построить эллипс");
     private final Text lengthLabel = new Text("ДЛИНА:");
     private final TextField lengthField = new TextField();
     private final Text stepLabel = new Text("ШАГ:");
     private final TextField stepField = new TextField();
-    private final Button drawPuchokBtn = new Button("Построить пучок");
+    private final Button drawPuchokBtn = new Button("Построить спектр");
     private final Button drawChartBtn = new Button("Построить диаграмму");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
