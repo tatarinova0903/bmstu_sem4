@@ -160,6 +160,9 @@ class ResizableCanvas extends Canvas {
             case BREZ -> {
                 BREZ(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
             }
+            case MIDDLE_POINT -> {
+                MIDDLE_POINT(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+            }
         }
     }
 
@@ -265,7 +268,60 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void drawPoint(double x, double y, Color color) {
+    private void MIDDLE_POINT(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+        ArrayList<Point> points = new ArrayList<>();
+
+        double pow_a = a * a;
+        double pow_b = b * b;
+
+        double limit = Math.round(a / Math.sqrt(1 + pow_b / pow_a)); // производная для ограничения
+
+        double x = 0;
+        double y = b;
+        points.add(new Point(x + x_center, y + y_center));
+        double func = pow_b - Math.round(pow_a * (b - 1 / 4));
+
+        // 1 участок
+        while (x <= limit) {
+            if (func > 0) { //диагональ
+                y -= 1;
+                func -= pow_a * y * 2;
+            }
+
+            x += 1;
+            func += pow_b * (x + x + 1);
+            points.add(new Point(x + x_center, y + y_center));
+        }
+
+        limit = Math.round(b / Math.sqrt(1 + pow_a / pow_b)); // производная для ограничения
+        x = a;
+        y = 0;
+        points.add(new Point(x + x_center, y + y_center));
+
+        func = pow_a - Math.round(pow_b * (x - 1 / 4));
+
+        // 2 участок
+        while (y <= limit) {
+            if (func > 0) { //диагональ
+                x -= 1;
+                func -= 2 * pow_b * x;
+            }
+
+            y += 1;
+            func += pow_a * (y + y + 1);
+            points.add(new Point(x + x_center, y + y_center));
+        }
+
+        reflectPointsX(points, y_center);
+        reflectPointsY(points, x_center);
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+        private void drawPoint(double x, double y, Color color) {
         pixelWriter.setColor((int)x, (int)y, color);
     }
 
@@ -291,5 +347,20 @@ class ResizableCanvas extends Canvas {
         double newHeight = oldHeight * scale;
         double newY = (newHeight - oldHeight) / 2;
         return newY * oldHeight / newHeight;
+    }
+
+    private void reflectPointsY(ArrayList<Point> pointsArray, double xCenter) {
+        double prevLen = pointsArray.size();
+        for (int i = 0; i < prevLen; i++) {
+            pointsArray.add(new Point(-(pointsArray.get(i).getX() - xCenter) + xCenter, pointsArray.get(i).getY()));
+        }
+    }
+
+
+    private void reflectPointsX(ArrayList<Point> pointsArray, double yCenter) {
+        double prevLen = pointsArray.size();
+        for (int i = 0; i < prevLen; i++) {
+            pointsArray.add(new Point(pointsArray.get(i).getX(), -(pointsArray.get(i).getY() - yCenter) + yCenter));
+        }
     }
 }
