@@ -157,6 +157,9 @@ class ResizableCanvas extends Canvas {
             case PARAMETER -> {
                 PARAMETER(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
             }
+            case BREZ -> {
+                BREZ(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+            }
         }
     }
 
@@ -205,6 +208,55 @@ class ResizableCanvas extends Canvas {
             points.add(new Point(x_center + x, y_center - y));
             points.add(new Point(x_center - x, y_center + y));
             points.add(new Point(x_center - x, y_center - y));
+        }
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+    private void BREZ(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+        // f(x,y)=x^2*b^2+a^2y^2-a^2*b^2=0
+        ArrayList<Point> points = new ArrayList<>();
+        double x = 0;
+        double y = b;
+        double a_pow = a * a;
+        double b_pow = b * b;
+        // error = b^2 * (x + 1)^2 + a^2 * (y - 1)^2-a^2 * b^2
+        double d =  a_pow + b_pow - a_pow * 2 * y;
+        while (y >= 0) {
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+            if (d < 0) { //точка внутри окружности
+                double d1 = 2 * d + a_pow * (2 * y - 1);
+                if (d1 > 0) { //диагональ
+                    x += 1;
+                    y -= 1;
+                    d += b_pow * 2 * x + b_pow + a_pow - a_pow * y * 2;
+                } else {  //горизонталь
+                    x += 1;
+                    d += b_pow * 2 * x + b_pow;
+                }
+            }
+            else if (d == 0) {  //точка лежит на окружности (диагональ)
+                x += 1;
+                y -= 1;
+                d += b_pow * 2 * x + b_pow + a_pow - a_pow * y * 2;
+            }
+            else {  //точка вне окружности
+                double d1 = 2 * d + b_pow * (-2 * x - 1);
+                if (d1< 0) { //диагональ
+                    x += 1;
+                    y -= 1;
+                    d += b_pow * 2 * x + b_pow + a_pow - a_pow * y * 2;
+                } else { //вертикаль
+                    y -= 1;
+                    d += a_pow - a_pow * 2 * y;
+                }
+            }
         }
         if (draw) {
             points.forEach(point -> {
