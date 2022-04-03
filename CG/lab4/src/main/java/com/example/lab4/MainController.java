@@ -205,18 +205,15 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         drawChartBtn.setOnAction(actionEvent -> {
-            if (xAxisSpectrField.getText().isEmpty() || yAxisSpectrField.getText().isEmpty() ||
-                    stepField.getText().isEmpty()) {
-                return;
-            }
-            int xAxisLen = Integer.parseInt(xAxisSpectrField.getText());
-            int yAxisLen = Integer.parseInt(yAxisSpectrField.getText());
-            double step = Math.toRadians(Double.parseDouble(stepField.getText()));
-            int spectrAmount = Integer.parseInt(spectrAmountField.getText());
-            Color segmentColor = colors.getColors().get(ovalColorComboBox.getSelectionModel().getSelectedIndex());
-            Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
-            AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
-            canvas.drawChartBtnDidTap(xAxisLen, yAxisLen, step, spectrAmount, algoritm, segmentColor, canvasColor);
+//            if (xAxisSpectrField.getText().isEmpty() || yAxisSpectrField.getText().isEmpty() ||
+//                    stepField.getText().isEmpty()) {
+//                return;
+//            }
+//            int xAxisLen = Integer.parseInt(xAxisSpectrField.getText());
+//            int yAxisLen = Integer.parseInt(yAxisSpectrField.getText());
+//            double step = Math.toRadians(Double.parseDouble(stepField.getText()));
+//            int spectrAmount = Integer.parseInt(spectrAmountField.getText());
+            canvas.drawChartBtnDidTap(100, 50, 30, 25);
             canvas.requestFocus();
         });
     }

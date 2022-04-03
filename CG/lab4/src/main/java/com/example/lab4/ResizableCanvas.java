@@ -67,7 +67,6 @@ class ResizableCanvas extends Canvas {
     }
 
     void drawSpectrBtnDidTap(int xAxisLen, int yAxisLen, double step, int count, AlgoritmType algoritmType, Color circleColor, Color backgroundColor) {
-        step *= 2;
         for (int i = 0; i < count; i++) {
             Oval oval = new Oval(new Point(0.0, 0.0),
                     xAxisLen + i * step, yAxisLen + i * step,
@@ -79,21 +78,42 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    void drawChartBtnDidTap(int xAxisLen, int yAxisLen, double step, int count, AlgoritmType algoritm, Color circleColor, Color backgroundColor) {
-//        ArrayList<ChartData> data = new ArrayList<>();
-//        Algoritm algoritms = new Algoritm();
-//        step *= 2;
-//        algoritms.getAlgoritms().forEach(algoritmStr -> {
-//            AlgoritmType algoritmType = algoritms.getAlgoritm(algoritmStr);
-//            ArrayList<long>
-//            for (int i = 0; i < count; i++) {
-//
-//            }
-//            long start = System.nanoTime();
-//            drawBtnDidTap(new Point(0.0, 0.0), xAxisLen, yAxisLen, algoritmType, circleColor, backgroundColor);
-//            long finish = System.nanoTime();
-//            long resTime = finish - start;
-//        });
+    void drawChartBtnDidTap(int xAxisLen, int yAxisLen, double step, int count) {
+        Algoritm algoritms = new Algoritm();
+        ArrayList<ChartData> data = new ArrayList<>();
+        int checkAmount = 200;
+        for (int j = 0; j < checkAmount; j++) {
+            int finalJ = j;
+            algoritms.getAlgoritms().forEach(algoritmSTR -> {
+                if (algoritms.getAlgoritm(algoritmSTR).equals(AlgoritmType.STANDARD)) {
+                    return;
+                }
+                ArrayList<Double> axis = new ArrayList<>();
+                ArrayList<Long> time = new ArrayList<>();
+                for (int k = 0; k < count; k++) {
+                    time.add(0L);
+                }
+                for (int i = 0; i < count; i++) {
+                    double x = xAxisLen + i * step;
+                    double y = yAxisLen + i * step;
+                    long start = System.nanoTime();
+                    switch (algoritms.getAlgoritm(algoritmSTR)) {
+                        case PARAMETER -> PARAMETER(0.0, 0.0, x, y, Color.WHITE, false);
+                        case CANONICAL -> CANONICAL(0.0, 0.0, x, y, Color.WHITE, false);
+                        case BREZ -> BREZ(0.0, 0.0, x, y, Color.WHITE, false);
+                        case MIDDLE_POINT -> MIDDLE_POINT(0.0, 0.0, x, y, Color.WHITE, false);
+                    }
+                    long finish = System.nanoTime();
+                    axis.add(x + y);
+                    time.set(i, time.get(i) + finish - start);
+                }
+                for (int k = 0; k < count; k++) {
+                    time.set(k, time.get(k) / checkAmount);
+                }
+                data.add(new ChartData(algoritms.getAlgoritm(algoritmSTR), axis, time));
+            });
+        }
+        showChart(data);
     }
 
     void cancelBtnDidTap() {
@@ -353,14 +373,14 @@ class ResizableCanvas extends Canvas {
         pixelWriter.setColor((int)x, (int)y, color);
     }
 
-    private void showChart(AlgoritmType algoritm, ArrayList<Integer> angles, ArrayList<Integer> steps) {
-//        ChartController chartControllerPane = new ChartController(algoritm, angles, steps);
-//        Scene scene = new Scene(chartControllerPane);
-//        Stage stage = new Stage();
-//        stage.setScene(scene);
-//        stage.setMinHeight(500);
-//        stage.setMinWidth(600);
-//        stage.show();
+    private void showChart(ArrayList<ChartData> data) {
+        ChartController chartControllerPane = new ChartController(data);
+        Scene scene = new Scene(chartControllerPane);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setMinHeight(500);
+        stage.setMinWidth(600);
+        stage.show();
     }
 
     private double newXForScale(Double scale) {
