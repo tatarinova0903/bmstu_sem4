@@ -21,7 +21,7 @@ public class MainController extends AnchorPane {
     private final Text currMousePositionLabel = new Text("");
     private final Button cancelBtn = new Button("Отменить");
     private final Button cancelAllBtn = new Button("Сбросить");
-    private final Text segmentColorLabel = new Text("Цвет эллипса:");
+    private final Text ovalColorLabel = new Text("Цвет эллипса:");
     private final ComboBox ovalColorComboBox = new ComboBox<>();
     private final Text backgroundColorLabel = new Text("Цвет фона:");
     private final ComboBox backgroundColorComboBox = new ComboBox<>();
@@ -32,16 +32,22 @@ public class MainController extends AnchorPane {
     private final TextField centerXField = new TextField();
     private final Text centerYLabel = new Text("y:");
     private final TextField centerYField = new TextField();
-    private final Text radiusLabel = new Text("ПОЛУОСИ:");
+    private final Text axisLabel = new Text("ПОЛУОСИ:");
     private final Text xAxisLabel = new Text("x:");
     private final TextField xAxisField = new TextField();
     private final Text yAxisLabel = new Text("y:");
     private final TextField yAxisField = new TextField();
-    private final Button drawBtn = new Button("Построить эллипс");
-    private final Text lengthLabel = new Text("ДЛИНА:");
-    private final TextField lengthField = new TextField();
+    private final Button drawEllipsBtn = new Button("Построить эллипс");
+    private final Text diametrLabel = new Text("ДИАМЕТР:");
+    private final TextField diametrField = new TextField();
+    private final Button drawCircleBtn = new Button("Построить окружность");
+    private final Text axisSpectrLabel = new Text("ПОЛУОСИ:");
+    private final TextField xAxisSpectrField = new TextField();
+    private final TextField yAxisSpectrField = new TextField();
     private final Text stepLabel = new Text("ШАГ:");
     private final TextField stepField = new TextField();
+    private final Text spectrAmountLabel = new Text("КОЛИЧЕСТВО: ");
+    private final TextField spectrAmountField = new TextField();
     private final Button drawPuchokBtn = new Button("Построить спектр");
     private final Button drawChartBtn = new Button("Построить диаграмму");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
@@ -53,9 +59,6 @@ public class MainController extends AnchorPane {
         HBox commonActionsMenu = new HBox(cancelBtn, cancelAllBtn, plusBtn, minusBtn, aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
         commonActionsMenu.setAlignment(Pos.CENTER);
         commonActionsMenu.setSpacing(10);
-        commonActionsMenu.getChildren().forEach(element -> {
-            element.setFocusTraversable(false);
-        });
 
         colors.getColorsStr().forEach(color -> {
             backgroundColorComboBox.getItems().add(color);
@@ -68,47 +71,46 @@ public class MainController extends AnchorPane {
         ovalColorComboBox.getSelectionModel().selectFirst();
         algoritmsComboBox.getSelectionModel().selectFirst();
 
-        HBox segmentActionsMenu = new HBox(
-                segmentColorLabel, ovalColorComboBox,
+        HBox ovalActionsMenu = new HBox(
+                ovalColorLabel, ovalColorComboBox,
                 backgroundColorLabel, backgroundColorComboBox,
                 algoritmsColorLabel, algoritmsComboBox
         );
-        segmentActionsMenu.setAlignment(Pos.CENTER);
-        segmentActionsMenu.setSpacing(10);
-        segmentActionsMenu.getChildren().forEach(element -> {
-            element.setFocusTraversable(false);
-        });
+        ovalActionsMenu.setAlignment(Pos.CENTER);
+        ovalActionsMenu.setSpacing(10);
 
         centerXField.setMaxWidth(60);
         centerYField.setMaxWidth(60);
+        HBox centerMenu = new HBox(centerLabel, centerXLabel, centerXField, centerYLabel, centerYField);
+        centerMenu.setSpacing(10);
+
         xAxisField.setMaxWidth(60);
         yAxisField.setMaxWidth(60);
-        HBox inputMenu = new HBox(
-                centerLabel, centerXLabel, centerXField, centerYLabel, centerYField,
-                radiusLabel, xAxisLabel, xAxisField, yAxisLabel, yAxisField,
-                drawBtn
-        );
-        inputMenu.setAlignment(Pos.CENTER);
-        inputMenu.setSpacing(10);
-        inputMenu.getChildren().forEach(element -> {
-            element.setFocusTraversable(false);
-        });
+        HBox ellipsInputMenu = new HBox(axisLabel, xAxisLabel, xAxisField, yAxisLabel, yAxisField, drawEllipsBtn);
+        ellipsInputMenu.setSpacing(10);
 
-        lengthField.setMaxWidth(60);
+        diametrField.setMaxWidth(60);
+        HBox circleInputMenu = new HBox(diametrLabel, diametrField, drawCircleBtn);
+        circleInputMenu.setSpacing(10);
+
+        HBox inputMenu = new HBox(ellipsInputMenu, circleInputMenu);
+        inputMenu.setSpacing(40);
+
+        xAxisSpectrField.setMaxWidth(60);
+        yAxisSpectrField.setMaxWidth(60);
         stepField.setMaxWidth(60);
-        HBox puchokMenu = new HBox(
-                lengthLabel, lengthField,
+        spectrAmountField.setMaxWidth(60);
+        HBox spectrMenu = new HBox(
+                axisSpectrLabel, xAxisLabel, xAxisSpectrField, yAxisLabel, yAxisSpectrField,
                 stepLabel, stepField,
+                spectrAmountLabel, spectrAmountField,
                 drawPuchokBtn, drawChartBtn
         );
-        puchokMenu.setAlignment(Pos.CENTER);
-        puchokMenu.setSpacing(10);
-        puchokMenu.getChildren().forEach(element -> {
-            element.setFocusTraversable(false);
-        });
+        spectrMenu.setSpacing(10);
 
-        VBox main = new VBox(commonActionsMenu, segmentActionsMenu, inputMenu, puchokMenu, canvas);
+        VBox main = new VBox(commonActionsMenu, ovalActionsMenu, centerMenu, inputMenu, spectrMenu, canvas);
         main.setSpacing(5);
+        configure(main);
         this.getChildren().add(main);
 
         canvas.widthProperty().bind(this.widthProperty());
@@ -127,16 +129,21 @@ public class MainController extends AnchorPane {
                 if (centerXField.focusedProperty().get()) { centerYField.requestFocus(); }
                 else if (centerYField.isFocused()) { xAxisField.requestFocus(); }
                 else if (xAxisField.isFocused()) { yAxisField.requestFocus(); }
-                else if (yAxisField.isFocused()) { centerXField.requestFocus(); }
-                else if (lengthField.isFocused()) { stepField.requestFocus(); }
-                else if (stepField.isFocused()) { lengthField.requestFocus(); }
+                else if (yAxisField.isFocused()) { diametrField.requestFocus(); }
+                else if (diametrField.isFocused()) { centerXField.requestFocus(); }
+                else if (xAxisSpectrField.isFocused()) { yAxisSpectrField.requestFocus(); }
+                else if (yAxisSpectrField.isFocused()) { stepField.requestFocus(); }
+                else if (stepField.isFocused()) { spectrAmountField.requestFocus(); }
+                else if (spectrAmountField.isFocused()) { xAxisSpectrField.requestFocus(); }
             }
             case ENTER -> {
-                if (centerXField.isFocused() || centerYField.isFocused() ||
-                        xAxisField.isFocused() || yAxisField.isFocused()) {
-                    requestDrawBtn();
+                if (xAxisField.isFocused() || yAxisField.isFocused()) {
+                    requestDrawBtn(Figure.ELLIPS);
                 }
-                else if (lengthField.isFocused() || stepField.isFocused()) {
+                else if (diametrField.isFocused()) {
+                    requestDrawBtn(Figure.CIRCLE);
+                }
+                else if (xAxisSpectrField.isFocused() || stepField.isFocused()) {
                     requestDrawPuchokBtn();
                 }
             }
@@ -148,7 +155,11 @@ public class MainController extends AnchorPane {
     }
 
     private void addHandlers() {
-        ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(centerXField, centerYField, xAxisField, yAxisField, lengthField, stepField));
+        ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(centerXField, centerYField,
+                xAxisField, yAxisField,
+                xAxisSpectrField, yAxisSpectrField, stepField, spectrAmountField,
+                diametrField
+        ));
         textFields.forEach(textField -> {
             textField.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
                 @Override
@@ -181,8 +192,12 @@ public class MainController extends AnchorPane {
             canvas.cancelAllBtnDidTap();
             canvas.requestFocus();
         });
-        drawBtn.setOnAction(actionEvent -> {
-            requestDrawBtn();
+        drawEllipsBtn.setOnAction(actionEvent -> {
+            requestDrawBtn(Figure.ELLIPS);
+            canvas.requestFocus();
+        });
+        drawCircleBtn.setOnAction(actionEvent -> {
+            requestDrawBtn(Figure.CIRCLE);
             canvas.requestFocus();
         });
         drawPuchokBtn.setOnAction(actionEvent -> {
@@ -190,42 +205,58 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         drawChartBtn.setOnAction(actionEvent -> {
-            if (lengthField.getText().isEmpty() || stepField.getText().isEmpty()) {
+            if (xAxisSpectrField.getText().isEmpty() || yAxisSpectrField.getText().isEmpty() ||
+                    stepField.getText().isEmpty()) {
                 return;
             }
-            int length = Integer.parseInt(lengthField.getText());
-            double step = Double.parseDouble(stepField.getText());
+            int xAxisLen = Integer.parseInt(xAxisSpectrField.getText());
+            int yAxisLen = Integer.parseInt(yAxisSpectrField.getText());
+            double step = Math.toRadians(Double.parseDouble(stepField.getText()));
+            int spectrAmount = Integer.parseInt(spectrAmountField.getText());
+            Color segmentColor = colors.getColors().get(ovalColorComboBox.getSelectionModel().getSelectedIndex());
+            Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
             AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
-            canvas.drawChartBtnDidTap(length, step, algoritm);
+            canvas.drawChartBtnDidTap(xAxisLen, yAxisLen, step, spectrAmount, algoritm, segmentColor, canvasColor);
             canvas.requestFocus();
         });
     }
 
-    private void requestDrawBtn() {
+    private void requestDrawBtn(Figure figure) {
         if (centerXField.getText().isEmpty() || centerYField.getText().isEmpty() ||
                 xAxisField.getText().isEmpty() || yAxisField.getText().isEmpty()) {
             return;
         }
         double centerX = Double.parseDouble(centerXField.getText());
         double centerY = Double.parseDouble(centerYField.getText());
-        double xAxis = Double.parseDouble(xAxisField.getText());
-        double yAxis = Double.parseDouble(yAxisField.getText());
         Color segmentColor = colors.getColors().get(ovalColorComboBox.getSelectionModel().getSelectedIndex());
         Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
         AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
-        canvas.drawBtnDidTap(new Point(centerX, centerY), xAxis, yAxis, algoritm, segmentColor, canvasColor);
+        switch (figure) {
+            case ELLIPS -> {
+                double xAxis = Double.parseDouble(xAxisField.getText()) / 2;
+                double yAxis = Double.parseDouble(yAxisField.getText()) / 2;
+                canvas.drawBtnDidTap(new Point(centerX, centerY), xAxis, yAxis, algoritm, segmentColor, canvasColor);
+            }
+            case CIRCLE -> {
+                double diametr = Double.parseDouble(diametrField.getText());
+                canvas.drawBtnDidTap(new Point(centerX, centerY), diametr, diametr, algoritm, segmentColor, canvasColor);
+            }
+        }
     }
 
     private void requestDrawPuchokBtn() {
-        if (lengthField.getText().isEmpty() || stepField.getText().isEmpty()) {
+        if (xAxisSpectrField.getText().isEmpty() || yAxisSpectrField.getText().isEmpty() ||
+                spectrAmountField.getText().isEmpty() || stepField.getText().isEmpty()) {
             return;
         }
-        int length = Integer.parseInt(lengthField.getText());
-        double step = Math.toRadians(Double.parseDouble(stepField.getText()));
+        int xAxisLen = Integer.parseInt(xAxisSpectrField.getText()) / 2;
+        int yAxisLen = Integer.parseInt(yAxisSpectrField.getText()) / 2;
+        double step = Double.parseDouble(stepField.getText());
+        int spectrAmount = Integer.parseInt(spectrAmountField.getText());
         Color segmentColor = colors.getColors().get(ovalColorComboBox.getSelectionModel().getSelectedIndex());
         Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
         AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
-//        canvas.drawPuchokBtnDidTap(length, step, algoritm, segmentColor, canvasColor);
+        canvas.drawSpectrBtnDidTap(xAxisLen, yAxisLen, step, spectrAmount, algoritm, segmentColor, canvasColor);
     }
 
     private void aboutProgramBtnDidTap() {
@@ -239,6 +270,32 @@ public class MainController extends AnchorPane {
                 "- алгоритм средней точки\n" +
                 "\n" +
                 "Построение гистограмм по затраченному времени.");
+    }
+
+    private void configure(HBox box) {
+        box.setAlignment(Pos.CENTER);
+        box.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+            if (element instanceof HBox) {
+                configure((HBox) element);
+            }
+            if (element instanceof VBox) {
+                configure((VBox) element);
+            }
+        });
+    }
+
+    private void configure(VBox box) {
+        box.setAlignment(Pos.CENTER);
+        box.getChildren().forEach(element -> {
+            element.setFocusTraversable(false);
+            if (element instanceof VBox) {
+                configure((VBox) element);
+            }
+            if (element instanceof HBox) {
+                configure((HBox) element);
+            }
+        });
     }
 
     private void aboutAuthorDidTap() {

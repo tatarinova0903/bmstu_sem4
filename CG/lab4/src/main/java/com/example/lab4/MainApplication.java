@@ -15,8 +15,8 @@ public class MainApplication extends Application {
         MainController mainPane = new MainController();
         Scene scene = new Scene(mainPane);
         stage.setScene(scene);
-        stage.setTitle("Лабораторная работа №3");
-        stage.setMinHeight(500);
+        stage.setTitle("Лабораторная работа №4");
+        stage.setMinHeight(700);
         stage.setMinWidth(600);
         scene.setOnKeyPressed(keyEvent -> {
             mainPane.keyboardDidTap(keyEvent);

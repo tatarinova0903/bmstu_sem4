@@ -1,10 +1,12 @@
 package com.example.lab4;
 
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -64,8 +66,34 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    void drawChartBtnDidTap(int length, double angle, AlgoritmType algoritm) {
+    void drawSpectrBtnDidTap(int xAxisLen, int yAxisLen, double step, int count, AlgoritmType algoritmType, Color circleColor, Color backgroundColor) {
+        step *= 2;
+        for (int i = 0; i < count; i++) {
+            Oval oval = new Oval(new Point(0.0, 0.0),
+                    xAxisLen + i * step, yAxisLen + i * step,
+                    circleColor, algoritmType
+                    );
+            model.addCircle(oval);
+        }
+        changeBackgroundColor(backgroundColor);
+        draw();
+    }
 
+    void drawChartBtnDidTap(int xAxisLen, int yAxisLen, double step, int count, AlgoritmType algoritm, Color circleColor, Color backgroundColor) {
+//        ArrayList<ChartData> data = new ArrayList<>();
+//        Algoritm algoritms = new Algoritm();
+//        step *= 2;
+//        algoritms.getAlgoritms().forEach(algoritmStr -> {
+//            AlgoritmType algoritmType = algoritms.getAlgoritm(algoritmStr);
+//            ArrayList<long>
+//            for (int i = 0; i < count; i++) {
+//
+//            }
+//            long start = System.nanoTime();
+//            drawBtnDidTap(new Point(0.0, 0.0), xAxisLen, yAxisLen, algoritmType, circleColor, backgroundColor);
+//            long finish = System.nanoTime();
+//            long resTime = finish - start;
+//        });
     }
 
     void cancelBtnDidTap() {
@@ -148,8 +176,8 @@ class ResizableCanvas extends Canvas {
         Point centerRealPoint = translatePointFromIdeal(oval.getCenter());
         switch (oval.getAlgoritmType()) {
             case STANDARD -> {
-                gc.strokeOval(centerRealPoint.getX() - oval.getxAxis() / 2, centerRealPoint.getY() - oval.getyAxis() / 2,
-                        oval.getxAxis(), oval.getyAxis());
+                gc.strokeOval(centerRealPoint.getX() - oval.getxAxis(), centerRealPoint.getY() - oval.getyAxis(),
+                        oval.getxAxis() * 2, oval.getyAxis() * 2);
             }
             case CANONICAL -> {
                 CANONICAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
