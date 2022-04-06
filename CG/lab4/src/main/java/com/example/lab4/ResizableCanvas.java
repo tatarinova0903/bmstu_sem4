@@ -42,8 +42,12 @@ class ResizableCanvas extends Canvas {
         gc.fillRect(0, 0, width, height);
 
         drawAxes();
+        model.getOvals().forEach(oval -> {
+            drawOval(oval);
+        });
+
         model.getCircles().forEach(circle -> {
-            drawOval(circle);
+            drawCircle(circle);
         });
 
         oldWidth = width;
@@ -59,9 +63,16 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
-    void drawBtnDidTap(Point center, double xAxis, double yAxis, AlgoritmType algoritmType, Color circleColor, Color backgroundColor) {
+    void drawOvalBtnDidTap(Point center, double xAxis, double yAxis, AlgoritmType algoritmType, Color circleColor, Color backgroundColor) {
         Oval oval = new Oval(center, xAxis, yAxis, circleColor, algoritmType);
-        model.addCircle(oval);
+        model.addOval(oval);
+        changeBackgroundColor(backgroundColor);
+        draw();
+    }
+
+    void drawCircleBtnDidTap(Point center, double rad, AlgoritmType algoritmType, Color circleColor, Color backgroundColor) {
+        Circle circle = new Circle(center, rad, circleColor, algoritmType);
+        model.addCircle(circle);
         changeBackgroundColor(backgroundColor);
         draw();
     }
@@ -72,7 +83,7 @@ class ResizableCanvas extends Canvas {
                     xAxisLen + i * step, yAxisLen + i * step,
                     circleColor, algoritmType
                     );
-            model.addCircle(oval);
+            model.addOval(oval);
         }
         changeBackgroundColor(backgroundColor);
         draw();
@@ -81,7 +92,7 @@ class ResizableCanvas extends Canvas {
     void drawChartBtnDidTap(int xAxisLen, int yAxisLen, double step, int count) {
         Algoritm algoritms = new Algoritm();
         ArrayList<ChartData> data = new ArrayList<>();
-        int checkAmount = 200;
+        int checkAmount = 100;
         for (int j = 0; j < checkAmount; j++) {
             int finalJ = j;
             algoritms.getAlgoritms().forEach(algoritmSTR -> {
@@ -98,10 +109,10 @@ class ResizableCanvas extends Canvas {
                     double y = yAxisLen + i * step;
                     long start = System.nanoTime();
                     switch (algoritms.getAlgoritm(algoritmSTR)) {
-                        case PARAMETER -> PARAMETER(0.0, 0.0, x, y, Color.WHITE, false);
-                        case CANONICAL -> CANONICAL(0.0, 0.0, x, y, Color.WHITE, false);
-                        case BREZ -> BREZ(0.0, 0.0, x, y, Color.WHITE, false);
-                        case MIDDLE_POINT -> MIDDLE_POINT(0.0, 0.0, x, y, Color.WHITE, false);
+                        case PARAMETER -> PARAMETER_OVAL(0.0, 0.0, x, y, Color.WHITE, false);
+                        case CANONICAL -> CANONICAL_OVAL(0.0, 0.0, x, y, Color.WHITE, false);
+                        case BREZ -> BREZ_OVAL(0.0, 0.0, x, y, Color.WHITE, false);
+                        case MIDDLE_POINT -> MIDDLE_POINT_OVAL(0.0, 0.0, x, y, Color.WHITE, false);
                     }
                     long finish = System.nanoTime();
                     axis.add(x + y);
@@ -200,21 +211,44 @@ class ResizableCanvas extends Canvas {
                         oval.getxAxis() * 2, oval.getyAxis() * 2);
             }
             case CANONICAL -> {
-                CANONICAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+                CANONICAL_OVAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
             }
             case PARAMETER -> {
-                PARAMETER(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+                PARAMETER_OVAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
             }
             case BREZ -> {
-                BREZ(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+                BREZ_OVAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
             }
             case MIDDLE_POINT -> {
-                MIDDLE_POINT(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
+                MIDDLE_POINT_OVAL(centerRealPoint.getX(), centerRealPoint.getY(), oval.getxAxis(), oval.getyAxis(), oval.getColor(), true);
             }
         }
     }
 
-    private void CANONICAL(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+    private void drawCircle(Circle circle) {
+        gc.setStroke(Color.BLACK);
+        Point centerRealPoint = translatePointFromIdeal(circle.getCenter());
+        switch (circle.getAlgoritmType()) {
+            case STANDARD -> {
+                gc.strokeOval(centerRealPoint.getX() - circle.getRad(), centerRealPoint.getY() - circle.getRad(),
+                        circle.getRad() * 2, circle.getRad() * 2);
+            }
+            case CANONICAL -> {
+                CANONICAL_CIRCLE(centerRealPoint.getX(), centerRealPoint.getY(), circle.getRad(), circle.getColor(), true);
+            }
+            case PARAMETER -> {
+                PARAMETER_CIRCLE(centerRealPoint.getX(), centerRealPoint.getY(), circle.getRad(), circle.getColor(), true);
+            }
+            case BREZ -> {
+                BREZ_CIRCLE(centerRealPoint.getX(), centerRealPoint.getY(), circle.getRad(), circle.getColor(), true);
+            }
+            case MIDDLE_POINT -> {
+                MIDDLE_POINT_CIRCLE(centerRealPoint.getX(), centerRealPoint.getY(), circle.getRad(), circle.getColor(), true);
+            }
+        }
+    }
+
+    private void CANONICAL_OVAL(double x_center, double y_center, double a, double b, Color color, boolean draw) {
         ArrayList<Point> points = new ArrayList<>();
         double a_pow = a * a;
         double b_pow = b * b;
@@ -243,7 +277,29 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void PARAMETER(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+    private void CANONICAL_CIRCLE(double x_center, double y_center, double radius, Color color, boolean draw) {
+        ArrayList<Point> points = new ArrayList<>();
+        double limit = Math.round(radius / Math.sqrt(2));
+        double radius_pow = radius * radius;
+        for (double x = 0; x < limit + 1; x++) {
+            double y = Math.round(Math.sqrt(radius_pow - x * x));
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+            points.add(new Point(x_center + y, y_center + x));
+            points.add(new Point(x_center + y, y_center - x));
+            points.add(new Point(x_center - y, y_center + x));
+            points.add(new Point(x_center - y, y_center - x));
+        }
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+    private void PARAMETER_OVAL(double x_center, double y_center, double a, double b, Color color, boolean draw) {
         ArrayList<Point> points = new ArrayList<>();
         double step;
         if (a > b) {
@@ -267,7 +323,29 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void BREZ(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+    private void PARAMETER_CIRCLE(double x_center, double y_center, double radius, Color color, boolean draw) {
+        ArrayList<Point> points = new ArrayList<>();
+        double step = 1 / radius;
+        for (double teta = 0; teta < Math.PI / 4 + step; teta += step) {
+            double x = Math.round(radius * Math.cos(teta));
+            double y = Math.round(radius * Math.sin(teta));
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+            points.add(new Point(x_center + y, y_center + x));
+            points.add(new Point(x_center + y, y_center - x));
+            points.add(new Point(x_center - y, y_center + x));
+            points.add(new Point(x_center - y, y_center - x));
+        }
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+    private void BREZ_OVAL(double x_center, double y_center, double a, double b, Color color, boolean draw) {
         // f(x,y)=x^2*b^2+a^2y^2-a^2*b^2=0
         ArrayList<Point> points = new ArrayList<>();
         double x = 0;
@@ -316,7 +394,50 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void MIDDLE_POINT(double x_center, double y_center, double a, double b, Color color, boolean draw) {
+    private void BREZ_CIRCLE(double x_center, double y_center, double radius, Color color, boolean draw) {
+        ArrayList<Point> points = new ArrayList<>();
+        double x = 0;
+        double y = radius;
+        // error = (0 + 1)^2 + (R - 1)^2 = 2(1 - R)
+        double d = 2 - radius - radius; // первоначальная ошибка
+        // (из прямоугольного треугольника находим граничное значение)
+        // Граничное значение = радиус / sin(45) = радиус / sqrt(2)
+        double limit = Math.round(radius / Math.sqrt(2));
+        while (y >= limit) {
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+            points.add(new Point(x_center + y, y_center + x));
+            points.add(new Point(x_center + y, y_center - x));
+            points.add(new Point(x_center - y, y_center + x));
+            points.add(new Point(x_center - y, y_center - x));
+            if (d >= 0) {  // точка на окружности =>диагональ
+                // точка вне окружности => диагональ, так как рисую я только 1\8
+                x += 1;
+                y -= 1;
+                d += (2 * (x - y + 1));
+            }
+            else if (d <0) {  //точка лежит внутри окружности
+                double d1 = d + d + y + y - 1;
+                x += 1;
+                if (d1 > 0) { //диагональ
+                    y -= 1;
+                    d += (2 * (x - y + 1));
+                }
+                else { //горизонталь
+                    d += (x + x + 1);
+                }
+            }
+        }
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+    private void MIDDLE_POINT_OVAL(double x_center, double y_center, double a, double b, Color color, boolean draw) {
         ArrayList<Point> points = new ArrayList<>();
 
         double pow_a = a * a;
@@ -369,7 +490,37 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-        private void drawPoint(double x, double y, Color color) {
+    private void MIDDLE_POINT_CIRCLE(double x_center, double y_center, double radius, Color color, boolean draw) {
+        ArrayList<Point> points = new ArrayList<>();
+        double x = 0;
+        double y = radius;
+        double d = 1 - radius;  // Начальная ошибка
+        while (x <= y) {
+            points.add(new Point(x_center + x, y_center + y));
+            points.add(new Point(x_center + x, y_center - y));
+            points.add(new Point(x_center - x, y_center + y));
+            points.add(new Point(x_center - x, y_center - y));
+            points.add(new Point(x_center + y, y_center + x));
+            points.add(new Point(x_center + y, y_center - x));
+            points.add(new Point(x_center - y, y_center + x));
+            points.add(new Point(x_center - y, y_center - x));
+            x += 1;
+            if (d < 0) { //выбираем горизонталь
+                d += 2 * x + 1;
+            }
+            else {  //выбираем диагональный
+                y -= 1;
+                d += 2 * (x - y) + 1;
+            }
+        }
+        if (draw) {
+            points.forEach(point -> {
+                drawPoint(point.getX(), point.getY(), color);
+            });
+        }
+    }
+
+    private void drawPoint(double x, double y, Color color) {
         pixelWriter.setColor((int)x, (int)y, color);
     }
 

@@ -205,22 +205,21 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         drawChartBtn.setOnAction(actionEvent -> {
-//            if (xAxisSpectrField.getText().isEmpty() || yAxisSpectrField.getText().isEmpty() ||
-//                    stepField.getText().isEmpty()) {
-//                return;
-//            }
-//            int xAxisLen = Integer.parseInt(xAxisSpectrField.getText());
-//            int yAxisLen = Integer.parseInt(yAxisSpectrField.getText());
-//            double step = Math.toRadians(Double.parseDouble(stepField.getText()));
-//            int spectrAmount = Integer.parseInt(spectrAmountField.getText());
-            canvas.drawChartBtnDidTap(100, 50, 30, 25);
+            if (xAxisSpectrField.getText().isEmpty() || yAxisSpectrField.getText().isEmpty() ||
+                    stepField.getText().isEmpty()) {
+                return;
+            }
+            int xAxisLen = Integer.parseInt(xAxisSpectrField.getText());
+            int yAxisLen = Integer.parseInt(yAxisSpectrField.getText());
+            double step = Math.toRadians(Double.parseDouble(stepField.getText()));
+            int spectrAmount = Integer.parseInt(spectrAmountField.getText());
+            canvas.drawChartBtnDidTap(xAxisLen, yAxisLen, step, spectrAmount);
             canvas.requestFocus();
         });
     }
 
     private void requestDrawBtn(Figure figure) {
-        if (centerXField.getText().isEmpty() || centerYField.getText().isEmpty() ||
-                xAxisField.getText().isEmpty() || yAxisField.getText().isEmpty()) {
+        if (centerXField.getText().isEmpty() || centerYField.getText().isEmpty()) {
             return;
         }
         double centerX = Double.parseDouble(centerXField.getText());
@@ -230,13 +229,13 @@ public class MainController extends AnchorPane {
         AlgoritmType algoritm = algoritms.getAlgoritm(algoritmsComboBox.getSelectionModel().getSelectedItem().toString());
         switch (figure) {
             case ELLIPS -> {
-                double xAxis = Double.parseDouble(xAxisField.getText()) / 2;
-                double yAxis = Double.parseDouble(yAxisField.getText()) / 2;
-                canvas.drawBtnDidTap(new Point(centerX, centerY), xAxis, yAxis, algoritm, segmentColor, canvasColor);
+                double xAxis = Double.parseDouble(xAxisField.getText());
+                double yAxis = Double.parseDouble(yAxisField.getText());
+                canvas.drawOvalBtnDidTap(new Point(centerX, centerY), xAxis, yAxis, algoritm, segmentColor, canvasColor);
             }
             case CIRCLE -> {
                 double diametr = Double.parseDouble(diametrField.getText());
-                canvas.drawBtnDidTap(new Point(centerX, centerY), diametr, diametr, algoritm, segmentColor, canvasColor);
+                canvas.drawCircleBtnDidTap(new Point(centerX, centerY), diametr, algoritm, segmentColor, canvasColor);
             }
         }
     }
@@ -246,8 +245,8 @@ public class MainController extends AnchorPane {
                 spectrAmountField.getText().isEmpty() || stepField.getText().isEmpty()) {
             return;
         }
-        int xAxisLen = Integer.parseInt(xAxisSpectrField.getText()) / 2;
-        int yAxisLen = Integer.parseInt(yAxisSpectrField.getText()) / 2;
+        int xAxisLen = Integer.parseInt(xAxisSpectrField.getText());
+        int yAxisLen = Integer.parseInt(yAxisSpectrField.getText());
         double step = Double.parseDouble(stepField.getText());
         int spectrAmount = Integer.parseInt(spectrAmountField.getText());
         Color segmentColor = colors.getColors().get(ovalColorComboBox.getSelectionModel().getSelectedIndex());
