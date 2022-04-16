@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4328B79D27F33FD2001869CE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4328B79327F33FD2001869CE /* main.cpp */; };
-		43B12BFA27F3411B008145C5 /* BaseVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B12BF627F3411B008145C5 /* BaseVector.cpp */; };
-		43B12BFB27F3411B008145C5 /* BaseIter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B12BF727F3411B008145C5 /* BaseIter.cpp */; };
+		43C2347A280A8BDC007ABE5E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43C23479280A8BDC007ABE5E /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4328B76B27F33E3A001869CE /* CopyFiles */ = {
+		43C23474280A8BDC007ABE5E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -25,21 +23,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4328B76D27F33E3A001869CE /* lab02 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = lab02; sourceTree = BUILT_PRODUCTS_DIR; };
-		4328B79327F33FD2001869CE /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		43B12BEF27F3411B008145C5 /* Iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Iterator.h; sourceTree = "<group>"; };
-		43B12BF027F3411B008145C5 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
-		43B12BF127F3411B008145C5 /* ConstIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstIterator.h; sourceTree = "<group>"; };
-		43B12BF227F3411B008145C5 /* BaseIter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseIter.h; sourceTree = "<group>"; };
-		43B12BF427F3411B008145C5 /* BaseVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseVector.h; sourceTree = "<group>"; };
-		43B12BF527F3411B008145C5 /* Vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vector.hpp; sourceTree = "<group>"; };
-		43B12BF627F3411B008145C5 /* BaseVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseVector.cpp; sourceTree = "<group>"; };
-		43B12BF727F3411B008145C5 /* BaseIter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseIter.cpp; sourceTree = "<group>"; };
-		43B12BF827F3411B008145C5 /* my_errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = my_errors.h; sourceTree = "<group>"; };
+		43C23476280A8BDC007ABE5E /* lab02 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = lab02; sourceTree = BUILT_PRODUCTS_DIR; };
+		43C23479280A8BDC007ABE5E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		43C23481280A8BED007ABE5E /* const_list_iterator_implement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = const_list_iterator_implement.hpp; sourceTree = "<group>"; };
+		43C23482280A8BED007ABE5E /* const_list_iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = const_list_iterator.h; sourceTree = "<group>"; };
+		43C23483280A8BED007ABE5E /* base_iterator_implement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = base_iterator_implement.hpp; sourceTree = "<group>"; };
+		43C23484280A8BED007ABE5E /* base_iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base_iterator.h; sourceTree = "<group>"; };
+		43C23485280A8BEE007ABE5E /* base_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base_container.h; sourceTree = "<group>"; };
+		43C23486280A8BF5007ABE5E /* list_iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list_iterator.h; sourceTree = "<group>"; };
+		43C23487280A8BF5007ABE5E /* list_implement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list_implement.h; sourceTree = "<group>"; };
+		43C23488280A8BF5007ABE5E /* list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
+		43C23489280A8BF5007ABE5E /* list_iterator_implement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = list_iterator_implement.hpp; sourceTree = "<group>"; };
+		43C2348A280A8BF6007ABE5E /* exceptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = exceptions.h; sourceTree = "<group>"; };
+		43C2348B280A8BFD007ABE5E /* node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = node.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4328B76A27F33E3A001869CE /* Frameworks */ = {
+		43C23473280A8BDC007ABE5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -49,35 +49,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4328B76427F33E3A001869CE = {
+		43C2346D280A8BDC007ABE5E = {
 			isa = PBXGroup;
 			children = (
-				4328B76F27F33E3A001869CE /* lab02 */,
-				4328B76E27F33E3A001869CE /* Products */,
+				43C23478280A8BDC007ABE5E /* lab02 */,
+				43C23477280A8BDC007ABE5E /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4328B76E27F33E3A001869CE /* Products */ = {
+		43C23477280A8BDC007ABE5E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4328B76D27F33E3A001869CE /* lab02 */,
+				43C23476280A8BDC007ABE5E /* lab02 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4328B76F27F33E3A001869CE /* lab02 */ = {
+		43C23478280A8BDC007ABE5E /* lab02 */ = {
 			isa = PBXGroup;
 			children = (
-				43B12BF727F3411B008145C5 /* BaseIter.cpp */,
-				43B12BF227F3411B008145C5 /* BaseIter.h */,
-				43B12BF627F3411B008145C5 /* BaseVector.cpp */,
-				43B12BF427F3411B008145C5 /* BaseVector.h */,
-				43B12BF127F3411B008145C5 /* ConstIterator.h */,
-				43B12BEF27F3411B008145C5 /* Iterator.h */,
-				43B12BF827F3411B008145C5 /* my_errors.h */,
-				43B12BF027F3411B008145C5 /* Vector.h */,
-				43B12BF527F3411B008145C5 /* Vector.hpp */,
-				4328B79327F33FD2001869CE /* main.cpp */,
+				43C2348B280A8BFD007ABE5E /* node.h */,
+				43C2348A280A8BF6007ABE5E /* exceptions.h */,
+				43C23485280A8BEE007ABE5E /* base_container.h */,
+				43C23481280A8BED007ABE5E /* const_list_iterator_implement.hpp */,
+				43C23482280A8BED007ABE5E /* const_list_iterator.h */,
+				43C23483280A8BED007ABE5E /* base_iterator_implement.hpp */,
+				43C23484280A8BED007ABE5E /* base_iterator.h */,
+				43C23489280A8BF5007ABE5E /* list_iterator_implement.hpp */,
+				43C23486280A8BF5007ABE5E /* list_iterator.h */,
+				43C23487280A8BF5007ABE5E /* list_implement.h */,
+				43C23488280A8BF5007ABE5E /* list.h */,
+				43C23479280A8BDC007ABE5E /* main.cpp */,
 			);
 			path = lab02;
 			sourceTree = "<group>";
@@ -85,13 +87,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4328B76C27F33E3A001869CE /* lab02 */ = {
+		43C23475280A8BDC007ABE5E /* lab02 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4328B77427F33E3A001869CE /* Build configuration list for PBXNativeTarget "lab02" */;
+			buildConfigurationList = 43C2347D280A8BDC007ABE5E /* Build configuration list for PBXNativeTarget "lab02" */;
 			buildPhases = (
-				4328B76927F33E3A001869CE /* Sources */,
-				4328B76A27F33E3A001869CE /* Frameworks */,
-				4328B76B27F33E3A001869CE /* CopyFiles */,
+				43C23472280A8BDC007ABE5E /* Sources */,
+				43C23473280A8BDC007ABE5E /* Frameworks */,
+				43C23474280A8BDC007ABE5E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -99,23 +101,23 @@
 			);
 			name = lab02;
 			productName = lab02;
-			productReference = 4328B76D27F33E3A001869CE /* lab02 */;
+			productReference = 43C23476280A8BDC007ABE5E /* lab02 */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4328B76527F33E3A001869CE /* Project object */ = {
+		43C2346E280A8BDC007ABE5E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
-					4328B76C27F33E3A001869CE = {
+					43C23475280A8BDC007ABE5E = {
 						CreatedOnToolsVersion = 12.0.1;
 					};
 				};
 			};
-			buildConfigurationList = 4328B76827F33E3A001869CE /* Build configuration list for PBXProject "lab02" */;
+			buildConfigurationList = 43C23471280A8BDC007ABE5E /* Build configuration list for PBXProject "lab02" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -123,31 +125,29 @@
 				en,
 				Base,
 			);
-			mainGroup = 4328B76427F33E3A001869CE;
-			productRefGroup = 4328B76E27F33E3A001869CE /* Products */;
+			mainGroup = 43C2346D280A8BDC007ABE5E;
+			productRefGroup = 43C23477280A8BDC007ABE5E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4328B76C27F33E3A001869CE /* lab02 */,
+				43C23475280A8BDC007ABE5E /* lab02 */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4328B76927F33E3A001869CE /* Sources */ = {
+		43C23472280A8BDC007ABE5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43B12BFB27F3411B008145C5 /* BaseIter.cpp in Sources */,
-				4328B79D27F33FD2001869CE /* main.cpp in Sources */,
-				43B12BFA27F3411B008145C5 /* BaseVector.cpp in Sources */,
+				43C2347A280A8BDC007ABE5E /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		4328B77227F33E3A001869CE /* Debug */ = {
+		43C2347B280A8BDC007ABE5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -206,7 +206,7 @@
 			};
 			name = Debug;
 		};
-		4328B77327F33E3A001869CE /* Release */ = {
+		43C2347C280A8BDC007ABE5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -258,7 +258,7 @@
 			};
 			name = Release;
 		};
-		4328B77527F33E3A001869CE /* Debug */ = {
+		43C2347E280A8BDC007ABE5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -266,7 +266,7 @@
 			};
 			name = Debug;
 		};
-		4328B77627F33E3A001869CE /* Release */ = {
+		43C2347F280A8BDC007ABE5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -277,25 +277,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4328B76827F33E3A001869CE /* Build configuration list for PBXProject "lab02" */ = {
+		43C23471280A8BDC007ABE5E /* Build configuration list for PBXProject "lab02" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4328B77227F33E3A001869CE /* Debug */,
-				4328B77327F33E3A001869CE /* Release */,
+				43C2347B280A8BDC007ABE5E /* Debug */,
+				43C2347C280A8BDC007ABE5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4328B77427F33E3A001869CE /* Build configuration list for PBXNativeTarget "lab02" */ = {
+		43C2347D280A8BDC007ABE5E /* Build configuration list for PBXNativeTarget "lab02" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4328B77527F33E3A001869CE /* Debug */,
-				4328B77627F33E3A001869CE /* Release */,
+				43C2347E280A8BDC007ABE5E /* Debug */,
+				43C2347F280A8BDC007ABE5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 4328B76527F33E3A001869CE /* Project object */;
+	rootObject = 43C2346E280A8BDC007ABE5E /* Project object */;
 }
