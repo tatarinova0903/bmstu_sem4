@@ -146,7 +146,7 @@ public class MainController extends AnchorPane {
         boolean withoutTimeSleep = timeRadioBtn.isDisabled();
         Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
         Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
-        canvas.fillBtnDidTap(figureColor, canvasColor);
+        canvas.fillBtnDidTap(figureColor);
     }
 
     private void requestAddPointBtn() {

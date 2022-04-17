@@ -1,14 +1,13 @@
 package com.example.lab5;
 
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 class ResizableCanvas extends Canvas {
     private final int INTENSITY = 255;
@@ -17,8 +16,7 @@ class ResizableCanvas extends Canvas {
     private double oldWidth = getWidth();
     private double oldHeight = getHeight();
     private final Model model = new Model();
-    private Color lastBackgroundColor = Color.WHITE;
-    private Color backgroundColor = Color.WHITE;
+    private Color figureColor = Color.BLACK;
     private double scale = 1.0;
     private MainController controller;
 
@@ -38,10 +36,12 @@ class ResizableCanvas extends Canvas {
         if (width == 0 || height == 0) { return; }
 
         gc.clearRect(0, 0, width, height);
-        gc.setFill(backgroundColor);
+        gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, width, height);
+        model.clearPixels();
 
         drawAxes();
+        fillBtnDidTap(figureColor);
 
         oldWidth = width;
         oldHeight = height;
@@ -56,7 +56,8 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
-    void fillBtnDidTap(Color color, Color backgroundColor) {
+    void fillBtnDidTap(Color color) {
+        figureColor = color;
         ArrayList<Point> figure = model.getFigure();
         int pointsCount = figure.size();
         if (pointsCount == 0) { return; }
@@ -64,6 +65,7 @@ class ResizableCanvas extends Canvas {
             figure.add(new Point(figure.get(0).getX(), figure.get(0).getY()));
         }
         drawFigure(color);
+        fillFigure(figure, color);
     }
 
     void addPointBtnDidTap(int x, int y, Color color) {
@@ -73,12 +75,10 @@ class ResizableCanvas extends Canvas {
 
     void cancelBtnDidTap() {
         model.cancel();
-        backgroundColor = lastBackgroundColor;
         draw();
     }
 
     void cancelAllBtnDidTap() {
-        changeBackgroundColor(Color.WHITE);
         model.cancelAll();
         draw();
     }
@@ -131,14 +131,7 @@ class ResizableCanvas extends Canvas {
         return new Point(newX, newY);
     }
 
-    private void changeBackgroundColor(Color newColor) {
-        lastBackgroundColor = backgroundColor;
-        backgroundColor = newColor;
-    }
-
     private void drawAxes() {
-        if (backgroundColor == Color.BLACK) { gc.setStroke(Color.WHITE); }
-        else { gc.setStroke(Color.BLACK); }
         gc.setLineWidth(0.4);
         Point screenCenter = translatePointFromIdeal(new Point(0, 0));
         gc.strokeLine(0, screenCenter.getY(), getWidth(), screenCenter.getY());
@@ -163,13 +156,74 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void fillFigure() {
-        ArrayList<Point> figure = model.getFigure();
+    private void fillFigure(ArrayList<Point> figure, Color color) {
         int pointsCount = figure.size();
         if (pointsCount < 3) { return; }
+        int border = border(figure);
+        System.out.println(border);
         for (int i = 0; i < pointsCount - 1; i++) {
-            
+            Line line = new Line(figure.get(i), figure.get(i + 1));
+            if (line.isHorizontal()) { continue; }
+            if ((int)line.getStart().getX() <= border && (int)line.getEnd().getX() <= border) {
+                fillLeft(line, border, color);
+            } else if ((int)line.getStart().getX() >= border && (int)line.getEnd().getX() >= border) {
+                fillRight(line, border, color);
+            } else {
+                fillMiddle();
+            }
         }
+    }
+
+    private int border(ArrayList<Point> figure) {
+        AtomicReference<Double> min = new AtomicReference<>(Double.MAX_VALUE);
+        AtomicReference<Double> max = new AtomicReference<>(Double.MIN_VALUE);
+        figure.forEach(point -> {
+            if (point.getX() > max.get()) {
+                max.set(point.getX());
+            }
+            if (point.getX() < min.get()) {
+                min.set(point.getX());
+            }
+        });
+        return (int)((min.get() + max.get()) / 2);
+    }
+
+    private void fillLeft(Line line, int border, Color color) {
+        int startY, endY;
+        if (line.getStart().getY() < line.getEnd().getY()) {
+            startY = (int)line.getStart().getY();
+            endY = (int)line.getEnd().getY();
+        } else {
+            endY = (int)line.getStart().getY();
+            startY = (int)line.getEnd().getY();
+        }
+        for (int y = startY; y < endY; y++) {
+            int startX = line.getX(y);
+            for (int x = startX; x <= border; x++) {
+                drawPixel(x, y, color);
+            }
+        }
+    }
+
+    private void fillRight(Line line, int border, Color color) {
+        int startY, endY;
+        if (line.getStart().getY() < line.getEnd().getY()) {
+            startY = (int)line.getStart().getY();
+            endY = (int)line.getEnd().getY();
+        } else {
+            endY = (int)line.getStart().getY();
+            startY = (int)line.getEnd().getY();
+        }
+        for (int y = startY; y < endY; y++) {
+            int startX = line.getX(y);
+            for (int x = startX; x > border; x--) {
+                drawPixel(x, y, color);
+            }
+        }
+    }
+
+    private void fillMiddle() {
+
     }
 
     private void drawPoint(Point point) {
@@ -186,7 +240,16 @@ class ResizableCanvas extends Canvas {
     }
 
     private void drawPixel(int x, int y, Color color) {
-        pixelWriter.setColor(x, y, color);
+        Point realPoint = translatePointFromIdeal(new Point(x, y));
+        int newX = (int)realPoint.getX();
+        int newY = (int)realPoint.getY();
+        Color[][] pixels = model.getPixels();
+        if (pixels[newX][newY] == color) {
+            pixelWriter.setColor(newX, newY, Color.WHITE);
+        } else {
+            pixels[newX][newY] = color;
+            pixelWriter.setColor(newX, newY, color);
+        }
     }
 
     private double newXForScale(Double scale) {

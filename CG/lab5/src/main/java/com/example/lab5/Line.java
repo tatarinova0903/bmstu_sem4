@@ -24,4 +24,16 @@ public class Line {
     public void setEnd(Point end) {
         this.end = end;
     }
+
+    boolean isHorizontal() {
+        return Math.abs(this.start.getY() - this.end.getY()) < 1e-6;
+    }
+
+    int getX(int y) {
+        double coefA = end.getY() - start.getY();
+        double coefB = start.getX() - end.getX();
+        double coefC = start.getY() * end.getX() - start.getX() * end.getY();
+        return (int)((-coefB * y - coefC) / coefA);
+    }
+
 }
