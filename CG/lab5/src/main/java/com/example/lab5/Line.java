@@ -36,4 +36,10 @@ public class Line {
         return (int)((-coefB * y - coefC) / coefA);
     }
 
+    public int getY(int x) {
+        double coefA = end.getY() - start.getY();
+        double coefB = start.getX() - end.getX();
+        double coefC = start.getY() * end.getX() - start.getX() * end.getY();
+        return (int)((-coefA * x - coefC) / coefB);
+    }
 }

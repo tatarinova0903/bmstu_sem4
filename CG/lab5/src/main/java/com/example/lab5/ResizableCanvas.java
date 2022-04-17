@@ -177,7 +177,7 @@ class ResizableCanvas extends Canvas {
             } else if ((int)line.getStart().getX() >= border && (int)line.getEnd().getX() >= border) {
                 fillRight(line, border, color);
             } else {
-                fillMiddle();
+                fillMiddle(line, border, color);
             }
         }
     }
@@ -230,8 +230,14 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void fillMiddle() {
-        
+    private void fillMiddle(Line line, int border, Color color) {
+        int yIntersection = line.getY(border);
+        Point leftPoint = line.getStart().getX() < border ? line.getStart() : line.getEnd();
+        Point rightPoint = line.getEnd().getX() > border ? line.getEnd() : line.getStart();
+        Line left = new Line(new Point(border, yIntersection), leftPoint);
+        Line right = new Line(new Point(border, yIntersection), rightPoint);
+        fillLeft(left, border, color);
+        fillRight(right, border, color);
     }
 
     private void drawPoint(Point point) {
