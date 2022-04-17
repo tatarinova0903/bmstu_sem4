@@ -29,17 +29,17 @@ public class Line {
         return Math.abs(this.start.getY() - this.end.getY()) < 1e-6;
     }
 
-    int getX(int y) {
+    double getX(double y) {
         double coefA = end.getY() - start.getY();
         double coefB = start.getX() - end.getX();
         double coefC = start.getY() * end.getX() - start.getX() * end.getY();
-        return (int)((-coefB * y - coefC) / coefA);
+        return ((-coefB * y - coefC) / coefA);
     }
 
-    public int getY(int x) {
+    public double getY(double x) {
         double coefA = end.getY() - start.getY();
         double coefB = start.getX() - end.getX();
         double coefC = start.getY() * end.getX() - start.getX() * end.getY();
-        return (int)((-coefA * x - coefC) / coefB);
+        return ((-coefA * x - coefC) / coefB);
     }
 }

@@ -1,13 +1,19 @@
 package com.example.lab5;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 class ResizableCanvas extends Canvas {
@@ -42,8 +48,8 @@ class ResizableCanvas extends Canvas {
         gc.fillRect(0, 0, width, height);
         model.clearPixels();
 
-        drawAxes();
-        fillBtnDidTap(figureColor);
+//        drawAxes();
+        fillBtnDidTap(figureColor, true);
 
         oldWidth = width;
         oldHeight = height;
@@ -58,7 +64,7 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
-    void fillBtnDidTap(Color color) {
+    void fillBtnDidTap(Color color, boolean withoutTimeSleep) {
         figureColor = color;
         ArrayList<Point> figure = model.getFigure();
         int pointsCount = figure.size();
@@ -67,7 +73,7 @@ class ResizableCanvas extends Canvas {
             figure.add(new Point(figure.get(0).getX(), figure.get(0).getY()));
         }
         drawFigure(color);
-        fillFigure(figure, color);
+        fillFigure(figure, color, withoutTimeSleep);
     }
 
     void addPointBtnDidTap(int x, int y, Color color) {
@@ -86,7 +92,7 @@ class ResizableCanvas extends Canvas {
     }
 
     void scale(boolean isPlus) {
-        if (isPlus) { scale += 0.2; }
+        if (isPlus) { scale += 0.4; }
         else if (scale > 1) { scale -= 0.1; }
         this.setScaleX(scale);
         this.setScaleY(scale);
@@ -140,7 +146,7 @@ class ResizableCanvas extends Canvas {
     }
 
     private void drawAxes() {
-        gc.setLineWidth(0.4);
+//        gc.setLineWidth(0.4);
         Point screenCenter = translatePointFromIdeal(new Point(0, 0));
         gc.strokeLine(0, screenCenter.getY(), getWidth(), screenCenter.getY());
         gc.strokeLine(screenCenter.getX(), 0, screenCenter.getX(), getHeight());
@@ -164,25 +170,27 @@ class ResizableCanvas extends Canvas {
         }
     }
 
-    private void fillFigure(ArrayList<Point> figure, Color color) {
+    private void fillFigure(ArrayList<Point> figure, Color color, boolean withoutTimeSleep) {
         int pointsCount = figure.size();
         if (pointsCount < 3) { return; }
-        int border = border(figure);
+        double border = border(figure);
         System.out.println(border);
         for (int i = 0; i < pointsCount - 1; i++) {
             Line line = new Line(figure.get(i), figure.get(i + 1));
             if (line.isHorizontal()) { continue; }
-            if ((int)line.getStart().getX() <= border && (int)line.getEnd().getX() <= border) {
-                fillLeft(line, border, color);
-            } else if ((int)line.getStart().getX() >= border && (int)line.getEnd().getX() >= border) {
-                fillRight(line, border, color);
+            if ((line.getStart().getX() < border || Math.abs(line.getStart().getX() - border) < 1e-6)  &&
+                    (line.getEnd().getX() <= border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                fillLeft(line, border, color, withoutTimeSleep);
+            } else if ((line.getStart().getX() > border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
+                    (line.getEnd().getX() > border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                fillRight(line, border, color, withoutTimeSleep);
             } else {
-                fillMiddle(line, border, color);
+                fillMiddle(line, border, color, withoutTimeSleep);
             }
         }
     }
 
-    private int border(ArrayList<Point> figure) {
+    private double border(ArrayList<Point> figure) {
         AtomicReference<Double> min = new AtomicReference<>(Double.MAX_VALUE);
         AtomicReference<Double> max = new AtomicReference<>(Double.MIN_VALUE);
         figure.forEach(point -> {
@@ -193,51 +201,57 @@ class ResizableCanvas extends Canvas {
                 min.set(point.getX());
             }
         });
-        return (int)((min.get() + max.get()) / 2);
+        return ((min.get() + max.get()) / 2);
     }
 
-    private void fillLeft(Line line, int border, Color color) {
-        int startY, endY;
+    private void fillLeft(Line line, double border, Color color, boolean withoutTimeSleep) {
+        double startY, endY;
         if (line.getStart().getY() < line.getEnd().getY()) {
-            startY = (int)line.getStart().getY();
-            endY = (int)line.getEnd().getY();
+            startY = line.getStart().getY();
+            endY = line.getEnd().getY();
         } else {
-            endY = (int)line.getStart().getY();
-            startY = (int)line.getEnd().getY();
+            endY = line.getStart().getY();
+            startY = line.getEnd().getY();
         }
-        for (int y = startY; y < endY; y++) {
-            int startX = line.getX(y);
-            for (int x = startX; x <= border; x++) {
-                drawPixel(x, y, color);
+        for (double y = startY; y <= endY; y++) {
+            double startX = line.getX(y);
+            for (double x = startX; x <= border; x++) {
+                drawPixel(x, y, color, border);
+            }
+            if (!withoutTimeSleep) {
+
             }
         }
     }
 
-    private void fillRight(Line line, int border, Color color) {
-        int startY, endY;
+    private void fillRight(Line line, double border, Color color, boolean withoutTimeSleep) {
+        double startY, endY;
         if (line.getStart().getY() < line.getEnd().getY()) {
-            startY = (int)line.getStart().getY();
-            endY = (int)line.getEnd().getY();
+            startY = line.getStart().getY();
+            endY = line.getEnd().getY();
         } else {
-            endY = (int)line.getStart().getY();
-            startY = (int)line.getEnd().getY();
+            endY = line.getStart().getY();
+            startY = line.getEnd().getY();
         }
-        for (int y = startY; y < endY; y++) {
-            int startX = line.getX(y);
-            for (int x = startX; x > border; x--) {
-                drawPixel(x, y, color);
+        for (double y = startY; y <= endY; y++) {
+            double startX = line.getX(y);
+            for (double x = startX; x > border; x--) {
+                drawPixel(x, y, color, border);
+            }
+            if (!withoutTimeSleep) {
+
             }
         }
     }
 
-    private void fillMiddle(Line line, int border, Color color) {
-        int yIntersection = line.getY(border);
+    private void fillMiddle(Line line, double border, Color color, boolean withoutTimeSleep) {
+        double yIntersection = line.getY(border);
         Point leftPoint = line.getStart().getX() < border ? line.getStart() : line.getEnd();
         Point rightPoint = line.getEnd().getX() > border ? line.getEnd() : line.getStart();
         Line left = new Line(new Point(border, yIntersection), leftPoint);
         Line right = new Line(new Point(border, yIntersection), rightPoint);
-        fillLeft(left, border, color);
-        fillRight(right, border, color);
+        fillLeft(left, border, color, withoutTimeSleep);
+        fillRight(right, border, color, withoutTimeSleep);
     }
 
     private void drawPoint(Point point) {
@@ -253,15 +267,19 @@ class ResizableCanvas extends Canvas {
         gc.strokeLine(realStartPoint.getX(), realStartPoint.getY(), realEndPoint.getX(), realEndPoint.getY());
     }
 
-    private void drawPixel(int x, int y, Color color) {
+    private void drawPixel(double x, double y, Color color, double border) {
         Point realPoint = translatePointFromIdeal(new Point(x, y));
         int newX = (int)realPoint.getX();
         int newY = (int)realPoint.getY();
         Color[][] pixels = model.getPixels();
-        if (pixels[newX][newY] == color) {
+        if (pixels[newX][newY] == color && newX != (int) border) {
+//            gc.setStroke(Color.WHITE);
+//            gc.strokeLine(newX, newY, newX, newY);
             pixelWriter.setColor(newX, newY, Color.WHITE);
         } else {
             pixels[newX][newY] = color;
+//            gc.setStroke(color);
+//            gc.strokeLine(newX, newY, newX, newY);
             pixelWriter.setColor(newX, newY, color);
         }
     }
