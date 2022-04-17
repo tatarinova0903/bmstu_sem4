@@ -136,18 +136,27 @@ public class MainController extends AnchorPane {
             requestDrawBtn();
             canvas.requestFocus();
         });
+        addPointBtn.setOnAction(actionEvent -> {
+            requestAddPointBtn();
+            canvas.requestFocus();
+        });
     }
 
     private void requestDrawBtn() {
+        boolean withoutTimeSleep = timeRadioBtn.isDisabled();
+        Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
+        Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
+        canvas.fillBtnDidTap(figureColor, canvasColor);
+    }
+
+    private void requestAddPointBtn() {
         if (xField.getText().isEmpty() || yField.getText().isEmpty()) {
             return;
         }
-        boolean withoutTimeSleep = timeRadioBtn.isDisabled();
-        double centerX = Double.parseDouble(xField.getText());
-        double centerY = Double.parseDouble(yField.getText());
-        Color segmentColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
-        Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
-
+        int xCoord = Integer.parseInt(xField.getText());
+        int yCoord = Integer.parseInt(yField.getText());
+        Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
+        canvas.addPointBtnDidTap(xCoord, yCoord, figureColor);
     }
 
     private void aboutProgramBtnDidTap() {

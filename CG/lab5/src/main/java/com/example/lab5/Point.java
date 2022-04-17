@@ -1,6 +1,8 @@
 package com.example.lab5;
 
 public class Point {
+    double EPS = 1e-6;
+
     private double x;
     private double y;
 
@@ -23,5 +25,9 @@ public class Point {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    boolean isEqual(Point point) {
+        return Math.abs(point.getX() - this.x) < EPS && Math.abs(point.getY() - this.y) < EPS;
     }
 }

@@ -43,7 +43,6 @@ class ResizableCanvas extends Canvas {
 
         drawAxes();
 
-
         oldWidth = width;
         oldHeight = height;
     }
@@ -57,8 +56,19 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
-    void drawBtnDidTap(Color circleColor, Color backgroundColor) {
+    void fillBtnDidTap(Color color, Color backgroundColor) {
+        ArrayList<Point> figure = model.getFigure();
+        int pointsCount = figure.size();
+        if (pointsCount == 0) { return; }
+        if (!figure.get(0).isEqual(figure.get(pointsCount - 1))) {
+            figure.add(new Point(figure.get(0).getX(), figure.get(0).getY()));
+        }
+        drawFigure(color);
+    }
 
+    void addPointBtnDidTap(int x, int y, Color color) {
+        model.addPoint(x, y);
+        drawFigure(color);
     }
 
     void cancelBtnDidTap() {
@@ -136,8 +146,47 @@ class ResizableCanvas extends Canvas {
         gc.setLineWidth(1.0);
     }
 
-    private void drawPoint(double x, double y, Color color) {
-        pixelWriter.setColor((int)x, (int)y, color);
+    private void drawFigure(Color figureColor) {
+        gc.setFill(figureColor);
+        ArrayList<Point> figure = model.getFigure();
+        int pointsCount = figure.size();
+        if (pointsCount > 0) {
+            drawPoint(figure.get(0));
+        }
+        if (pointsCount == 1) { return; }
+        for (int i = 0; i < pointsCount - 1; i++) {
+            Point startPoint = figure.get(i);
+            Point endPoint = figure.get(i + 1);
+            drawPoint(startPoint);
+            drawPoint(endPoint);
+            drawLine(startPoint, endPoint);
+        }
+    }
+
+    private void fillFigure() {
+        ArrayList<Point> figure = model.getFigure();
+        int pointsCount = figure.size();
+        if (pointsCount < 3) { return; }
+        for (int i = 0; i < pointsCount - 1; i++) {
+            
+        }
+    }
+
+    private void drawPoint(Point point) {
+        Point realPoint = translatePointFromIdeal(point);
+        double x = realPoint.getX();
+        double y = realPoint.getY();
+        gc.fillOval(x - 1, y - 1, 2, 2);
+    }
+
+    private void drawLine(Point startPoint, Point endPoint) {
+        Point realStartPoint = translatePointFromIdeal(startPoint);
+        Point realEndPoint = translatePointFromIdeal(endPoint);
+        gc.strokeLine(realStartPoint.getX(), realStartPoint.getY(), realEndPoint.getX(), realEndPoint.getY());
+    }
+
+    private void drawPixel(int x, int y, Color color) {
+        pixelWriter.setColor(x, y, color);
     }
 
     private double newXForScale(Double scale) {
