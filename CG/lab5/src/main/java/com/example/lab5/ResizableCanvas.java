@@ -3,7 +3,6 @@ package com.example.lab5;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
@@ -13,7 +12,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 class ResizableCanvas extends Canvas {
@@ -175,18 +174,41 @@ class ResizableCanvas extends Canvas {
         if (pointsCount < 3) { return; }
         double border = border(figure);
         System.out.println(border);
-        for (int i = 0; i < pointsCount - 1; i++) {
-            Line line = new Line(figure.get(i), figure.get(i + 1));
-            if (line.isHorizontal()) { continue; }
-            if ((line.getStart().getX() < border || Math.abs(line.getStart().getX() - border) < 1e-6)  &&
-                    (line.getEnd().getX() <= border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
-                fillLeft(line, border, color, withoutTimeSleep);
-            } else if ((line.getStart().getX() > border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
-                    (line.getEnd().getX() > border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
-                fillRight(line, border, color, withoutTimeSleep);
-            } else {
-                fillMiddle(line, border, color, withoutTimeSleep);
+        if (withoutTimeSleep) {
+            for (int i = 0; i < pointsCount - 1; i++) {
+                Line line = new Line(figure.get(i), figure.get(i + 1));
+                if (line.isHorizontal()) {
+                    continue;
+                }
+                if ((line.getStart().getX() < border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
+                        (line.getEnd().getX() <= border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                    fillLeft(line, border, color);
+                } else if ((line.getStart().getX() > border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
+                        (line.getEnd().getX() > border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                    fillRight(line, border, color);
+                } else {
+                    fillMiddle(line, border, color);
+                }
             }
+        } else {
+            AtomicInteger i = new AtomicInteger();
+            Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(2500), (ActionEvent event) -> {
+                Line line = new Line(figure.get(i.get()), figure.get(i.get() + 1));
+                if (!line.isHorizontal()) {
+                    if ((line.getStart().getX() < border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
+                            (line.getEnd().getX() <= border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                        fillLeft(line, border, color);
+                    } else if ((line.getStart().getX() > border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
+                            (line.getEnd().getX() > border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                        fillRight(line, border, color);
+                    } else {
+                        fillMiddle(line, border, color);
+                    }
+                }
+                i.getAndIncrement();
+            }));
+            timeleine.setCycleCount(pointsCount - 1);
+            timeleine.play();
         }
     }
 
@@ -204,7 +226,7 @@ class ResizableCanvas extends Canvas {
         return ((min.get() + max.get()) / 2);
     }
 
-    private void fillLeft(Line line, double border, Color color, boolean withoutTimeSleep) {
+    private void fillLeft(Line line, double border, Color color) {
         double startY, endY;
         if (line.getStart().getY() < line.getEnd().getY()) {
             startY = line.getStart().getY();
@@ -218,13 +240,10 @@ class ResizableCanvas extends Canvas {
             for (double x = startX; x <= border; x++) {
                 drawPixel(x, y, color, border);
             }
-            if (!withoutTimeSleep) {
-
-            }
         }
     }
 
-    private void fillRight(Line line, double border, Color color, boolean withoutTimeSleep) {
+    private void fillRight(Line line, double border, Color color) {
         double startY, endY;
         if (line.getStart().getY() < line.getEnd().getY()) {
             startY = line.getStart().getY();
@@ -238,20 +257,17 @@ class ResizableCanvas extends Canvas {
             for (double x = startX; x > border; x--) {
                 drawPixel(x, y, color, border);
             }
-            if (!withoutTimeSleep) {
-
-            }
         }
     }
 
-    private void fillMiddle(Line line, double border, Color color, boolean withoutTimeSleep) {
+    private void fillMiddle(Line line, double border, Color color) {
         double yIntersection = line.getY(border);
         Point leftPoint = line.getStart().getX() < border ? line.getStart() : line.getEnd();
         Point rightPoint = line.getEnd().getX() > border ? line.getEnd() : line.getStart();
         Line left = new Line(new Point(border, yIntersection), leftPoint);
         Line right = new Line(new Point(border, yIntersection), rightPoint);
-        fillLeft(left, border, color, withoutTimeSleep);
-        fillRight(right, border, color, withoutTimeSleep);
+        fillLeft(left, border, color);
+        fillRight(right, border, color);
     }
 
     private void drawPoint(Point point) {
