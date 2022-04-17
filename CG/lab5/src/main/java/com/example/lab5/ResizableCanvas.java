@@ -3,6 +3,7 @@ package com.example.lab5;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -26,6 +27,7 @@ class ResizableCanvas extends Canvas {
             Point ideal = translatePointFromReal(new Point(mouseEvent.getX(), mouseEvent.getY()));
             controller.setCurrentMousePosition(ideal.getX(), ideal.getY());
         });
+        setOnMouseClicked(this::onMouseClicked);
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
     }
@@ -131,6 +133,12 @@ class ResizableCanvas extends Canvas {
         return new Point(newX, newY);
     }
 
+    private void onMouseClicked(MouseEvent event) {
+        requestFocus();
+        Point point = translatePointFromReal(new Point(event.getX(), event.getY()));
+        addPointBtnDidTap((int) point.getX(), (int) point.getY(), figureColor);
+    }
+
     private void drawAxes() {
         gc.setLineWidth(0.4);
         Point screenCenter = translatePointFromIdeal(new Point(0, 0));
@@ -223,7 +231,7 @@ class ResizableCanvas extends Canvas {
     }
 
     private void fillMiddle() {
-
+        
     }
 
     private void drawPoint(Point point) {

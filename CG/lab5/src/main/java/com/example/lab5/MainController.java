@@ -88,7 +88,7 @@ public class MainController extends AnchorPane {
             }
             case ENTER -> {
                 if (xField.isFocused() || yField.isFocused()) {
-                    requestDrawBtn();
+                    requestAddPointBtn();
                 }
             }
             case LEFT -> canvas.goTo(Direction.LEFT);
