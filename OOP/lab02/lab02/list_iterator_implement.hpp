@@ -21,8 +21,8 @@ T& list_iterator<T>::operator *()
     time_t t_time;
     t_time = time(NULL);
     if (!this->ptr.expired())
-        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Invalid iterator");
-    return this->ptr.lock()->get_obj();
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Object does not exist");
+    return this->ptr.lock()->get_info();
 }
 
 template<typename T>
@@ -31,7 +31,7 @@ shared_ptr<Node<T>> list_iterator<T>::operator ->()
     time_t t_time;
     t_time = time(NULL);
     if (!this->ptr.expired())
-        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Invalid iterator");
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Object does not exist");
     return this->ptr.lock();
 }
 
@@ -41,7 +41,7 @@ const T& list_iterator<T>::operator *() const
     time_t t_time;
     t_time = time(NULL);
     if (!this->ptr.expired())
-        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Invalid iterator");
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Object does not exist");
     return this->ptr.lock()->get_obj();
 }
 
@@ -51,7 +51,7 @@ const shared_ptr<Node<T>> list_iterator<T>::operator ->() const
     time_t t_time;
     t_time = time(NULL);
     if (!this->ptr.expired())
-        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Invalid iterator");
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Object does not exist");
     return this->ptr.lock();
 }
 

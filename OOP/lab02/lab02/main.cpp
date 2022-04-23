@@ -35,8 +35,8 @@ int main()
         else
             cout << "list3 is not empty" << endl;
         
-        cout << list3.first() << endl;
-        cout << list3.last() << endl;
+        cout << list3.get_first() << endl;
+        cout << list3.get_last() << endl;
         cout << list3.pop_front() << endl;
         cout << list3.pop_front() << endl;
 

@@ -8,7 +8,7 @@ namespace container {
     {
     public:
         explicit base_container(): len(0) {}
-        virtual ~base_container(){}
+        virtual ~base_container() = default;
         
         bool is_empty() const
         {

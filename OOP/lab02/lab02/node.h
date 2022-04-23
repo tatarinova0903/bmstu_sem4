@@ -18,24 +18,24 @@ public:
         next(nullptr)
     {}
     
-    Node(Info &key):
-        info(key),
+    Node(Info &info):
+        info(info),
         next(nullptr)
     {}
     
     ~Node(){}
     
-    const Info& get_obj() const
+    const Info& get_info() const
     {
         return this->info;
     }
     
-    Info& get_obj()
+    Info& get_info()
     {
         return this->info;
     }
     
-    void set_obj(const Info &key)
+    void set_info(const Info &info)
     {
         this->info = info;
     }

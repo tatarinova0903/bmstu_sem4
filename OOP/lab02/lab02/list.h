@@ -18,11 +18,11 @@ class List : public container::base_container
 public:
     List(): head(nullptr), tail(nullptr){}
     List(T* array, int n);
-    List(const List<T> &list);
-    List(List<T> && list);
+    explicit List(const List<T> &list);
+    List(List<T> &&list) noexcept;
     List(initializer_list<T> lst);
 
-    virtual ~List();
+    virtual ~List() override;
     List<T>& operator =(const List<T> &list);
     List<T>& operator =(List<T> &&list);
     List<T>& operator =(initializer_list<T> lst);
@@ -51,8 +51,8 @@ public:
 
     list_iterator<T> begin();
     list_iterator<T> end();
-    const_list_iterator<T> begin() const;
-    const_list_iterator<T> end() const;
+    const_list_iterator<T> cbegin() const;
+    const_list_iterator<T> cend() const;
 
     void clear();
 
@@ -61,10 +61,10 @@ public:
 
     bool is_empty();
 
-    T& first();
-    const T& first() const;
-    T& last();
-    const T& last() const;
+    T& get_first();
+    const T& get_first() const;
+    T& get_last();
+    const T& get_last() const;
 
 protected:
     List<T>& append_list(const List<T>& list);

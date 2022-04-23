@@ -19,7 +19,7 @@ List<T>::List(T* array, int n)
         for (int i = 0; i < n; i++)
         {
             shared_ptr<Node<T>> new_node = shared_ptr<Node<T>>(new Node<T>);
-            new_node->set_obj(array[i]);
+            new_node->set_info(array[i]);
             this->append(new_node);
         }
     }
@@ -48,7 +48,7 @@ List<T>::List(const List<T> &list)
             for (node = list.head; node; node = node->get_next())
             {
                 shared_ptr<Node<T>> new_node = shared_ptr<Node<T>>(new Node<T>);
-                new_node->set_obj(node->get_obj());
+                new_node->set_info(node->get_info());
                 this->append(new_node);
             }
         }
@@ -119,7 +119,7 @@ List<T>& List<T>::operator =(const List<T> &list)
             for (node = list.head; node; node = node->get_next())
             {
                 shared_ptr<Node<T>> new_node = shared_ptr<Node<T>>(new Node<T>);
-                new_node->set_obj(node->get_obj());
+                new_node->set_info(node->get_info());
                 this->append(new_node);
             }
         }
@@ -245,7 +245,7 @@ template <typename T>
 bool List<T>::operator ==(const List<T> &list) const
 {
     shared_ptr<Node<T>> nodet = this->head, nodel = list.head;
-    while (nodet && nodel && nodet->get_obj() == nodel->get_obj())
+    while (nodet && nodel && nodet->get_info() == nodel->get_info())
     {
         nodet = nodet->get_next();
         nodel = nodel->get_next();
@@ -275,18 +275,6 @@ list_iterator<T> List<T>::end()
 }
 
 template <typename T>
-const_list_iterator<T> List<T>::begin() const
-{
-    return const_list_iterator<T>(this->head);
-}
-
-template <typename T>
-const_list_iterator<T> List<T>::end() const
-{
-    return const_list_iterator<T>(this->tail);
-}
-
-template <typename T>
 void List<T>::clear()
 {
     this->free();
@@ -298,17 +286,26 @@ void List<T>::clear()
 template <typename T>
 List<T>& List<T>::insert_after(const T& el, list_iterator<T>& insert_after)
 {
-    shared_ptr<Node<T>> node = shared_ptr<Node<T>>(new Node<T>);
-    node->set_obj(el);
-    this->insert_after(node, insert_after);
+    time_t t_time = time(NULL);
+    if (insert_after == nullptr)
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Iterator is empty");
+    try
+    {
+        shared_ptr<Node<T>> node = shared_ptr<Node<T>>(new Node<T>);
+        node->set_info(el);
+        this->insert_after(node, insert_after);
+    }
+    catch (bad_alloc)
+    {
+        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Allocation error");
+    }
     return *this;
 }
 
 template <typename T>
 List<T>& List<T>::insert_after(const List<T> &list, list_iterator<T>& insert_after)
 {
-    time_t t_time;
-    t_time = time(NULL);
+    time_t t_time = time(NULL);
     try
     {
         shared_ptr<Node<T>> node;
@@ -316,7 +313,7 @@ List<T>& List<T>::insert_after(const List<T> &list, list_iterator<T>& insert_aft
         {
             shared_ptr<Node<T>> new_node = shared_ptr<Node<T>>(new Node<T>);
             new_node->set_obj(node->get_obj());
-            this->insert_after(new_node,insert_after);
+            this->insert_after(new_node, insert_after);
             ++insert_after;
         }
     }
@@ -330,10 +327,9 @@ List<T>& List<T>::insert_after(const List<T> &list, list_iterator<T>& insert_aft
 template <typename T>
 List<T>& List<T>::remove(list_iterator<T>& iter)
 {
-    time_t t_time;
-    t_time = time(NULL);
+    time_t t_time = time(NULL);
     if (!this->head)
-        throw list_index_out_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "List index out of range");
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "List is empty");
     shared_ptr<Node<T>> node = this->head;
     while (node->get_next() != *iter)
     {
@@ -352,25 +348,25 @@ bool List<T>::is_empty()
 }
 
 template <typename T>
- T& List<T>::first()
+ T& List<T>::get_first()
+{
+    return this->head->get_info();
+}
+
+template <typename T>
+const T& List<T>::get_first() const
 {
     return this->head->get_obj();
 }
 
 template <typename T>
-const T& List<T>::first() const
+ T& List<T>::get_last()
 {
-    return this->head->get_obj();
+    return this->tail->get_info();
 }
 
 template <typename T>
- T& List<T>::last()
-{
-    return this->tail->get_obj();
-}
-
-template <typename T>
-const T& List<T>::last() const
+const T& List<T>::get_last() const
 {
     return this->tail->get_obj();
 }
@@ -381,9 +377,9 @@ T& List<T>::pop_front()
     time_t t_time;
     t_time = time(NULL);
     if (!this->head)
-        throw list_index_out_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "List index out of range");
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "List is empty");
     T *data = new T;
-    *data = this->head->get_obj();
+    *data = this->head->get_info();
     shared_ptr<Node<T>> tmp = this->head->get_next();
     this->head.reset();
     this->head = tmp;
@@ -407,7 +403,7 @@ List<T>& List<T>::push_front(const T& value)
     try
     {
         shared_ptr<Node<T>> node = shared_ptr<Node<T>>(new Node<T>);
-        node->set_obj(value);
+        node->set_info(value);
         if (!this->head)
         {
             this->head = node;
@@ -480,7 +476,7 @@ List<T>& List<T>::append_el(const T& elem)
     try
     {
         shared_ptr<Node<T>>node = shared_ptr<Node<T>>(new Node<T>);
-        node->set_obj(elem);
+        node->set_info(elem);
         this->append(node);
     }
     catch (bad_alloc)
@@ -506,7 +502,10 @@ void List<T>::free()
 template <typename T>
 List<T>& List<T>::insert_after(shared_ptr<Node<T>> node, list_iterator<T>& insert_after)
 {
+    time_t t_time = time(NULL);
     node->next = insert_after->get_next();
+    if (node->next == nullptr)
+        throw iterator_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "Next element does not exist");
     insert_after->set_next(node);
     this->len++;
     return *this;

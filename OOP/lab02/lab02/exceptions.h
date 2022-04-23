@@ -19,14 +19,6 @@ protected:
     string err_info;
 };
 
-class list_index_out_exception : public base_exception
-{
-public:
-    list_index_out_exception(string filename, string classname, int line, const char *time, string info)
-    : base_exception(filename, classname, line, time, info) {}
-    string what(void) {return this->err_info;}
-};
-
 class memory_allocate_exception : public base_exception
 {
 public:
