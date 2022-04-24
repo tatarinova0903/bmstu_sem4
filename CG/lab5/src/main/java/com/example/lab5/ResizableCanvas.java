@@ -177,17 +177,8 @@ class ResizableCanvas extends Canvas {
         if (withoutTimeSleep) {
             for (int i = 0; i < pointsCount - 1; i++) {
                 Line line = new Line(figure.get(i), figure.get(i + 1));
-                if (line.isHorizontal()) {
-                    continue;
-                }
-                if ((line.getStart().getX() < border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
-                        (line.getEnd().getX() <= border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
+                if (!line.isHorizontal()) {
                     fillLeft(line, border, color);
-                } else if ((line.getStart().getX() > border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
-                        (line.getEnd().getX() > border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
-                    fillRight(line, border, color);
-                } else {
-                    fillMiddle(line, border, color);
                 }
             }
         } else {
@@ -195,15 +186,7 @@ class ResizableCanvas extends Canvas {
             Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(2500), (ActionEvent event) -> {
                 Line line = new Line(figure.get(i.get()), figure.get(i.get() + 1));
                 if (!line.isHorizontal()) {
-                    if ((line.getStart().getX() < border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
-                            (line.getEnd().getX() <= border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
-                        fillLeft(line, border, color);
-                    } else if ((line.getStart().getX() > border || Math.abs(line.getStart().getX() - border) < 1e-6) &&
-                            (line.getEnd().getX() > border || Math.abs(line.getEnd().getX() - border) < 1e-6)) {
-                        fillRight(line, border, color);
-                    } else {
-                        fillMiddle(line, border, color);
-                    }
+                    fillLeft(line, border, color);
                 }
                 i.getAndIncrement();
             }));
@@ -213,61 +196,41 @@ class ResizableCanvas extends Canvas {
     }
 
     private double border(ArrayList<Point> figure) {
-        AtomicReference<Double> min = new AtomicReference<>(Double.MAX_VALUE);
         AtomicReference<Double> max = new AtomicReference<>(Double.MIN_VALUE);
         figure.forEach(point -> {
             if (point.getX() > max.get()) {
                 max.set(point.getX());
             }
-            if (point.getX() < min.get()) {
-                min.set(point.getX());
-            }
         });
-        return ((min.get() + max.get()) / 2);
+        return max.get();
     }
 
     private void fillLeft(Line line, double border, Color color) {
-        double startY, endY;
-        if (line.getStart().getY() < line.getEnd().getY()) {
-            startY = line.getStart().getY();
-            endY = line.getEnd().getY();
-        } else {
-            endY = line.getStart().getY();
-            startY = line.getEnd().getY();
+        int x1 = (int) line.getStart().getX();
+        int x2 = (int) line.getEnd().getX();
+        int y1 = (int) line.getStart().getY();
+        int y2 = (int) line.getEnd().getY();
+
+        if (y1 > y2)
+        {
+            int tmp = y2;
+            y2 = y1;
+            y1 = tmp;
+            tmp = x2;
+            x2 = x1;
+            x1 = tmp;
         }
-        for (double y = startY; y <= endY; y++) {
-            double startX = line.getX(y);
-            for (double x = startX; x <= border; x++) {
+
+        double dx = (x2 - x1) / (double)(y2 - y1);
+        double xstart = x1;
+        for (int y = y1; y < y2; y++)
+        {
+            for (int x = (int) Math.round(xstart); x <= border; x++)
+            {
                 drawPixel(x, y, color, border);
             }
+            xstart += dx;
         }
-    }
-
-    private void fillRight(Line line, double border, Color color) {
-        double startY, endY;
-        if (line.getStart().getY() < line.getEnd().getY()) {
-            startY = line.getStart().getY();
-            endY = line.getEnd().getY();
-        } else {
-            endY = line.getStart().getY();
-            startY = line.getEnd().getY();
-        }
-        for (double y = startY; y <= endY; y++) {
-            double startX = line.getX(y);
-            for (double x = startX; x > border; x--) {
-                drawPixel(x, y, color, border);
-            }
-        }
-    }
-
-    private void fillMiddle(Line line, double border, Color color) {
-        double yIntersection = line.getY(border);
-        Point leftPoint = line.getStart().getX() < border ? line.getStart() : line.getEnd();
-        Point rightPoint = line.getEnd().getX() > border ? line.getEnd() : line.getStart();
-        Line left = new Line(new Point(border, yIntersection), leftPoint);
-        Line right = new Line(new Point(border, yIntersection), rightPoint);
-        fillLeft(left, border, color);
-        fillRight(right, border, color);
     }
 
     private void drawPoint(Point point) {
@@ -283,19 +246,15 @@ class ResizableCanvas extends Canvas {
         gc.strokeLine(realStartPoint.getX(), realStartPoint.getY(), realEndPoint.getX(), realEndPoint.getY());
     }
 
-    private void drawPixel(double x, double y, Color color, double border) {
+    private void drawPixel(int x, int y, Color color, double border) {
         Point realPoint = translatePointFromIdeal(new Point(x, y));
         int newX = (int)realPoint.getX();
         int newY = (int)realPoint.getY();
         Color[][] pixels = model.getPixels();
         if (pixels[newX][newY] == color && newX != (int) border) {
-//            gc.setStroke(Color.WHITE);
-//            gc.strokeLine(newX, newY, newX, newY);
             pixelWriter.setColor(newX, newY, Color.WHITE);
         } else {
             pixels[newX][newY] = color;
-//            gc.setStroke(color);
-//            gc.strokeLine(newX, newY, newX, newY);
             pixelWriter.setColor(newX, newY, color);
         }
     }
