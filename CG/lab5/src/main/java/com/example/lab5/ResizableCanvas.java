@@ -65,14 +65,13 @@ class ResizableCanvas extends Canvas {
 
     void fillBtnDidTap(Color color, boolean withoutTimeSleep) {
         figureColor = color;
-        ArrayList<Point> figure = model.getFigure();
-        int pointsCount = figure.size();
-        if (pointsCount == 0) { return; }
-        if (!figure.get(0).isEqual(figure.get(pointsCount - 1))) {
-            figure.add(new Point(figure.get(0).getX(), figure.get(0).getY()));
-        }
-        drawFigure(color);
-        fillFigure(figure, color, withoutTimeSleep);
+        ArrayList<Figure> figures = model.getFigures();
+        figures.forEach(figure -> {
+            int pointsCount = figure.getPoints().size();
+            if (pointsCount == 0) { return; }
+            drawFigure(color);
+            fillFigure(figure, color, withoutTimeSleep);
+        });
     }
 
     void addPointBtnDidTap(int x, int y, Color color) {
@@ -88,6 +87,11 @@ class ResizableCanvas extends Canvas {
     void cancelAllBtnDidTap() {
         model.cancelAll();
         draw();
+    }
+
+    void lockFigureBtnDidTap(Color color) {
+        model.lockFigure();
+        drawFigure(color);
     }
 
     void scale(boolean isPlus) {
@@ -154,29 +158,30 @@ class ResizableCanvas extends Canvas {
 
     private void drawFigure(Color figureColor) {
         gc.setFill(figureColor);
-        ArrayList<Point> figure = model.getFigure();
-        int pointsCount = figure.size();
-        if (pointsCount > 0) {
-            drawPoint(figure.get(0));
-        }
-        if (pointsCount == 1) { return; }
-        for (int i = 0; i < pointsCount - 1; i++) {
-            Point startPoint = figure.get(i);
-            Point endPoint = figure.get(i + 1);
-            drawPoint(startPoint);
-            drawPoint(endPoint);
-            drawLine(startPoint, endPoint);
-        }
+        ArrayList<Figure> figures = model.getFigures();
+        figures.forEach(figure -> {
+            int pointsCount = figure.getPoints().size();
+            if (pointsCount > 0) {
+                drawPoint(figure.getPoints().get(0));
+            }
+            if (pointsCount == 1) { return; }
+            for (int i = 0; i < pointsCount - 1; i++) {
+                Point startPoint = figure.getPoints().get(i);
+                Point endPoint = figure.getPoints().get(i + 1);
+                drawPoint(startPoint);
+                drawPoint(endPoint);
+                drawLine(startPoint, endPoint);
+            }
+        });
     }
 
-    private void fillFigure(ArrayList<Point> figure, Color color, boolean withoutTimeSleep) {
-        int pointsCount = figure.size();
+    private void fillFigure(Figure figure, Color color, boolean withoutTimeSleep) {
+        int pointsCount = figure.getPoints().size();
         if (pointsCount < 3) { return; }
-        double border = border(figure);
-        System.out.println(border);
+        double border = border(figure.getPoints());
         if (withoutTimeSleep) {
             for (int i = 0; i < pointsCount - 1; i++) {
-                Line line = new Line(figure.get(i), figure.get(i + 1));
+                Line line = new Line(figure.getPoints().get(i), figure.getPoints().get(i + 1));
                 if (!line.isHorizontal()) {
                     fillLeft(line, border, color);
                 }
@@ -184,7 +189,7 @@ class ResizableCanvas extends Canvas {
         } else {
             AtomicInteger i = new AtomicInteger();
             Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(2500), (ActionEvent event) -> {
-                Line line = new Line(figure.get(i.get()), figure.get(i.get() + 1));
+                Line line = new Line(figure.getPoints().get(i.get()), figure.getPoints().get(i.get() + 1));
                 if (!line.isHorizontal()) {
                     fillLeft(line, border, color);
                 }
@@ -211,8 +216,7 @@ class ResizableCanvas extends Canvas {
         int y1 = (int) line.getStart().getY();
         int y2 = (int) line.getEnd().getY();
 
-        if (y1 > y2)
-        {
+        if (y1 > y2) {
             int tmp = y2;
             y2 = y1;
             y1 = tmp;
@@ -223,10 +227,8 @@ class ResizableCanvas extends Canvas {
 
         double dx = (x2 - x1) / (double)(y2 - y1);
         double xstart = x1;
-        for (int y = y1; y < y2; y++)
-        {
-            for (int x = (int) Math.round(xstart); x <= border; x++)
-            {
+        for (int y = y1; y < y2; y++) {
+            for (int x = (int) Math.round(xstart); x <= border; x++) {
                 drawPixel(x, y, color, border);
             }
             xstart += dx;

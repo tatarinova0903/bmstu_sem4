@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Model {
     private final TranslateCoords translateCoords = new TranslateCoords(0, 0);
-    private ArrayList<Point> figure = new ArrayList<>();
+    private ArrayList<Figure> figures = new ArrayList<>();
     private Color[][] pixels = new Color[1500][1000];
 
     public Model() {
@@ -26,23 +26,27 @@ public class Model {
     }
 
     public void cancel() {
-        int lastIndex = figure.size() - 1;
+        Figure lastFigure = getLastFigure();
+        int lastIndex = lastFigure.getPoints().size() - 1;
         if (lastIndex > 0) {
-            figure.remove(lastIndex);
+            lastFigure.getPoints().remove(lastIndex);
         }
     }
 
     public void cancelAll() {
-        figure.clear();
+        figures.clear();
     }
 
     public void addPoint(int x, int y) {
         Point point = new Point(x, y);
-        figure.add(point);
+        if (figures.size() == 0 || getLastFigure().isLocked()) {
+            figures.add(new Figure());
+        }
+        getLastFigure().addPoint(point);
     }
 
-    public ArrayList<Point> getFigure() {
-        return figure;
+    public ArrayList<Figure> getFigures() {
+        return figures;
     }
 
     public void clearPixels() {
@@ -51,5 +55,15 @@ public class Model {
                 pixels[i][j] = Color.WHITE;
             }
         }
+    }
+
+    void lockFigure() {
+        if (figures.size() == 0) { return; }
+        getLastFigure().lock();
+    }
+
+    private Figure getLastFigure() {
+        int lastIndex = figures.size() - 1;
+        return figures.get(lastIndex);
     }
 }

@@ -31,6 +31,7 @@ public class MainController extends AnchorPane {
     private final Text yLabel = new Text("y:");
     private final TextField yField = new TextField();
     private final Button addPointBtn = new Button("Добавить");
+    private final Button lockBtn = new Button("Замкнуть");
     private final Button drawBtn = new Button("Закрасить");
     private final RadioButton timeRadioBtn = new RadioButton("С задержкой");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
@@ -59,7 +60,7 @@ public class MainController extends AnchorPane {
 
         xField.setMaxWidth(60);
         yField.setMaxWidth(60);
-        HBox figureMenu = new HBox(pointLabel, xLabel, xField, yLabel, yField, addPointBtn, timeRadioBtn, drawBtn);
+        HBox figureMenu = new HBox(pointLabel, xLabel, xField, yLabel, yField, addPointBtn, lockBtn, timeRadioBtn, drawBtn);
         figureMenu.setSpacing(10);
 
         HBox inputMenu = new HBox(colorsMenu, figureMenu);
@@ -139,6 +140,11 @@ public class MainController extends AnchorPane {
         addPointBtn.setOnAction(actionEvent -> {
             requestAddPointBtn();
             canvas.requestFocus();
+        });
+        lockBtn.setOnAction(actionEvent -> {
+            requestAddPointBtn();
+            Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
+            canvas.lockFigureBtnDidTap(figureColor);
         });
     }
 
