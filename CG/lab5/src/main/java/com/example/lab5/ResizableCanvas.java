@@ -180,12 +180,15 @@ class ResizableCanvas extends Canvas {
         if (pointsCount < 3) { return; }
         double border = border(figure.getPoints());
         if (withoutTimeSleep) {
+            long start = System.currentTimeMillis();
             for (int i = 0; i < pointsCount - 1; i++) {
                 Line line = new Line(figure.getPoints().get(i), figure.getPoints().get(i + 1));
                 if (!line.isHorizontal()) {
                     fillLeft(line, border, color);
                 }
             }
+            long finish = System.currentTimeMillis();
+            controller.setTime(finish - start);
         } else {
             AtomicInteger i = new AtomicInteger();
             Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(2500), (ActionEvent event) -> {
