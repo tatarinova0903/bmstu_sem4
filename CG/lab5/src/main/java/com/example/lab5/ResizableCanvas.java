@@ -253,7 +253,7 @@ class ResizableCanvas extends Canvas {
         int newX = (int) realPoint.getX();
         int newY = (int) realPoint.getY();
         Color[][] pixels = model.getPixels();
-        if (pixels[newX][newY] == color && newX != (int) border) {
+        if (pixels[newX][newY] == color) {
             pixels[newX][newY] = Color.WHITE;
             pixelWriter.setColor(newX, newY, Color.WHITE);
         } else {
