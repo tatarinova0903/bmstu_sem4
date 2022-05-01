@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 class ResizableCanvas extends Canvas {
-    private final int INTENSITY = 255;
     private final GraphicsContext gc = getGraphicsContext2D();
     private final PixelWriter pixelWriter = gc.getPixelWriter();
     private double oldWidth = getWidth();
@@ -69,7 +68,7 @@ class ResizableCanvas extends Canvas {
         figures.forEach(figure -> {
             int pointsCount = figure.getPoints().size();
             if (pointsCount == 0) { return; }
-            drawFigure(color);
+//            drawFigure(color);
             fillFigure(figure, color, withoutTimeSleep);
         });
     }
@@ -191,7 +190,7 @@ class ResizableCanvas extends Canvas {
             controller.setTime(finish - start);
         } else {
             AtomicInteger i = new AtomicInteger();
-            Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(2500), (ActionEvent event) -> {
+            Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(1500), (ActionEvent event) -> {
                 Line line = new Line(figure.getPoints().get(i.get()), figure.getPoints().get(i.get() + 1));
                 if (!line.isHorizontal()) {
                     fillLeft(line, border, color);

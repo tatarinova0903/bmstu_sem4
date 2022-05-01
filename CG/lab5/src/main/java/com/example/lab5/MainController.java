@@ -53,8 +53,8 @@ public class MainController extends AnchorPane {
         colorComboBox.getSelectionModel().selectFirst();
 
         HBox colorsMenu = new HBox(
-                colorLabel, colorComboBox,
-                backgroundColorLabel, backgroundColorComboBox
+                colorLabel, colorComboBox
+                // backgroundColorLabel, backgroundColorComboBox
         );
         colorsMenu.setAlignment(Pos.CENTER);
         colorsMenu.setSpacing(10);
@@ -144,7 +144,6 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         lockBtn.setOnAction(actionEvent -> {
-            requestAddPointBtn();
             Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
             canvas.lockFigureBtnDidTap(figureColor);
         });
@@ -168,16 +167,11 @@ public class MainController extends AnchorPane {
     }
 
     private void aboutProgramBtnDidTap() {
-        showInfoAlert("Реализовать различные алгоритмы построения одиночных эллипсов. Эллипс задается координатой центра и двумя полуосями.\n" +
-                "\n" +
-                "Сравнить визуальные характеристики эллипсов, построенных разными алгоритмами, с помощью построения спектра с заданным шагом.\n" +
-                "\n" +
-                "- Каноническое уравнение\n" +
-                "- Параметрическое уравнение\n" +
-                "- алгоритм Брезенхема\n" +
-                "- алгоритм средней точки\n" +
-                "\n" +
-                "Построение гистограмм по затраченному времени.");
+        showInfoAlert("Реализовать aлгоритм заполнения с перегородкой.\n" +
+                "Необходимо обеспечить ввод произвольной многоугольной области, содержащей произвольное количество отверстий. Ввод (вершин многоугольника) производить с помощью мыши, при этом для удобства пользователя должны отображаться ребра, соединяющие вводимые вершины. Предусмотреть ввод горизонтальных и вертикальных ребер.\n" +
+                "Пользователь должен иметь возможность задания цвета заполнения.\n" +
+                "Работа программы должна предусматривать два режима – с задержкой и без задержки.\n" +
+                "Режим с задержкой должен позволить проследить выполняемую последовательность действий.\n");
     }
 
     private void configure(HBox box) {
