@@ -21,10 +21,10 @@ public class MainController extends AnchorPane {
     private final Text currMousePositionLabel = new Text("");
     private final Button cancelBtn = new Button("Отменить");
     private final Button cancelAllBtn = new Button("Сбросить");
+    private final Text borderColorLabel = new Text("Цвет границы:");
+    private final ComboBox borderColorComboBox = new ComboBox<>();
     private final Text colorLabel = new Text("Цвет заполнения:");
     private final ComboBox colorComboBox = new ComboBox<>();
-    private final Text backgroundColorLabel = new Text("Цвет фона:");
-    private final ComboBox backgroundColorComboBox = new ComboBox<>();
     private final Text pointLabel = new Text("Точка:");
     private final Text xLabel = new Text("x:");
     private final TextField xField = new TextField();
@@ -44,16 +44,16 @@ public class MainController extends AnchorPane {
         commonActionsMenu.setSpacing(10);
 
         colors.getColorsStr().forEach(color -> {
-            backgroundColorComboBox.getItems().add(color);
+            borderColorComboBox.getItems().add(color);
             colorComboBox.getItems().add(color);
         });
 
-        backgroundColorComboBox.getSelectionModel().select(1);
-        colorComboBox.getSelectionModel().selectFirst();
+        borderColorComboBox.getSelectionModel().selectFirst();
+        colorComboBox.getSelectionModel().select(1);
 
         HBox colorsMenu = new HBox(
-                colorLabel, colorComboBox,
-                backgroundColorLabel, backgroundColorComboBox
+                borderColorLabel, borderColorComboBox,
+                colorLabel, colorComboBox
         );
         colorsMenu.setAlignment(Pos.CENTER);
         colorsMenu.setSpacing(10);
@@ -97,6 +97,10 @@ public class MainController extends AnchorPane {
             case UP -> canvas.goTo(Direction.UP);
             case DOWN -> canvas.goTo(Direction.DOWN);
         }
+    }
+
+    Color getBorderColor() {
+        return colors.getColors().get(borderColorComboBox.getSelectionModel().getSelectedIndex());
     }
 
     private void addHandlers() {
@@ -143,16 +147,16 @@ public class MainController extends AnchorPane {
         });
         lockBtn.setOnAction(actionEvent -> {
             requestAddPointBtn();
-            Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
-            canvas.lockFigureBtnDidTap(figureColor);
+            Color borderColor = colors.getColors().get(borderColorComboBox.getSelectionModel().getSelectedIndex());
+            canvas.lockFigureBtnDidTap(borderColor);
         });
     }
 
     private void requestDrawBtn() {
         boolean withoutTimeSleep = !timeRadioBtn.isSelected();
         Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
-        Color canvasColor = colors.getColors().get(backgroundColorComboBox.getSelectionModel().getSelectedIndex());
-        canvas.fillBtnDidTap(figureColor, withoutTimeSleep);
+        Color canvasColor = colors.getColors().get(borderColorComboBox.getSelectionModel().getSelectedIndex());
+        canvas.fillBtnDidTap(canvasColor, figureColor, withoutTimeSleep);
     }
 
     private void requestAddPointBtn() {

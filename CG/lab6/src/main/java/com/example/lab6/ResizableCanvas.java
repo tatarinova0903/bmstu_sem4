@@ -13,7 +13,6 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 class ResizableCanvas extends Canvas {
     private final int INTENSITY = 255;
@@ -29,8 +28,8 @@ class ResizableCanvas extends Canvas {
     public ResizableCanvas(MainController controller) {
         this.controller = controller;
         setOnMouseMoved(mouseEvent -> {
-            Point ideal = translatePointFromReal(new Point(mouseEvent.getX(), mouseEvent.getY()));
-            controller.setCurrentMousePosition(ideal.getX(), ideal.getY());
+            Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
+            controller.setCurrentMousePosition(point.getX(), point.getY());
         });
         setOnMouseClicked(this::onMouseClicked);
         widthProperty().addListener(evt -> draw());
@@ -47,8 +46,7 @@ class ResizableCanvas extends Canvas {
         gc.fillRect(0, 0, width, height);
         model.clearPixels();
 
-//        drawAxes();
-        fillBtnDidTap(figureColor, true);
+//        fillBtnDidTap(figureColor, true);
 
         oldWidth = width;
         oldHeight = height;
@@ -63,14 +61,12 @@ class ResizableCanvas extends Canvas {
     @Override
     public double prefHeight(double width) { return getHeight(); }
 
-    void fillBtnDidTap(Color color, boolean withoutTimeSleep) {
-        figureColor = color;
+    void fillBtnDidTap(Color borderColor, Color figureColor, boolean withoutTimeSleep) {
         ArrayList<Figure> figures = model.getFigures();
         figures.forEach(figure -> {
             int pointsCount = figure.getPoints().size();
             if (pointsCount == 0) { return; }
-            drawFigure(color);
-            fillFigure(figure, color, withoutTimeSleep);
+            fillFigure(borderColor, figureColor, withoutTimeSleep);
         });
     }
 
@@ -126,38 +122,15 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    Point translatePointFromIdeal(Point point) {
-        double newX = (point.getX() + model.getTranslateCoords().getX());
-        double newY = (point.getY() + model.getTranslateCoords().getY());
-        newX = newX + getWidth() / 2;
-        newY = (newY - getHeight() / 2) * (-1);
-        return new Point(newX, newY);
-    }
-
-    Point translatePointFromReal(Point point) {
-        double newX = point.getX() - getWidth() / 2;
-        double newY = point.getY() * (-1) + getHeight() / 2;
-        newX = newX - model.getTranslateCoords().getX();
-        newY = newY - model.getTranslateCoords().getY();
-        return new Point(newX, newY);
-    }
-
     private void onMouseClicked(MouseEvent event) {
         requestFocus();
-        Point point = translatePointFromReal(new Point(event.getX(), event.getY()));
-        addPointBtnDidTap((int) point.getX(), (int) point.getY(), figureColor);
-    }
-
-    private void drawAxes() {
-//        gc.setLineWidth(0.4);
-        Point screenCenter = translatePointFromIdeal(new Point(0, 0));
-        gc.strokeLine(0, screenCenter.getY(), getWidth(), screenCenter.getY());
-        gc.strokeLine(screenCenter.getX(), 0, screenCenter.getX(), getHeight());
-        gc.setLineWidth(1.0);
+        Point point = new Point(event.getX(), event.getY());
+        addPointBtnDidTap((int) point.getX(), (int) point.getY(), controller.getBorderColor());
     }
 
     private void drawFigure(Color figureColor) {
         gc.setFill(figureColor);
+        gc.setStroke(figureColor);
         ArrayList<Figure> figures = model.getFigures();
         figures.forEach(figure -> {
             int pointsCount = figure.getPoints().size();
@@ -175,83 +148,34 @@ class ResizableCanvas extends Canvas {
         });
     }
 
-    private void fillFigure(Figure figure, Color color, boolean withoutTimeSleep) {
-        int pointsCount = figure.getPoints().size();
-        if (pointsCount < 3) { return; }
-        double border = border(figure.getPoints());
+    private void fillFigure(Color borderColor, Color figureColor, boolean withoutTimeSleep) {
         if (withoutTimeSleep) {
-            for (int i = 0; i < pointsCount - 1; i++) {
-                Line line = new Line(figure.getPoints().get(i), figure.getPoints().get(i + 1));
-                if (!line.isHorizontal()) {
-                    fillLeft(line, border, color);
-                }
-            }
+
         } else {
             AtomicInteger i = new AtomicInteger();
             Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(2500), (ActionEvent event) -> {
-                Line line = new Line(figure.getPoints().get(i.get()), figure.getPoints().get(i.get() + 1));
-                if (!line.isHorizontal()) {
-                    fillLeft(line, border, color);
-                }
+
                 i.getAndIncrement();
             }));
-            timeleine.setCycleCount(pointsCount - 1);
+            timeleine.setCycleCount(0);
             timeleine.play();
         }
     }
 
-    private double border(ArrayList<Point> figure) {
-        AtomicReference<Double> max = new AtomicReference<>(Double.MIN_VALUE);
-        figure.forEach(point -> {
-            if (point.getX() > max.get()) {
-                max.set(point.getX());
-            }
-        });
-        return max.get();
-    }
-
-    private void fillLeft(Line line, double border, Color color) {
-        int x1 = (int) line.getStart().getX();
-        int x2 = (int) line.getEnd().getX();
-        int y1 = (int) line.getStart().getY();
-        int y2 = (int) line.getEnd().getY();
-
-        if (y1 > y2) {
-            int tmp = y2;
-            y2 = y1;
-            y1 = tmp;
-            tmp = x2;
-            x2 = x1;
-            x1 = tmp;
-        }
-
-        double dx = (x2 - x1) / (double)(y2 - y1);
-        double xstart = x1;
-        for (int y = y1; y < y2; y++) {
-            for (int x = (int) Math.round(xstart); x <= border; x++) {
-                drawPixel(x, y, color, border);
-            }
-            xstart += dx;
-        }
-    }
-
     private void drawPoint(Point point) {
-        Point realPoint = translatePointFromIdeal(point);
-        double x = realPoint.getX();
-        double y = realPoint.getY();
+        double x = point.getX();
+        double y = point.getY();
         gc.fillOval(x - 1, y - 1, 2, 2);
     }
 
     private void drawLine(Point startPoint, Point endPoint) {
-        Point realStartPoint = translatePointFromIdeal(startPoint);
-        Point realEndPoint = translatePointFromIdeal(endPoint);
-        gc.strokeLine(realStartPoint.getX(), realStartPoint.getY(), realEndPoint.getX(), realEndPoint.getY());
+        gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
     }
 
     private void drawPixel(int x, int y, Color color, double border) {
-        Point realPoint = translatePointFromIdeal(new Point(x, y));
-        int newX = (int) realPoint.getX();
-        int newY = (int) realPoint.getY();
+        Point point = new Point(x, y);
+        int newX = (int) point.getX();
+        int newY = (int) point.getY();
         Color[][] pixels = model.getPixels();
         if (pixels[newX][newY] == color) {
             pixels[newX][newY] = Color.WHITE;

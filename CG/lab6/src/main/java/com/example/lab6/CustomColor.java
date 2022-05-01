@@ -9,7 +9,6 @@ public class CustomColor {
 
     public CustomColor() {
         colors.add(Color.BLACK);
-        colors.add(Color.WHITE);
         colors.add(Color.RED);
         colors.add(Color.BLUE);
         colors.add(Color.YELLOW);
@@ -32,7 +31,6 @@ public class CustomColor {
             if (color == Color.ORANGE) { colors.add("ORANGE"); }
             if (color == Color.GREEN) { colors.add("GREEN"); }
             if (color == Color.BLACK) { colors.add("BLACK"); }
-            if (color == Color.WHITE) { colors.add("WHITE"); }
         });
         return colors;
     }
