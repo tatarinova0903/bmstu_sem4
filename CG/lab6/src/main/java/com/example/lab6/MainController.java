@@ -103,6 +103,14 @@ public class MainController extends AnchorPane {
         return colors.getColors().get(borderColorComboBox.getSelectionModel().getSelectedIndex());
     }
 
+    Color getFigureColor() {
+        return colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
+    }
+
+    boolean isWithoutTimeSleep() {
+        return !timeRadioBtn.isSelected();
+    }
+
     private void addHandlers() {
         ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(xField, yField));
         textFields.forEach(textField -> {
@@ -153,10 +161,7 @@ public class MainController extends AnchorPane {
     }
 
     private void requestDrawBtn() {
-        boolean withoutTimeSleep = !timeRadioBtn.isSelected();
-        Color figureColor = colors.getColors().get(colorComboBox.getSelectionModel().getSelectedIndex());
-        Color canvasColor = colors.getColors().get(borderColorComboBox.getSelectionModel().getSelectedIndex());
-        canvas.fillBtnDidTap(canvasColor, figureColor, withoutTimeSleep);
+        canvas.fillBtnDidTap();
     }
 
     private void requestAddPointBtn() {

@@ -3,27 +3,27 @@ package com.example.lab6;
 public class Point {
     double EPS = 1e-6;
 
-    private double x;
-    private double y;
+    private int x;
+    private int y;
 
-    public Point(double x, double y) {
+    public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 
