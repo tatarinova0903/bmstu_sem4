@@ -1,9 +1,7 @@
 package com.example.lab6;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -18,10 +16,6 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Stack;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 class ResizableCanvas extends Canvas {
     private final GraphicsContext gc = getGraphicsContext2D();
@@ -32,7 +26,7 @@ class ResizableCanvas extends Canvas {
     private double scale = 1.0;
     private MainController controller;
     private boolean isFilling = false;
-    private Point pixel;
+    private Point pixel = null;
 
     public ResizableCanvas(MainController controller) {
         this.controller = controller;
@@ -41,26 +35,29 @@ class ResizableCanvas extends Canvas {
             controller.setCurrentMousePosition(point.getX(), point.getY());
         });
         setOnMouseClicked(this::onMouseClicked);
-//        widthProperty().addListener(evt -> draw());
-//        heightProperty().addListener(evt -> draw());
+        widthProperty().addListener(evt -> draw());
+        heightProperty().addListener(evt -> draw());
     }
 
     private void draw() {
-//        double width = getWidth();
-//        double height = getHeight();
-//        if (width == 0 || height == 0) { return; }
-//
-//        gc.clearRect(0, 0, width, height);
-//        gc.setFill(Color.WHITE);
-//        gc.fillRect(0, 0, width, height);
-//        model.clearPixels();
-//
-//        if (pixel != null) {
-//            fillFigure(controller.getBorderColor(), controller.getFigureColor(), controller.isWithoutTimeSleep(), pixel);
-//        }
-//
-//        oldWidth = width;
-//        oldHeight = height;
+        double width = getWidth();
+        double height = getHeight();
+        if (width == 0 || height == 0) { return; }
+
+        gc.clearRect(0, 0, width, height);
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, width, height);
+        model.clearPixels();
+
+        if (pixel != null) {
+            model.translateFigure();
+            pixel.translate(model.getTranslateCoords());
+            drawFigure(controller.getBorderColor());
+            fillFigure(controller.getBorderColor(), controller.getFigureColor(), controller.isWithoutTimeSleep(), pixel);
+        }
+
+        oldWidth = width;
+        oldHeight = height;
     }
 
     @Override
@@ -89,6 +86,7 @@ class ResizableCanvas extends Canvas {
 
     void cancelAllBtnDidTap() {
         model.cancelAll();
+        pixel = null;
         draw();
     }
 
@@ -126,6 +124,7 @@ class ResizableCanvas extends Canvas {
             }
         }
         draw();
+        model.getTranslateCoords().clear();
     }
 
     private void onMouseClicked(MouseEvent event) {
@@ -406,6 +405,7 @@ class ResizableCanvas extends Canvas {
     }
 
     private void drawPixel(int x, int y, Color color) {
+//        if (x < 0 || y < 0) { return; }
         Point point = new Point(x, y);
         int newX = point.getX();
         int newY = point.getY();

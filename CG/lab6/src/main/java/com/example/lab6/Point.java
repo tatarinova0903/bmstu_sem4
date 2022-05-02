@@ -27,6 +27,11 @@ public class Point {
         this.y = y;
     }
 
+    public void translate(TranslateCoords coords) {
+        this.x += coords.getX();
+        this.y += coords.getY();
+    }
+
     boolean isEqual(Point point) {
         return Math.abs(point.getX() - this.x) < EPS && Math.abs(point.getY() - this.y) < EPS;
     }

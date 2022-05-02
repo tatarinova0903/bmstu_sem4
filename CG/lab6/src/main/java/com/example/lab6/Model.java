@@ -66,5 +66,13 @@ public class Model {
         int lastIndex = figures.size() - 1;
         return figures.get(lastIndex);
     }
+
+    void translateFigure() {
+        figures.forEach(figure -> {
+           figure.getPoints().forEach(point -> {
+               point.translate(translateCoords);
+           });
+        });
+    }
 }
 
