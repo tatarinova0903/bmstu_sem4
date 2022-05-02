@@ -34,6 +34,7 @@ public class MainController extends AnchorPane {
     private final Button lockBtn = new Button("Замкнуть");
     private final Button drawBtn = new Button("Закрасить");
     private final RadioButton timeRadioBtn = new RadioButton("С задержкой");
+    private final TextField timeLabel = new TextField();
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     private final CustomColor colors = new CustomColor();
@@ -60,7 +61,8 @@ public class MainController extends AnchorPane {
 
         xField.setMaxWidth(60);
         yField.setMaxWidth(60);
-        HBox figureMenu = new HBox(pointLabel, xLabel, xField, yLabel, yField, addPointBtn, lockBtn, timeRadioBtn, drawBtn);
+        timeLabel.setMinWidth(25);
+        HBox figureMenu = new HBox(pointLabel, xLabel, xField, yLabel, yField, addPointBtn, lockBtn, timeRadioBtn, drawBtn, timeLabel);
         figureMenu.setSpacing(10);
 
         HBox inputMenu = new HBox(colorsMenu, figureMenu);
@@ -109,6 +111,10 @@ public class MainController extends AnchorPane {
 
     boolean isWithoutTimeSleep() {
         return !timeRadioBtn.isSelected();
+    }
+
+    public void setTime(long time) {
+        timeLabel.setText(Long.toString(time) + "мс");
     }
 
     private void addHandlers() {
@@ -175,16 +181,7 @@ public class MainController extends AnchorPane {
     }
 
     private void aboutProgramBtnDidTap() {
-        showInfoAlert("Реализовать различные алгоритмы построения одиночных эллипсов. Эллипс задается координатой центра и двумя полуосями.\n" +
-                "\n" +
-                "Сравнить визуальные характеристики эллипсов, построенных разными алгоритмами, с помощью построения спектра с заданным шагом.\n" +
-                "\n" +
-                "- Каноническое уравнение\n" +
-                "- Параметрическое уравнение\n" +
-                "- алгоритм Брезенхема\n" +
-                "- алгоритм средней точки\n" +
-                "\n" +
-                "Построение гистограмм по затраченному времени.");
+        showInfoAlert("Реализация и исследование  алгоритма построчного затравочного заполнения");
     }
 
     private void configure(HBox box) {
