@@ -73,6 +73,14 @@ class ResizableCanvas extends Canvas {
         drawFigure();
     }
 
+    public void clipperBtnDidTap() {
+        model.setAction(Action.CLIPPER);
+    }
+
+    public void figureBtnDidTap() {
+        model.setAction(Action.FIGURE);
+    }
+
     void scale(boolean isPlus) {
         if (isPlus) { scale += 0.2; }
         else if (scale > 1) { scale -= 0.1; }
@@ -105,7 +113,7 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    public void drawClipperBtnDidTap(int xLeft, int xRight, int yUp, int yDown, Color resColor) {
+    public void drawClipperBtnDidTap(int xLeft, int xRight, int yUp, int yDown) {
         model.setClipper(new Clipper(xLeft, xRight, yUp, yDown));
         drawClipper(model.getClipper());
     }
@@ -116,8 +124,19 @@ class ResizableCanvas extends Canvas {
         drawFigure();
     }
 
+    public void clipbtnDidTap() {
+
+    }
+
     private void onMouseClicked(MouseEvent mouseEvent) {
-        addPointBtnDidTap((int) mouseEvent.getX(), (int) mouseEvent.getY());
+        switch (model.getAction()) {
+            case FIGURE -> addPointBtnDidTap((int) mouseEvent.getX(), (int) mouseEvent.getY());
+            case CLIPPER -> {
+                if (model.setClippPoint(new Point((int) mouseEvent.getX(), (int) mouseEvent.getY()))) {
+                    drawClipper(model.getClipper());
+                }
+            }
+        }
     }
 
     private void drawClipper(Clipper clipper) {
@@ -159,7 +178,7 @@ class ResizableCanvas extends Canvas {
         double newY = (point.getY() + model.getTranslateCoords().getY());
         newX = newX + getWidth() / 2;
         newY = (newY - getHeight() / 2) * (-1);
-        return new Point(newX, newY);
+        return new Point((int) newX, (int) newY);
     }
 
     Point translatePointFromReal(Point point) {
@@ -167,6 +186,6 @@ class ResizableCanvas extends Canvas {
         double newY = point.getY() * (-1) + getHeight() / 2;
         newX = newX - model.getTranslateCoords().getX();
         newY = newY - model.getTranslateCoords().getY();
-        return new Point(newX, newY);
+        return new Point((int) newX, (int) newY);
     }
 }

@@ -41,6 +41,9 @@ public class MainController extends AnchorPane {
     private final Button addPointBtn = new Button("Добавить точку");
     private final Button lockBtn = new Button("Замкнуть фигуру");
     private final Button clipBtn = new Button("Обрезать");
+    private final ToggleGroup toggleSetGroup = new ToggleGroup();
+    private final ToggleButton clipperBtn = new ToggleButton("Отсекатель");
+    private final ToggleButton figureBtn = new ToggleButton("Фигура");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     private final CustomColor colors = new CustomColor();
@@ -71,7 +74,8 @@ public class MainController extends AnchorPane {
         clipperMenu.setAlignment(Pos.CENTER);
         clipperMenu.setSpacing(10);
 
-
+        clipperBtn.setToggleGroup(toggleSetGroup);
+        figureBtn.setToggleGroup(toggleSetGroup);
 
         HBox figureMenu = new HBox(
                 pointLabel,
@@ -82,8 +86,13 @@ public class MainController extends AnchorPane {
         figureMenu.setAlignment(Pos.CENTER);
         figureMenu.setSpacing(10);
 
+        HBox actionMenu = new HBox(
+                clipperBtn, figureBtn
+        );
+        actionMenu.setAlignment(Pos.CENTER);
+        actionMenu.setSpacing(10);
 
-        VBox main = new VBox(commonActionsMenu, clipperMenu, figureMenu, canvas);
+        VBox main = new VBox(commonActionsMenu, clipperMenu, figureMenu, actionMenu, canvas);
         main.setSpacing(5);
         configure(main);
         this.getChildren().add(main);
@@ -174,6 +183,18 @@ public class MainController extends AnchorPane {
             canvas.lockBtnDidTap();
             canvas.requestFocus();
         });
+        clipperBtn.setOnAction(actionEvent -> {
+            canvas.clipperBtnDidTap();
+            canvas.requestFocus();
+        });
+        figureBtn.setOnAction(actionEvent -> {
+            canvas.figureBtnDidTap();
+            canvas.requestFocus();
+        });
+        clipBtn.setOnAction(actionEvent -> {
+            canvas.clipbtnDidTap();
+            canvas.requestFocus();
+        });
     }
 
     private void requestDrawClipperBtn() {
@@ -186,7 +207,7 @@ public class MainController extends AnchorPane {
         int yUp = Integer.parseInt(yUpField.getText());
         int yDown = Integer.parseInt(yDownField.getText());
         Color resColor = colors.getColors().get(resColorComboBox.getSelectionModel().getSelectedIndex());
-        canvas.drawClipperBtnDidTap(xLeft, xRight, yUp, yDown, resColor);
+        canvas.drawClipperBtnDidTap(xLeft, xRight, yUp, yDown);
     }
 
     private void requestAddPointBtn() {
