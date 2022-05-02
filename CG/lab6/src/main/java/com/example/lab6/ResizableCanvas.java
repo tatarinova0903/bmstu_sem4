@@ -21,6 +21,7 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class ResizableCanvas extends Canvas {
     private final GraphicsContext gc = getGraphicsContext2D();
@@ -278,107 +279,101 @@ class ResizableCanvas extends Canvas {
 
         Color[][] pixels = model.getPixels();
 
-        Timer timer = new Timer();
+        Timeline timeleine = new Timeline(new KeyFrame(Duration.millis(200), (ActionEvent event) -> {
+            if (!stack.isEmpty()) {
+                Point dot_z = stack.pop();
 
-        while (!stack.isEmpty()) {
-            Point dot_z = stack.pop();
+                int cur_x = dot_z.getX();
+                int cur_y = dot_z.getY();
 
-            int cur_x = dot_z.getX();
-            int cur_y = dot_z.getY();
+                Color got_color = pixels[cur_x][cur_y];
 
-            Color got_color = pixels[cur_x][cur_y];
-
-            while (!similar(got_color, borderColor)) {
-//                drawPixel(cur_x, cur_y, figureColor);
-                cur_x -= 1;
-                got_color = pixels[cur_x][cur_y];
-            }
-
-            int x_left = cur_x + 1;
-
-            cur_x = dot_z.getX() + 1;
-            got_color = pixels[cur_x][cur_y];
-            while (!similar(got_color, borderColor)) {
-//                drawPixel(cur_x, cur_y, figureColor);
-                cur_x += 1;
-                got_color = pixels[cur_x][cur_y];
-            }
-            int x_right = cur_x - 1;
-
-            int finalCur_y = cur_y;
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    gc.strokeLine(x_left, finalCur_y, x_right, finalCur_y);
-                }
-            };
-
-            timer.schedule(timerTask, 100);
-
-            cur_x = x_left;
-            cur_y += 1;
-
-            boolean flag = false;
-            while (cur_x <= x_right) {
-                got_color = pixels[cur_x][cur_y];
-                while (!similar(got_color, borderColor) && !similar(got_color,figureColor) && cur_x <= x_right) {
-                    flag = true;
-                    cur_x += 1;
+                while (!similar(got_color, borderColor)) {
+                    drawPixel(cur_x, cur_y, figureColor);
+                    cur_x -= 1;
                     got_color = pixels[cur_x][cur_y];
                 }
 
-                if (flag) {
-                    if (cur_x == x_right && !similar(got_color, borderColor) && !similar(got_color, figureColor)) {
-                        stack.push(new Point(cur_x, cur_y));
-                    } else {
-                        stack.push(new Point(cur_x - 1, cur_y));
+                int x_left = cur_x + 1;
+
+                cur_x = dot_z.getX() + 1;
+                got_color = pixels[cur_x][cur_y];
+                while (!similar(got_color, borderColor)) {
+                    drawPixel(cur_x, cur_y, figureColor);
+                    cur_x += 1;
+                    got_color = pixels[cur_x][cur_y];
+                }
+                int x_right = cur_x - 1;
+
+//            gc.strokeLine(x_left, cur_y, x_right, cur_y);
+
+                cur_x = x_left;
+                cur_y += 1;
+
+                boolean flag = false;
+                while (cur_x <= x_right) {
+                    got_color = pixels[cur_x][cur_y];
+                    while (!similar(got_color, borderColor) && !similar(got_color,figureColor) && cur_x <= x_right) {
+                        flag = true;
+                        cur_x += 1;
+                        got_color = pixels[cur_x][cur_y];
                     }
-                    flag = false;
-                }
 
-                int x_start = cur_x;
-                while ((similar(got_color, borderColor) || similar(got_color, figureColor)) && cur_x < x_right) {
-                    cur_x += 1;
-                    got_color = pixels[cur_x][cur_y];
-                }
-
-                if (cur_x == x_start) {
-                    cur_x += 1;
-                }
-            }
-
-            cur_x = x_left;
-            cur_y -= 2;
-
-            flag = false;
-            while (cur_x <= x_right) {
-                got_color = pixels[cur_x][cur_y];
-                while (!similar(got_color, borderColor) && !similar(got_color,figureColor) && cur_x <= x_right) {
-                    flag = true;
-                    cur_x += 1;
-                    got_color = pixels[cur_x][cur_y];
-                }
-
-                if (flag) {
-                    if (cur_x == x_right && !similar(got_color, borderColor) && !similar(got_color,figureColor)) {
-                        stack.push(new Point(cur_x, cur_y));
-                    } else{
-                        stack.push(new Point(cur_x - 1, cur_y));
+                    if (flag) {
+                        if (cur_x == x_right && !similar(got_color, borderColor) && !similar(got_color, figureColor)) {
+                            stack.push(new Point(cur_x, cur_y));
+                        } else {
+                            stack.push(new Point(cur_x - 1, cur_y));
+                        }
+                        flag = false;
                     }
-                    flag = false;
+
+                    int x_start = cur_x;
+                    while ((similar(got_color, borderColor) || similar(got_color, figureColor)) && cur_x < x_right) {
+                        cur_x += 1;
+                        got_color = pixels[cur_x][cur_y];
+                    }
+
+                    if (cur_x == x_start) {
+                        cur_x += 1;
+                    }
                 }
 
-                int x_start = cur_x;
-                while ((similar(got_color, borderColor) || similar(got_color,figureColor)) && cur_x < x_right) {
-                    cur_x += 1;
+                cur_x = x_left;
+                cur_y -= 2;
+
+                flag = false;
+                while (cur_x <= x_right) {
                     got_color = pixels[cur_x][cur_y];
-                }
+                    while (!similar(got_color, borderColor) && !similar(got_color,figureColor) && cur_x <= x_right) {
+                        flag = true;
+                        cur_x += 1;
+                        got_color = pixels[cur_x][cur_y];
+                    }
 
-                if (cur_x == x_start) {
-                    cur_x += 1;
+                    if (flag) {
+                        if (cur_x == x_right && !similar(got_color, borderColor) && !similar(got_color,figureColor)) {
+                            stack.push(new Point(cur_x, cur_y));
+                        } else{
+                            stack.push(new Point(cur_x - 1, cur_y));
+                        }
+                        flag = false;
+                    }
+
+                    int x_start = cur_x;
+                    while ((similar(got_color, borderColor) || similar(got_color,figureColor)) && cur_x < x_right) {
+                        cur_x += 1;
+                        got_color = pixels[cur_x][cur_y];
+                    }
+
+                    if (cur_x == x_start) {
+                        cur_x += 1;
+                    }
                 }
             }
-        }
+        }));
+        timeleine.setCycleCount(1000);
+        timeleine.play();
     }
 
     private void drawPoint(Point point) {

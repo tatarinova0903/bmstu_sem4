@@ -61,7 +61,7 @@ public class MainController extends AnchorPane {
 
         xField.setMaxWidth(60);
         yField.setMaxWidth(60);
-        timeLabel.setMinWidth(25);
+        timeLabel.setMaxWidth(35);
         HBox figureMenu = new HBox(pointLabel, xLabel, xField, yLabel, yField, addPointBtn, lockBtn, timeRadioBtn, drawBtn, timeLabel);
         figureMenu.setSpacing(10);
 
