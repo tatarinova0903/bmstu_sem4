@@ -191,7 +191,6 @@ class ResizableCanvas extends Canvas {
                 got_color = pixels[cur_x][cur_y];
             }
             int x_left = cur_x + 1;
-//            picture.put(seed_color, (x_left, cur_y, dot_z[0] + 1, cur_y + 1))
 
             cur_x = dot_z.getX() + 1;
             got_color = pixels[cur_x][cur_y];
@@ -201,7 +200,6 @@ class ResizableCanvas extends Canvas {
                 got_color = pixels[cur_x][cur_y];
             }
             int x_right = cur_x - 1;
-//            picture.put(seed_color, (dot_z[0], cur_y, x_right + 1, cur_y + 1))
 
             cur_x = x_left;
             cur_y += 1;
@@ -209,7 +207,7 @@ class ResizableCanvas extends Canvas {
             boolean flag = false;
             while (cur_x <= x_right) {
                 got_color = pixels[cur_x][cur_y];
-                while (!similar(got_color, borderColor) && !similar(got_color,figureColor) && cur_x <= x_right) {
+                while (!similar(got_color, borderColor) && !similar(got_color, figureColor) && cur_x <= x_right) {
                     flag = true;
                     cur_x += 1;
                     got_color = pixels[cur_x][cur_y];
@@ -241,14 +239,14 @@ class ResizableCanvas extends Canvas {
             flag = false;
             while (cur_x <= x_right) {
                 got_color = pixels[cur_x][cur_y];
-                while (!similar(got_color, borderColor) && !similar(got_color,figureColor) && cur_x <= x_right) {
+                while (!similar(got_color, borderColor) && !similar(got_color, figureColor) && cur_x <= x_right) {
                     flag = true;
                     cur_x += 1;
                     got_color = pixels[cur_x][cur_y];
                 }
 
                 if (flag) {
-                    if (cur_x == x_right && !similar(got_color, borderColor) && !similar(got_color,figureColor)) {
+                    if (cur_x == x_right && !similar(got_color, borderColor) && !similar(got_color, figureColor)) {
                         stack.push(new Point(cur_x, cur_y));
                     } else{
                         stack.push(new Point(cur_x - 1, cur_y));
@@ -257,7 +255,7 @@ class ResizableCanvas extends Canvas {
                 }
 
                 int x_start = cur_x;
-                while ((similar(got_color, borderColor) || similar(got_color,figureColor)) && cur_x < x_right) {
+                while ((similar(got_color, borderColor) || similar(got_color, figureColor)) && cur_x < x_right) {
                     cur_x += 1;
                     got_color = pixels[cur_x][cur_y];
                 }
@@ -369,6 +367,9 @@ class ResizableCanvas extends Canvas {
                         cur_x += 1;
                     }
                 }
+            } else {
+//                System.out.println("<<<<<<<<");
+                return;
             }
         }));
         timeleine.setCycleCount(1000);
