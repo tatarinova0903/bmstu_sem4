@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Model {
 
-    private Clipper clipper = new Clipper();
+    private final ArrayList<Point> clipper = new ArrayList<>();
+    private int clipperSize = 0;
     private final ArrayList<Segment> figure = new ArrayList<>();
     private final ArrayList<Segment> res = new ArrayList<>();
     private final TranslateCoords translateCoords = new TranslateCoords(0, 0);
     private Action action = null;
     private Segment curSegment = new Segment();
-    private Point firstPoint = new Point(), secondPoint = new Point();
     private Segment resSegment = new Segment();
     boolean clipBtnDidTap = false;
 
@@ -26,10 +26,13 @@ public class Model {
         this.clipBtnDidTap = clipBtnDidTap;
     }
 
+    public int getClipperSize() {
+        clipperSize = clipper.size() - 1;
+        return clipperSize;
+    }
+
     public void cancelAll() {
-        clipper = new Clipper();
-        firstPoint = new Point();
-        secondPoint = new Point();
+        clipper.clear();
         resSegment = new Segment();
         curSegment = new Segment();
         res.clear();
@@ -45,17 +48,15 @@ public class Model {
                 figure.remove(lastIndex);
             }
             case CLIPPER -> {
-                clipper = new Clipper();
+                int lastIndex = clipper.size() - 1;
+                if (lastIndex < 0) { return; }
+                clipper.remove(lastIndex);
             }
         }
     }
 
-    public Clipper getClipper() {
+    public ArrayList<Point> getClipper() {
         return clipper;
-    }
-
-    public void setClipper(Clipper clipper) {
-        this.clipper = clipper;
     }
 
     public ArrayList<Segment> getFigure() {
@@ -84,34 +85,13 @@ public class Model {
         }
     }
 
-    public void addPointToRes(Point point) {
-        if (!resSegment.getStart().exists()) {
-            resSegment.setStart(point);
-        } else {
-            resSegment.setEnd(point);
-            res.add(new Segment(resSegment.getStart(), resSegment.getEnd()));
-            resSegment = new Segment();
-        }
+    public void addPointToClipper(Point point) {
+        clipper.add(point);
     }
 
-    public void addSegmentToRes(Segment segment) {
-        res.add(segment);
-    }
-
-    public boolean setClippPoint(Point point) {
-        if (!firstPoint.exists()) {
-            firstPoint = point;
-            return false;
-        } else {
-            secondPoint = point;
-            double xLeft = Math.min(firstPoint.getX(), secondPoint.getX());
-            double xRight = Math.max(firstPoint.getX(), secondPoint.getX());
-            double yUp = Math.max(firstPoint.getY(), secondPoint.getY());
-            double yDown = Math.min(firstPoint.getY(), secondPoint.getY());
-            setClipper(new Clipper(xLeft, xRight, yUp, yDown));
-            firstPoint = new Point();
-            secondPoint = new Point();
-            return true;
-        }
+    public void lockClipper() {
+        if (clipper.size() < 1) { return; }
+        Point firstPoint = clipper.get(0);
+        clipper.add(new Point(firstPoint.getX(), firstPoint.getY()));
     }
 }

@@ -24,15 +24,12 @@ public class MainController extends AnchorPane {
     private final Text resColorLabel = new Text("Цвет результата:");
     private final ComboBox resColorComboBox = new ComboBox<>();
     private final Text clipLabel = new Text("Отсекатель:");
-    private final Text xLeftLabel = new Text("Xл:");
-    private final TextField xLeftField = new TextField();
-    private final Text xRightLabel = new Text("Xп:");
-    private final TextField xRightField = new TextField();
-    private final Text yUpLabel = new Text("Yв:");
-    private final TextField yUpField = new TextField();
-    private final Text yDownLabel = new Text("Yн:");
-    private final TextField yDownField = new TextField();
-    private final Button drawClipperBtn = new Button("Нарисовать отсекатель");
+    private final Text xClipperLabel = new Text("X:");
+    private final TextField xClipperField = new TextField();
+    private final Text yClipperLabel = new Text("Y:");
+    private final TextField yClipperField = new TextField();
+    private final Button lockClipperBtn = new Button("Замкнуть");
+    private final Button addPointToClipperBtn = new Button("Добавить точку в отсекатель");
     private final Text pointLabel = new Text("Точка:");
     private final Text xLabel = new Text("x:");
     private final TextField xField = new TextField();
@@ -57,18 +54,14 @@ public class MainController extends AnchorPane {
         });
         resColorComboBox.getSelectionModel().selectFirst();
 
-        xLeftField.setMaxWidth(60);
-        xRightField.setMaxWidth(60);
-        yUpField.setMaxWidth(60);
-        yDownField.setMaxWidth(60);
+        xClipperField.setMaxWidth(60);
+        yClipperField.setMaxWidth(60);
         HBox clipperMenu = new HBox(
                 resColorLabel, resColorComboBox,
                 clipLabel,
-                xLeftLabel, xLeftField,
-                xRightLabel, xRightField,
-                yDownLabel, yDownField,
-                yUpLabel, yUpField,
-                drawClipperBtn
+                xClipperLabel, xClipperField,
+                yClipperLabel, yClipperField,
+                addPointToClipperBtn, lockClipperBtn
         );
         clipperMenu.setAlignment(Pos.CENTER);
         clipperMenu.setSpacing(10);
@@ -76,6 +69,8 @@ public class MainController extends AnchorPane {
         clipperBtn.setToggleGroup(toggleSetGroup);
         figureBtn.setToggleGroup(toggleSetGroup);
 
+        xField.setMaxWidth(60);
+        yField.setMaxWidth(60);
         HBox figureMenu = new HBox(
                 pointLabel,
                 xLabel, xField,
@@ -109,10 +104,8 @@ public class MainController extends AnchorPane {
     void keyboardDidTap(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case TAB -> {
-                if (xLeftField.focusedProperty().get()) { xRightField.requestFocus(); }
-                else if (xRightField.isFocused()) { yDownField.requestFocus(); }
-                else if (yDownField.isFocused()) { yUpField.requestFocus(); }
-                else if (yUpField.isFocused()) { xLeftField.requestFocus(); }
+                if (xClipperField.focusedProperty().get()) { yClipperField.requestFocus(); }
+                else if (yClipperField.isFocused()) { xClipperField.requestFocus(); }
                 else if (xField.isFocused()) { yField.requestFocus(); }
                 else if (yField.isFocused()) { xField.requestFocus(); }
             }
@@ -120,9 +113,8 @@ public class MainController extends AnchorPane {
                 if (xField.isFocused() || yField.isFocused()) {
                     requestAddPointBtn();
                 }
-                else if (xLeftField.isFocused() || xRightField.isFocused() ||
-                        yUpField.isFocused() || yDownField.isFocused()) {
-                    requestDrawClipperBtn();
+                else if (xClipperField.isFocused() || yClipperField.isFocused()) {
+                    requestAddPointToClipperBtn();
                 }
             }
             case LEFT -> canvas.goTo(Direction.LEFT);
@@ -138,8 +130,7 @@ public class MainController extends AnchorPane {
 
     private void addHandlers() {
         ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(
-                xLeftField, xRightField,
-                yUpField, yDownField,
+                xClipperField, yClipperField,
                 xField, yField
         ));
         textFields.forEach(textField -> {
@@ -174,8 +165,8 @@ public class MainController extends AnchorPane {
             canvas.cancelAllBtnDidTap();
             canvas.requestFocus();
         });
-        drawClipperBtn.setOnAction(actionEvent -> {
-            requestDrawClipperBtn();
+        addPointToClipperBtn.setOnAction(actionEvent -> {
+            requestAddPointToClipperBtn();
             canvas.requestFocus();
         });
         addPointBtn.setOnAction(actionEvent -> {
@@ -194,18 +185,19 @@ public class MainController extends AnchorPane {
             canvas.clipBtnDidTap();
             canvas.requestFocus();
         });
+        lockClipperBtn.setOnAction(actionEvent -> {
+            canvas.lockBtnDidTap();
+            canvas.requestFocus();
+        });
     }
 
-    private void requestDrawClipperBtn() {
-        if (xLeftField.getText().isEmpty() || xRightField.getText().isEmpty() ||
-                yUpField.getText().isEmpty() || yDownField.getText().isEmpty()) {
+    private void requestAddPointToClipperBtn() {
+        if (xClipperField.getText().isEmpty() || yClipperField.getText().isEmpty()) {
             return;
         }
-        int xLeft = Integer.parseInt(xLeftField.getText());
-        int xRight = Integer.parseInt(xRightField.getText());
-        int yUp = Integer.parseInt(yUpField.getText());
-        int yDown = Integer.parseInt(yDownField.getText());
-        canvas.drawClipperBtnDidTap(xLeft, xRight, yUp, yDown);
+        int x = Integer.parseInt(xClipperField.getText());
+        int y = Integer.parseInt(yClipperField.getText());
+        canvas.drawAddPointToClipperBtnDidTap(x, y);
     }
 
     private void requestAddPointBtn() {
