@@ -28,9 +28,9 @@ public class MainController extends AnchorPane {
     private final TextField xLeftField = new TextField();
     private final Text xRightLabel = new Text("Xп:");
     private final TextField xRightField = new TextField();
-    private final Text yUpLabel = new Text("Yн:");
+    private final Text yUpLabel = new Text("Yв:");
     private final TextField yUpField = new TextField();
-    private final Text yDownLabel = new Text("Yв:");
+    private final Text yDownLabel = new Text("Yн:");
     private final TextField yDownField = new TextField();
     private final Button drawClipperBtn = new Button("Нарисовать отсекатель");
     private final Text pointLabel = new Text("Точка:");
@@ -66,8 +66,8 @@ public class MainController extends AnchorPane {
                 clipLabel,
                 xLeftLabel, xLeftField,
                 xRightLabel, xRightField,
-                yUpLabel, yUpField,
                 yDownLabel, yDownField,
+                yUpLabel, yUpField,
                 drawClipperBtn
         );
         clipperMenu.setAlignment(Pos.CENTER);
@@ -110,9 +110,9 @@ public class MainController extends AnchorPane {
         switch (keyEvent.getCode()) {
             case TAB -> {
                 if (xLeftField.focusedProperty().get()) { xRightField.requestFocus(); }
-                else if (xRightField.isFocused()) { yUpField.requestFocus(); }
-                else if (yUpField.isFocused()) { yDownField.requestFocus(); }
-                else if (yDownField.isFocused()) { xLeftField.requestFocus(); }
+                else if (xRightField.isFocused()) { yDownField.requestFocus(); }
+                else if (yDownField.isFocused()) { yUpField.requestFocus(); }
+                else if (yUpField.isFocused()) { xLeftField.requestFocus(); }
                 else if (xField.isFocused()) { yField.requestFocus(); }
                 else if (yField.isFocused()) { xField.requestFocus(); }
             }

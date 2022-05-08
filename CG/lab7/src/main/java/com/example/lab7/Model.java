@@ -12,15 +12,26 @@ public class Model {
     private Segment curSegment = new Segment();
     private Point firstPoint = new Point(), secondPoint = new Point();
     private Segment resSegment = new Segment();
+    boolean clipBtnDidTap = false;
 
     public TranslateCoords getTranslateCoords() {
         return translateCoords;
+    }
+
+    public boolean isClipBtnDidTap() {
+        return clipBtnDidTap;
+    }
+
+    public void setClipBtnDidTap(boolean clipBtnDidTap) {
+        this.clipBtnDidTap = clipBtnDidTap;
     }
 
     public void cancelAll() {
         clipper = new Clipper();
         firstPoint = new Point();
         secondPoint = new Point();
+        resSegment = new Segment();
+        curSegment = new Segment();
         res.clear();
         figure.clear();
     }

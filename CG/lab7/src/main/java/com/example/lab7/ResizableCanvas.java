@@ -40,7 +40,9 @@ class ResizableCanvas extends Canvas {
 
         drawClipper(model.getClipper());
         drawFigure(model.getFigure(), Color.BLACK);
-        clipBtnDidTap();
+        if (model.isClipBtnDidTap()) {
+            clipBtnDidTap();
+        }
 
         oldWidth = width;
         oldHeight = height;
@@ -106,11 +108,13 @@ class ResizableCanvas extends Canvas {
     }
 
     public void drawClipperBtnDidTap(int xLeft, int xRight, int yUp, int yDown) {
+        model.setAction(Action.CLIPPER);
         model.setClipper(new Clipper(xLeft, xRight, yUp, yDown));
         drawClipper(model.getClipper());
     }
 
     public void addPointBtnDidTap(double x, double y) {
+        model.setAction(Action.FIGURE);
         model.addPointToFigure(new Point(x, y));
         Point point = translatePointFromIdeal(new Point(x, y));
         drawPoint((int) point.getX(), (int) point.getY(), Color.BLACK);
@@ -118,6 +122,7 @@ class ResizableCanvas extends Canvas {
     }
 
     public void clipBtnDidTap() {
+        model.setClipBtnDidTap(true);
         clip();
         gc.setLineWidth(3);
         drawFigure(model.getRes(), controller.getResColor());
@@ -150,7 +155,7 @@ class ResizableCanvas extends Canvas {
             int S1 = T1_1 + T1_2 + T1_3 + T1_4;
             int S2 = T2_1 + T2_2 + T2_3 + T2_4;
 
-            // Установка признака видимости отрезка pr =1
+            // Установка признака видимости отрезка pr = 1
             int pr = 1;
 
             // Задание начального значения  тангенса  угла  наклона отрезка m=10^30
@@ -247,7 +252,8 @@ class ResizableCanvas extends Canvas {
                     // если (Xр>=Xл)&(Xр<=Xп) == истина (пересечение  корректно),
                     // то выполнение следующих действий:  Ri.x=Xр;  Ri.y=Yв  (занесение полученных координат в результат);
                     // переход к п. 12.
-                    if (Xp >= clipper.getxLeft() && Xp <= clipper.getxRight()) {
+                    if ((Xp > clipper.getxLeft() || Math.abs(Xp - clipper.getxLeft()) < 1e-6) &&
+                            (Xp < clipper.getxRight() || Math.abs(Xp - clipper.getxRight()) < 1e-6)) {
                         addToRes(new Point((int) Xp, clipper.getyUp()));
                         punkt12 = true;
                         continue;
@@ -264,7 +270,8 @@ class ResizableCanvas extends Canvas {
                 // 29. Проверка корректности найденного пересечения: (Xр>=Xл)&(Xр<=Xп) == истина (пересечение корректно),
                 // то выполнение следующих действий: Ri.x=Xр;  Ri.y=Yв (занесение полученных координат в результат);
                 // переход к п. 12.
-                if (Xp >= clipper.getxLeft() && Xp <= clipper.getxRight()) {
+                if ((Xp > clipper.getxLeft() || Math.abs(Xp - clipper.getxLeft()) < 1e-6) &&
+                        (Xp < clipper.getxRight() || Math.abs(Xp - clipper.getxRight()) < 1e-6)) {
                     addToRes(new Point((int) Xp, clipper.getyDown()));
                     punkt12 = true;
                     continue;

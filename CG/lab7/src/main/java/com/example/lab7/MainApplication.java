@@ -18,9 +18,9 @@ public class MainApplication extends Application {
         stage.setTitle("Лабораторная работа №7");
         stage.setMinHeight(700);
         stage.setMinWidth(600);
-        scene.setOnKeyPressed(keyEvent -> {
-            mainPane.keyboardDidTap(keyEvent);
-        });
+//        scene.setOnKeyPressed(keyEvent -> {
+//            mainPane.keyboardDidTap(keyEvent);
+//        });
         stage.show();
     }
 
