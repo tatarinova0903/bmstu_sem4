@@ -1,26 +1,26 @@
 package com.example.lab7;
 
 public class Clipper {
-    private int xLeft;
-    private int xRight;
-    private int yUp;
-    private int yDown;
+    private double xLeft;
+    private double xRight;
+    private double yUp;
+    private double yDown;
 
     public Clipper() {
-        this.xLeft = 0;
-        this.xRight = 0;
-        this.yUp = 0;
-        this.yDown = 0;
+        this.xLeft = Double.POSITIVE_INFINITY;
+        this.xRight = Double.POSITIVE_INFINITY;
+        this.yUp = Double.POSITIVE_INFINITY;
+        this.yDown = Double.POSITIVE_INFINITY;
     }
 
-    public Clipper(int xLeft, int xRight, int yUp, int yDown) {
+    public Clipper(double xLeft, double xRight, double yUp, double yDown) {
         this.xLeft = xLeft;
         this.xRight = xRight;
         this.yUp = yUp;
         this.yDown = yDown;
     }
 
-    public int getxLeft() {
+    public double getxLeft() {
         return xLeft;
     }
 
@@ -28,7 +28,7 @@ public class Clipper {
         this.xLeft = xLeft;
     }
 
-    public int getxRight() {
+    public double getxRight() {
         return xRight;
     }
 
@@ -36,7 +36,7 @@ public class Clipper {
         this.xRight = xRight;
     }
 
-    public int getyUp() {
+    public double getyUp() {
         return yUp;
     }
 
@@ -44,11 +44,18 @@ public class Clipper {
         this.yUp = yUp;
     }
 
-    public int getyDown() {
+    public double getyDown() {
         return yDown;
     }
 
     public void setyDown(int yDown) {
         this.yDown = yDown;
+    }
+
+    public boolean exists() {
+        if (xLeft == Double.POSITIVE_INFINITY) {
+            return false;
+        }
+        return true;
     }
 }

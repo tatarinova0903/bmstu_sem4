@@ -8,7 +8,6 @@ public class CustomColor {
     private final ArrayList<Color> colors = new ArrayList<>();
 
     public CustomColor() {
-        colors.add(Color.BLACK);
         colors.add(Color.RED);
         colors.add(Color.BLUE);
         colors.add(Color.YELLOW);
@@ -30,7 +29,6 @@ public class CustomColor {
             if (color == Color.CHOCOLATE) { colors.add("CHOCOLATE"); }
             if (color == Color.ORANGE) { colors.add("ORANGE"); }
             if (color == Color.GREEN) { colors.add("GREEN"); }
-            if (color == Color.BLACK) { colors.add("BLACK"); }
         });
         return colors;
     }

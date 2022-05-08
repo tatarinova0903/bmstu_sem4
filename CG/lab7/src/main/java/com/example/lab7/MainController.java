@@ -39,7 +39,6 @@ public class MainController extends AnchorPane {
     private final Text yLabel = new Text("y:");
     private final TextField yField = new TextField();
     private final Button addPointBtn = new Button("Добавить точку");
-    private final Button lockBtn = new Button("Замкнуть фигуру");
     private final Button clipBtn = new Button("Обрезать");
     private final ToggleGroup toggleSetGroup = new ToggleGroup();
     private final ToggleButton clipperBtn = new ToggleButton("Отсекатель");
@@ -81,7 +80,7 @@ public class MainController extends AnchorPane {
                 pointLabel,
                 xLabel, xField,
                 yLabel, yField,
-                addPointBtn, lockBtn, clipBtn
+                addPointBtn, clipBtn
         );
         figureMenu.setAlignment(Pos.CENTER);
         figureMenu.setSpacing(10);
@@ -133,6 +132,10 @@ public class MainController extends AnchorPane {
         }
     }
 
+    Color getResColor() {
+        return colors.getColors().get(resColorComboBox.getSelectionModel().getSelectedIndex());
+    }
+
     private void addHandlers() {
         ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(
                 xLeftField, xRightField,
@@ -179,10 +182,6 @@ public class MainController extends AnchorPane {
             requestAddPointBtn();
             canvas.requestFocus();
         });
-        lockBtn.setOnAction(actionEvent -> {
-            canvas.lockBtnDidTap();
-            canvas.requestFocus();
-        });
         clipperBtn.setOnAction(actionEvent -> {
             canvas.clipperBtnDidTap();
             canvas.requestFocus();
@@ -192,7 +191,7 @@ public class MainController extends AnchorPane {
             canvas.requestFocus();
         });
         clipBtn.setOnAction(actionEvent -> {
-            canvas.clipbtnDidTap();
+            canvas.clipBtnDidTap();
             canvas.requestFocus();
         });
     }
@@ -206,7 +205,6 @@ public class MainController extends AnchorPane {
         int xRight = Integer.parseInt(xRightField.getText());
         int yUp = Integer.parseInt(yUpField.getText());
         int yDown = Integer.parseInt(yDownField.getText());
-        Color resColor = colors.getColors().get(resColorComboBox.getSelectionModel().getSelectedIndex());
         canvas.drawClipperBtnDidTap(xLeft, xRight, yUp, yDown);
     }
 

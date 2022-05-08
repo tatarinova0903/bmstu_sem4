@@ -1,15 +1,20 @@
 package com.example.lab7;
 
 public class Point {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Point(int x, int y) {
+    public Point() {
+        this.x = Double.POSITIVE_INFINITY;
+        this.y = Double.POSITIVE_INFINITY;
+    }
+
+    public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
@@ -17,7 +22,7 @@ public class Point {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
@@ -27,5 +32,12 @@ public class Point {
 
     boolean isEqual(Point point) {
         return Math.abs(point.getX() - this.x) < 1e-6 && Math.abs(point.getY() - this.y) < 1e-6;
+    }
+
+    boolean exists() {
+        if (this.x == Double.POSITIVE_INFINITY || this.y == Double.POSITIVE_INFINITY) {
+            return false;
+        }
+        return true;
     }
 }
