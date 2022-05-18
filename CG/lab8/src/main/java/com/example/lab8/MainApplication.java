@@ -3,6 +3,7 @@ package com.example.lab8;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +26,12 @@ public class MainApplication extends Application {
         stage.setTitle("Лабораторная работа №8");
         stage.setMinHeight(700);
         stage.setMinWidth(600);
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.DOWN ||
+            keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.UP) {
+                mainPane.keyboardDidTap(keyEvent);
+            }
+        });
         stage.show();
     }
 
