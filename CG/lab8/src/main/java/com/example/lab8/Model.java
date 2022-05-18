@@ -11,7 +11,6 @@ public class Model {
     private final TranslateCoords translateCoords = new TranslateCoords(0, 0);
     private Action action = null;
     private Segment curSegment = new Segment();
-    private Segment resSegment = new Segment();
     boolean clipBtnDidTap = false;
 
     public TranslateCoords getTranslateCoords() {
@@ -33,10 +32,10 @@ public class Model {
 
     public void cancelAll() {
         clipper.clear();
-        resSegment = new Segment();
         curSegment = new Segment();
         res.clear();
         figure.clear();
+        clipBtnDidTap = false;
     }
 
     public void cancel() {
@@ -53,6 +52,7 @@ public class Model {
                 clipper.remove(lastIndex);
             }
         }
+        res.clear();
     }
 
     public ArrayList<Point> getClipper() {
@@ -86,6 +86,13 @@ public class Model {
     }
 
     public void addPointToClipper(Point point) {
+        if (clipper.size() > 1) {
+            Point firstPoint = clipper.get(0);
+            Point lastPoint = clipper.get(clipper.size() - 1);
+            if (firstPoint.isEqual(lastPoint)) {
+                return;
+            }
+        }
         clipper.add(point);
     }
 
@@ -93,5 +100,9 @@ public class Model {
         if (clipper.size() < 1) { return; }
         Point firstPoint = clipper.get(0);
         clipper.add(new Point(firstPoint.getX(), firstPoint.getY()));
+    }
+
+    public void addSegmentToRes(Segment segment) {
+        res.add(segment);
     }
 }

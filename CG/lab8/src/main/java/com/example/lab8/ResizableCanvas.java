@@ -122,6 +122,10 @@ class ResizableCanvas extends Canvas {
     }
 
     public void clipBtnDidTap() {
+        if (!check_clipper(model.getClipper())) {
+            controller.showInfoAlert("Остекатель невыпуклый");
+            return;
+        }
         model.setClipBtnDidTap(true);
         clip();
         gc.setLineWidth(3);
@@ -135,8 +139,32 @@ class ResizableCanvas extends Canvas {
         drawClipper(model.getClipper());
     }
 
-    private void clip() {
+    private boolean check_clipper(ArrayList<Point> clipper) {
+        if (clipper.size() < 3) {
+            return false;
+        }
 
+        int sign = 1;
+        Vector v21 = new Vector(clipper.get(2).getX() - clipper.get(1).getX(), clipper.get(2).getY() - clipper.get(1).getY());
+        Vector v10 = new Vector(clipper.get(1).getX() - clipper.get(0).getX(), clipper.get(1).getY() - clipper.get(0).getY());
+        if (vect_mult(v21, v10) < 0) {
+            sign = -1;
+        }
+
+        //   В цикле проверяем совпадения знаков векторных произведений
+        //   всех пар соседних ребер со знаком первого
+        //   векторного произведения
+        int len = clipper.size();
+        for (int i = 3; i < len + 3; ++i)
+        {
+            if (sign * vect_mult(
+                    new Vector(clipper.get(i % len), clipper.get((i - 1) % len)),
+                    new Vector(clipper.get((i - 1) % len), clipper.get((i - 2) % len))) < 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void onMouseClicked(MouseEvent mouseEvent) {
@@ -204,5 +232,136 @@ class ResizableCanvas extends Canvas {
         newX = newX - model.getTranslateCoords().getX();
         newY = newY - model.getTranslateCoords().getY();
         return new Point((int) newX, (int) newY);
+    }
+
+    private void clip() {
+        for (Segment segment : model.getFigure()) {
+            Segment res = clip_line(segment, model.getClipperSize());
+            if (res.getStart().exists()) {
+                model.addSegmentToRes(res);
+            }
+        }
+    }
+
+    private Segment clip_line(Segment line, int count) {
+//        Вычисление директрисы заданного отрезка:
+//        D = P_2-P_1
+
+        ArrayList<Point> clipper = model.getClipper();
+
+        Vector d = new Vector(line.getEnd().getX() - line.getStart().getX(),
+                line.getEnd().getY() - line.getStart().getY());
+
+//        Инициализация пределов значений параметра t при условии,
+//        что отрезок полностью видим:
+//        t_н=0,t_к=1
+        double top = 0;
+        double bottom = 1;
+
+//        Начало цикла по всем сторонам отсекателя.
+//        Для каждой i-ой стороны отсекателя выполнить следующие действия:
+        for (int i = 0; i < clipper.size() - 1; i++) {
+//            print(i)
+//            Вычисление вектора внутренней нормали к очередной
+//            i - ой стороне отсекателя -N_вi
+            Point p0 = clipper.get(i);
+            Point p1 = clipper.get(i + 1);
+            Point p2 = clipper.get(i + 1 == count ? 1 : i + 2);
+            Vector norm = normal(p0, p1, p2);
+
+//            Вычисление вектора W_i = P_1 - f_i(f_i берем за вершины стороны)
+            Vector w = new Vector(
+                    line.getStart().getX() - p0.getX(),
+                    line.getStart().getY() - p0.getY()
+            );
+
+//            Вычисление скалярного произведения векторов:
+//            W_iскал = W_i N_вi
+//            D_скал = DN_вi
+            double d_scal = scalar_mult(d, norm);
+            double w_scal = scalar_mult(w, norm);
+
+//            Если D_скал = 0, Если W_скi > 0, то отрезок
+//            (точка) видим(-а) относительно текущей стороны отсекателя
+//            Проверка видимости точки, в которую выродился отрезок, или проверка видимости произвольной
+//            точки отрезка в случае его параллельности стороне отсекателя:если W_скi<0, то отрезок(точка)
+//            невидим(-а).Если W_скi > 0, то отрезок(точка) видим(-а) относительно текущей
+//            стороны отсекателя.
+
+            if (d_scal == 0) {
+                if (w_scal < 0) { // невидима
+                    return new Segment(); // todo: - 7.
+                } else {
+                    continue;
+                }
+            }
+
+//            Вычисление параметра t:
+//            t = -W_скi / D_ск
+            double param = -w_scal / d_scal;
+
+
+            if (d_scal > 0) { // нижняя граница видимости
+                if (param <= 1) {
+                    top = Math.max(top, param);
+                } else {
+                    return new Segment(); // todo: - 7.
+                }
+            } else if (d_scal < 0) { // верхняя граница видимости
+                if (param >= 0) {
+                    bottom = Math.min(bottom, param);
+                } else {
+                    return new Segment();
+                }
+            }
+
+//            Проверка фактической видимости отсечённого отрезка. Если t_н > t_в, то выход
+            if (top > bottom) {
+                break;
+            }
+        }
+//        Проверка фактической видимости отсечённого отрезка.
+//        Если t_н≤t_в, то изобразить отрезок в
+//        интервале от P(t_н ) до P(t_н ).
+//        TOP - нижнее BOTTOM вернее
+        if (top <= bottom) {
+            return new Segment(
+                    new Point(
+                            Math.round(line.getStart().getX() + d.getA() * top),
+                            Math.round(line.getStart().getY() + d.getB() * top)
+                    ),
+                    new Point(
+                            Math.round(line.getStart().getX() + d.getA() * bottom),
+                            Math.round(line.getStart().getY() + d.getB() * bottom)
+                    )
+            );
+        }
+
+        return new Segment();
+    }
+
+    private Vector normal(Point p1, Point p2, Point cp) {
+        Vector vect = new Vector(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+        Vector norm;
+        if (vect.getA() == 0) {
+            norm = new Vector(1, 0);
+        } else {
+            norm = new Vector(-vect.getB() / vect.getA(), 1);
+        }
+
+        if (scalar_mult(new Vector(cp.getX() - p2.getX(), cp.getY() - p2.getY()), norm) < 0 ) {
+            norm.setA(-norm.getA());
+            norm.setB(-norm.getB());
+        }
+
+        return norm;
+    }
+
+    private double scalar_mult(Vector a, Vector b) {
+        return a.getA() * b.getA() + a.getB() * b.getB();
+    }
+
+    private double vect_mult(Vector v1, Vector v2) {
+        return v1.getA() * v2.getB() - v1.getB() * v2.getA();
     }
 }
