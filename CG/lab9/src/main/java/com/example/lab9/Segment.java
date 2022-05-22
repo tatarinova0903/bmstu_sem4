@@ -29,5 +29,13 @@ public class Segment {
     public void setEnd(Point end) {
         this.end = end;
     }
+
+    public double getDX() {
+        return this.end.getX() - this.start.getX();
+    }
+
+    public double getDY() {
+        return this.end.getY() - this.start.getY();
+    }
 }
 

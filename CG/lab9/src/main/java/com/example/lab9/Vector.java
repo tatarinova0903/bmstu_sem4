@@ -14,16 +14,13 @@ public class Vector {
         this.b = b;
     }
 
+    public Vector(Point a, Point b) {
+        this.a = a.getX() - b.getX();
+        this.b = a.getY() - b.getY();
+    }
+
     public double getA() {
         return a;
-    }
-
-    public void negA() {
-        this.a *= (-1);
-    }
-
-    public void negB() {
-        this.b *= (-1);
     }
 
     public void setA(double a) {
@@ -36,6 +33,10 @@ public class Vector {
 
     public void setB(double b) {
         this.b = b;
+    }
+
+    double vectMult(Vector v) {
+        return this.getA() * v.getB() - this.getB() * v.getA();
     }
 }
 

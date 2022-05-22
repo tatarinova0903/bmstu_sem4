@@ -33,6 +33,7 @@ public class Model {
         clipper.clear();
         res.clear();
         figure.clear();
+        clipBtnDidTap = false;
     }
 
     public void cancel() {

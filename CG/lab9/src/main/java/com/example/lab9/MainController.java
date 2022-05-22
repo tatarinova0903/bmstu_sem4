@@ -31,11 +31,11 @@ public class MainController extends AnchorPane {
     private final Button lockClipperBtn = new Button("Замкнуть");
     private final Button addPointToClipperBtn = new Button("Добавить точку в отсекатель");
     private final Text pointLabel = new Text("ФИГУРА:");
-    private final Text xLabel = new Text("x:");
-    private final TextField xField = new TextField();
-    private final Text yLabel = new Text("y:");
-    private final TextField yField = new TextField();
-    private final Button addPointBtn = new Button("Добавить точку в фигуру");
+    private final Text xFigureLabel = new Text("X:");
+    private final TextField xFigureField = new TextField();
+    private final Text yFigureLabel = new Text("Y:");
+    private final TextField yFigureField = new TextField();
+    private final Button addPointToFigureBtn = new Button("Добавить точку в фигуру");
     private final Button lockFigureBtn = new Button("Замкнуть");
     private final Button clipBtn = new Button("Обрезать");
     private final ToggleGroup toggleSetGroup = new ToggleGroup();
@@ -58,7 +58,6 @@ public class MainController extends AnchorPane {
         xClipperField.setMaxWidth(60);
         yClipperField.setMaxWidth(60);
         HBox clipperMenu = new HBox(
-                resColorLabel, resColorComboBox,
                 clipLabel,
                 xClipperLabel, xClipperField,
                 yClipperLabel, yClipperField,
@@ -70,19 +69,20 @@ public class MainController extends AnchorPane {
         clipperBtn.setToggleGroup(toggleSetGroup);
         figureBtn.setToggleGroup(toggleSetGroup);
 
-        xField.setMaxWidth(60);
-        yField.setMaxWidth(60);
+        xFigureField.setMaxWidth(60);
+        yFigureField.setMaxWidth(60);
         HBox figureMenu = new HBox(
                 pointLabel,
-                xLabel, xField,
-                yLabel, yField,
-                addPointBtn, lockFigureBtn, clipBtn
+                xFigureLabel, xFigureField,
+                yFigureLabel, yFigureField,
+                addPointToFigureBtn, lockFigureBtn
         );
         figureMenu.setAlignment(Pos.CENTER);
         figureMenu.setSpacing(10);
 
         HBox actionMenu = new HBox(
-                clipperBtn, figureBtn
+                resColorLabel, resColorComboBox,
+                clipperBtn, figureBtn, clipBtn
         );
         actionMenu.setAlignment(Pos.CENTER);
         actionMenu.setSpacing(10);
@@ -107,12 +107,12 @@ public class MainController extends AnchorPane {
             case TAB -> {
                 if (xClipperField.focusedProperty().get()) { yClipperField.requestFocus(); }
                 else if (yClipperField.isFocused()) { xClipperField.requestFocus(); }
-                else if (xField.isFocused()) { yField.requestFocus(); }
-                else if (yField.isFocused()) { xField.requestFocus(); }
+                else if (xFigureField.isFocused()) { yFigureField.requestFocus(); }
+                else if (yFigureField.isFocused()) { xFigureField.requestFocus(); }
             }
             case ENTER -> {
-                if (xField.isFocused() || yField.isFocused()) {
-                    requestAddPointBtn();
+                if (xFigureField.isFocused() || yFigureField.isFocused()) {
+                    requestAddPointToFigureBtn();
                 }
                 else if (xClipperField.isFocused() || yClipperField.isFocused()) {
                     requestAddPointToClipperBtn();
@@ -132,7 +132,7 @@ public class MainController extends AnchorPane {
     private void addHandlers() {
         ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(
                 xClipperField, yClipperField,
-                xField, yField
+                xFigureField, yFigureField
         ));
         textFields.forEach(textField -> {
             textField.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -170,8 +170,8 @@ public class MainController extends AnchorPane {
             requestAddPointToClipperBtn();
             canvas.requestFocus();
         });
-        addPointBtn.setOnAction(actionEvent -> {
-            requestAddPointBtn();
+        addPointToFigureBtn.setOnAction(actionEvent -> {
+            requestAddPointToFigureBtn();
             canvas.requestFocus();
         });
         clipperBtn.setOnAction(actionEvent -> {
@@ -202,20 +202,20 @@ public class MainController extends AnchorPane {
         }
         int x = Integer.parseInt(xClipperField.getText());
         int y = Integer.parseInt(yClipperField.getText());
-        canvas.drawAddPointToClipperBtnDidTap(x, y);
+        canvas.addPointToClipperBtnDidTap(x, y);
     }
 
-    private void requestAddPointBtn() {
-        if (xField.getText().isEmpty() || yField.getText().isEmpty()) {
+    private void requestAddPointToFigureBtn() {
+        if (xFigureField.getText().isEmpty() || yFigureField.getText().isEmpty()) {
             return;
         }
-        int x = Integer.parseInt(xField.getText());
-        int y = Integer.parseInt(yField.getText());
-        canvas.addPointBtnDidTap(x, y);
+        int x = Integer.parseInt(xFigureField.getText());
+        int y = Integer.parseInt(yFigureField.getText());
+        canvas.addPointToFigureBtnDidTap(x, y);
     }
 
     private void aboutProgramBtnDidTap() {
-        showInfoAlert("Отсечение произвольного отрезка произвольным выпуклым окном (Алгоритм Кируса-Бека)");
+        showInfoAlert("Алгоритм отсечения многоугольника выпуклым окном (алгоритм Сазерленда-Ходжмена)");
     }
 
     private void configure(HBox box) {

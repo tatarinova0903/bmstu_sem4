@@ -38,8 +38,8 @@ class ResizableCanvas extends Canvas {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, width, height);
 
-        drawFigure(model.getClipper());
-        drawFigure(model.getFigure());
+        drawFigure(model.getClipper(), Color.BLACK);
+        drawFigure(model.getFigure(), Color.BLACK);
         if (model.isClipBtnDidTap()) {
             clipBtnDidTap();
         }
@@ -107,37 +107,37 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
-    public void drawAddPointToClipperBtnDidTap(int x, int y) {
+    public void addPointToClipperBtnDidTap(int x, int y) {
         model.setAction(Action.CLIPPER);
         model.addPointToClipper(new Point(x, y));
-        drawFigure(model.getClipper());
+        drawFigure(model.getClipper(), Color.BLACK);
     }
 
-    public void addPointBtnDidTap(double x, double y) {
+    public void addPointToFigureBtnDidTap(double x, double y) {
         model.setAction(Action.FIGURE);
         model.addPointToFigure(new Point(x, y));
         Point point = translatePointFromIdeal(new Point(x, y));
         drawPoint((int) point.getX(), (int) point.getY(), Color.BLACK);
-        drawFigure(model.getFigure());
+        drawFigure(model.getFigure(), Color.BLACK);
     }
 
     public void clipBtnDidTap() {
+        if (!checkClipper(model.getClipper())) {
+            controller.showInfoAlert("Остекатель невыпуклый");
+            return;
+        }
         model.setClipBtnDidTap(true);
-        clip();
-        gc.setLineWidth(3);
-        drawSegments(model.getRes(), controller.getResColor());
-        gc.setLineWidth(1);
-        gc.setStroke(Color.BLACK);
+        clip(model.getFigure(), model.getClipper());
     }
 
     public void lockClipperBtnDidTap() {
         model.lock(model.getClipper());
-        drawFigure(model.getClipper());
+        drawFigure(model.getClipper(), Color.BLACK);
     }
 
     public void lockFigureBtnDidTap() {
         model.lock(model.getFigure());
-        drawFigure(model.getFigure());
+        drawFigure(model.getFigure(), Color.BLACK);
     }
 
     private void onMouseClicked(MouseEvent mouseEvent) {
@@ -145,32 +145,25 @@ class ResizableCanvas extends Canvas {
         switch (model.getAction()) {
             case FIGURE -> {
                 Point ideal = translatePointFromReal(new Point(mouseEvent.getX(), mouseEvent.getY()));
-                addPointBtnDidTap(ideal.getX(), ideal.getY());
+                addPointToFigureBtnDidTap(ideal.getX(), ideal.getY());
             }
             case CLIPPER -> {
                 Point ideal = translatePointFromReal(new Point(mouseEvent.getX(), mouseEvent.getY()));
                 model.addPointToClipper(ideal);
-                drawFigure(model.getClipper());
+                drawFigure(model.getClipper(), Color.BLACK);
             }
         }
     }
 
-    private void drawFigure(ArrayList<Point> clipper) {
+    private void drawFigure(ArrayList<Point> clipper, Color color) {
         int pointsCount = clipper.size();
+        gc.setStroke(color);
         for (int i = 0; i < pointsCount - 1; i++) {
             Point start = translatePointFromIdeal(clipper.get(i));
             Point end = translatePointFromIdeal(clipper.get(i + 1));
             gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
         }
-    }
-
-    private void drawSegments(ArrayList<Segment> figure, Color color) {
-        gc.setStroke(color);
-        figure.forEach(segment -> {
-            Point start = translatePointFromIdeal(segment.getStart());
-            Point end = translatePointFromIdeal(segment.getEnd());
-            gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-        });
+        gc.setStroke(Color.BLACK);
     }
 
     private void drawPoint(int x, int y, Color color) {
@@ -207,8 +200,155 @@ class ResizableCanvas extends Canvas {
         return new Point((int) newX, (int) newY);
     }
 
-    private void clip() {
+    // сам алгоритм
+    private void clip(ArrayList<Point> figure, ArrayList<Point> clipper) {
+        ArrayList<Vector> normals_list = getNormalList(clipper);
+        ArrayList<Point> res = cut_figure(figure, clipper, normals_list);
+        model.lock(res);
+        gc.setLineWidth(3);
+        drawFigure(res, controller.getResColor());
+        gc.setLineWidth(1);
+    }
 
+    ArrayList<Point> cut_figure(ArrayList<Point> figure, ArrayList<Point> clipper, ArrayList<Vector> normals) {
+        ArrayList<Point> res = figure;
+
+        for (int i = 0; i < clipper.size() - 1; ++i) {
+            Segment cur_edge = new Segment(
+                    clipper.get(i),
+                    clipper.get((i + 1) % clipper.size())
+            );
+
+            res = edgeCutFigure(res, cur_edge, normals.get(i));
+
+            if (res.size() < 3) {
+                return new ArrayList<Point>();
+            }
+        }
+
+        return res;
+    }
+
+    ArrayList<Point> edgeCutFigure(ArrayList<Point> figure, Segment edge, Vector normal)
+    {
+        ArrayList<Point> res = new ArrayList<>();
+
+        if (figure.size() < 3) {
+            return new ArrayList<Point>();
+        }
+
+        boolean prevCheck = checkPoint(figure.get(0), edge.getStart(), edge.getEnd());
+
+        for (int i = 1; i < figure.size() + 1; ++i) {
+            boolean curCheck = checkPoint(figure.get(i % figure.size()), edge.getStart(), edge.getEnd());
+
+            if (prevCheck) {
+                if (curCheck) {
+                    res.add(figure.get(i % figure.size()));
+                } else {
+                    res.add(findIntersection(
+                            new Segment(figure.get(i - 1), figure.get(i % figure.size())), edge, normal)
+                    );
+                }
+            } else {
+                if (curCheck) {
+                    res.add(findIntersection(
+                            new Segment(figure.get(i - 1), figure.get(i % figure.size())), edge, normal)
+                    );
+                    res.add(figure.get(i % figure.size()));
+                }
+            }
+
+            prevCheck = curCheck;
+        }
+
+        return res;
+    }
+
+    Point findIntersection(Segment section, Segment edge, Vector normal)
+    {
+        Vector wi = new Vector(edge.getStart(), section.getStart());
+        Vector d = new Vector(section.getStart(), section.getEnd());
+        double Wck = scalarMult(wi, normal);
+        double Dck = scalarMult(d, normal);
+
+        Point diff = new Point(section.getDX(), section.getDY());
+
+        double t = - Wck / Dck;
+
+        return new Point(
+                section.getStart().getX() + diff.getX() * t,
+                section.getStart().getY() + diff.getY() * t
+        );
+    }
+
+    boolean checkPoint(Point point, Point p1, Point p2) {
+        return vectMult(new Vector(p1, p2), new Vector(p1, point)) <= 0;
+    }
+
+    ArrayList<Vector> getNormalList(ArrayList<Point> points) {
+        int len = points.size();
+        ArrayList<Vector> res = new ArrayList<>();
+        for (int i = 0; i < len; ++i)
+            res.add(
+                    getNormal(points.get(i), points.get((i + 1) % len),
+                            points.get((i + 2) % len))
+            );
+
+        return res;
+    }
+
+    private Vector getNormal(Point p1, Point p2, Point cp) {
+        Vector vect = new Vector(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+        Vector norm;
+        if (vect.getA() == 0) {
+            norm = new Vector(1, 0);
+        } else {
+            norm = new Vector(-vect.getB() / vect.getA(), 1);
+        }
+
+        if (scalarMult(new Vector(cp.getX() - p2.getX(), cp.getY() - p2.getY()), norm) < 0 ) {
+            norm.setA(-norm.getA());
+            norm.setB(-norm.getB());
+        }
+
+        return norm;
+    }
+
+    private double scalarMult(Vector a, Vector b) {
+        return a.getA() * b.getA() + a.getB() * b.getB();
+    }
+
+    private double vectMult(Vector v1, Vector v2) {
+        return v1.vectMult(v2);
+    }
+
+    private boolean checkClipper(ArrayList<Point> clipper) {
+        if (clipper.size() < 3) {
+            return false;
+        }
+
+        int sign = 1;
+        Vector v21 = new Vector(clipper.get(2).getX() - clipper.get(1).getX(), clipper.get(2).getY() - clipper.get(1).getY());
+        Vector v10 = new Vector(clipper.get(1).getX() - clipper.get(0).getX(), clipper.get(1).getY() - clipper.get(0).getY());
+        if (vectMult(v21, v10) < 0) {
+            sign = -1;
+        }
+
+        //   В цикле проверяем совпадения знаков векторных произведений
+        //   всех пар соседних ребер со знаком первого
+        //   векторного произведения
+        int len = clipper.size();
+        for (int i = 3; i < len + 3; ++i)
+        {
+            if (sign * vectMult(
+                    new Vector(clipper.get(i % len), clipper.get((i - 1) % len)),
+                    new Vector(clipper.get((i - 1) % len), clipper.get((i - 2) % len))) < 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
