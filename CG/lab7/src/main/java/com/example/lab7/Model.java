@@ -34,6 +34,7 @@ public class Model {
         curSegment = new Segment();
         res.clear();
         figure.clear();
+        clipBtnDidTap = false;
     }
 
     public void cancel() {
@@ -102,16 +103,15 @@ public class Model {
         if (!firstPoint.exists()) {
             firstPoint = point;
             return false;
-        } else {
+        } else if (!secondPoint.exists()) {
             secondPoint = point;
             double xLeft = Math.min(firstPoint.getX(), secondPoint.getX());
             double xRight = Math.max(firstPoint.getX(), secondPoint.getX());
             double yUp = Math.max(firstPoint.getY(), secondPoint.getY());
             double yDown = Math.min(firstPoint.getY(), secondPoint.getY());
             setClipper(new Clipper(xLeft, xRight, yUp, yDown));
-            firstPoint = new Point();
-            secondPoint = new Point();
             return true;
         }
+        return false;
     }
 }
