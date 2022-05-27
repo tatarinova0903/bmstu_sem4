@@ -267,19 +267,22 @@ class ResizableCanvas extends Canvas {
 
     Point findIntersection(Segment section, Segment edge, Vector normal)
     {
-        Vector wi = new Vector(edge.getStart(), section.getStart());
-        Vector d = new Vector(section.getStart(), section.getEnd());
-        double Wck = scalarMult(wi, normal);
-        double Dck = scalarMult(d, normal);
+//        Vector wi = new Vector(edge.getStart(), section.getStart());
+//        Vector d = new Vector(section.getStart(), section.getEnd());
+//        double Wck = scalarMult(wi, normal);
+//        double Dck = scalarMult(d, normal);
+//
+//        Point diff = new Point(section.getDX(), section.getDY());
+//
+//        double t = - Wck / Dck;
+//
+//        return new Point(
+//                section.getStart().getX() + diff.getX() * t,
+//                section.getStart().getY() + diff.getY() * t
+//        );
 
-        Point diff = new Point(section.getDX(), section.getDY());
-
-        double t = - Wck / Dck;
-
-        return new Point(
-                section.getStart().getX() + diff.getX() * t,
-                section.getStart().getY() + diff.getY() * t
-        );
+        Equatation equatation = new Equatation(new Line(section.getStart(), section.getEnd()), new Line(edge.getStart(), edge.getEnd()));
+        return equatation.calculate();
     }
 
     boolean checkPoint(Point point, Point p1, Point p2) {
