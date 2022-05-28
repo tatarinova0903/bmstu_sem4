@@ -7,6 +7,9 @@
 
 #include "facade.h"
 #include "command.h"
+#include "model_command.h"
+#include "camera_command.h"
+#include "scene_command.h"
 #include "camera_error.h"
 #include "model_error.h"
 #include "ui_mainwindow.h"

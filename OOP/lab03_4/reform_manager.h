@@ -1,7 +1,7 @@
 #ifndef REFORM_MANAGER_H
 #define REFORM_MANAGER_H
 
-#include "component.h"
+#include "object.h"
 #include "base_manager.h"
 
 class reform_manager : public base_manager

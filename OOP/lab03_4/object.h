@@ -1,5 +1,5 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 #include <memory>
 
@@ -16,9 +16,6 @@ public:
 
     virtual bool add(const std::shared_ptr<object>&) { return false; };
     virtual bool remove(const iterator<std::shared_ptr<object>>&) { return false; };
-
-    virtual iterator<std::shared_ptr<object>> begin() {}; // = 0;
-    virtual iterator<std::shared_ptr<object>> end()   {}; // = 0;
 
     virtual bool is_composite() const { return false; };
     virtual void accept(std::shared_ptr<visitor> visitor) = 0;

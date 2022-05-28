@@ -17,7 +17,7 @@ vector<T>::vector(const T *array, size_t _size)
 {
     this->allocate_new(_size * 2);
 
-    for (int i = 0; i < _size; i++)
+    for (size_t i = 0; i < _size; i++)
     {
         this->push_back(*(array + i));
     }
@@ -28,7 +28,7 @@ vector<T>::vector(T elem, size_t _size)
 {
     this->allocate_new(_size * 2);
 
-    for (int i = 0; i < _size; i++)
+    for (size_t i = 0; i < _size; i++)
     {
         this->push_back(elem);
     }
@@ -83,8 +83,8 @@ void vector<T>::remove(iterator<T> _iterator)
 template <typename T>
 void vector<T>::remove(size_t index)
 {
-    //iterator<T> iterator(index);
-    //this->remove(iterator);
+//    iterator<T> iterator(index);
+//    this->remove(iterator);
 }
 
 template <typename T>

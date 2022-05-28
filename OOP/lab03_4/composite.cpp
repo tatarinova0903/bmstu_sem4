@@ -23,16 +23,6 @@ bool composite::remove(const iterator<std::shared_ptr<object>> &iterator)
     return true;
 }
 
-iterator<std::shared_ptr<object>> composite::begin()
-{
-    return this->objects.begin();
-}
-
-iterator<std::shared_ptr<object>> composite::end()
-{
-    return this->objects.end();
-}
-
 bool composite::is_composite() const
 {
     return true;
