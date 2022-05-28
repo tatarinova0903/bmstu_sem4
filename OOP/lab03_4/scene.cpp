@@ -7,12 +7,15 @@ void scene::add_model(std::shared_ptr<object> model)
 
 void scene::remove_model(const size_t index)
 {
-    //this->models->remove(index);
+//    this->models->remove(index);
 }
 
-void scene::add_camera(const std::shared_ptr<camera> &camera)
+void scene::add_camera(const double x, const double y, const double z)
 {
-    this->cams.push_back(camera);
+    std::shared_ptr<camera> cam(new camera);
+    point cp(x, y, z);
+    cam->reform(cp, cp, cp);
+    this->cams.push_back(cam);
 }
 
 void scene::remove_camera(const size_t index)

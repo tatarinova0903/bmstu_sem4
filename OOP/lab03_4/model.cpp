@@ -5,11 +5,6 @@ model::model(const model &_model)
     this->_details = _model.get_details();
 }
 
-std::unique_ptr<model> model::clone()
-{
-    return std::unique_ptr<model>(new model(*this));
-}
-
 void model::add_point(const point &point)
 {
     this->_details->add_point(point);

@@ -14,7 +14,7 @@ public:
     void add_model(std::shared_ptr<object> model);
     void remove_model(const size_t model_index);
 
-    void add_camera(const std::shared_ptr<camera> &camera);
+    void add_camera(const double x, const double y, const double z);
     void remove_camera(const size_t cam_index);
 
     vector<std::shared_ptr<object>> get_models();

@@ -15,7 +15,8 @@ class move_model: public base_model_command
 public:
     move_model(const double &dx,
               const double &dy,
-              const double &dz, const size_t &n);
+              const double &dz,
+               std::shared_ptr<object> object);
 
     move_model() = delete;
 
@@ -24,9 +25,8 @@ public:
     void execute() override;
 
 private:
-    size_t model_n_;
-
     double dx, dy, dz;
+    std::shared_ptr<object> model;
 };
 
 class scale_model: public base_model_command
@@ -34,7 +34,8 @@ class scale_model: public base_model_command
 public:
     scale_model(const double &x,
                const double &y,
-               const double &z, const size_t &n);
+               const double &z,
+                std::shared_ptr<object> model);
 
     scale_model() = delete;
 
@@ -43,9 +44,8 @@ public:
     void execute() override;
 
 private:
-    size_t model_n_;
-
     double kx, ky, kz;
+    std::shared_ptr<object> model;
 };
 
 class rotate_model: public base_model_command
@@ -53,7 +53,8 @@ class rotate_model: public base_model_command
 public:
     rotate_model(const double &ox,
               const double &oy,
-              const double &oz, const size_t &n);
+              const double &oz,
+                 std::shared_ptr<object> model);
 
     rotate_model() = delete;
 
@@ -62,18 +63,17 @@ public:
     void execute() override;
 
 private:
-    size_t model_n_;
-
     double ox, oy, oz;
+    std::shared_ptr<object> model;
 };
 
 class reform_model: public base_model_command
 {
 public:
-    reform_model(const size_t &n,
-                const point &m,
+    reform_model(const point &m,
                 const point &s,
-                const point &t);
+                const point &t,
+                 std::shared_ptr<object> model);
 
     reform_model() = delete;
     ~reform_model() override = default;
@@ -81,9 +81,8 @@ public:
     void execute() override;
 
 private:
-    size_t model_n_;
-
     point move, scale, turn;
+    std::shared_ptr<object> model;
 };
 
 

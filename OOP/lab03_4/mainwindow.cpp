@@ -58,9 +58,9 @@ void MainWindow::on_move_button_clicked()
         return;
     }
 
-    move_model move_command(10, 10, 10, 1);
-    this->_facade->execute(move_command);
-    update_scene();
+//    move_model move_command(10, 10, 10, 1);
+//    this->_facade->execute(move_command);
+//    update_scene();
 }
 
 void MainWindow::on_scale_button_clicked()
@@ -79,9 +79,9 @@ void MainWindow::on_scale_button_clicked()
         return;
     }
 
-    scale_model scale_command(2, 2, 2, 1);
-    this->_facade->execute(scale_command);
-    update_scene();
+//    scale_model scale_command(2, 2, 2, 1);
+//    this->_facade->execute(scale_command);
+//    update_scene();
 }
 
 void MainWindow::on_turn_button_clicked()
@@ -100,9 +100,9 @@ void MainWindow::on_turn_button_clicked()
         return;
     }
 
-    rotate_model rotate_command(3, 3, 3, 1);
-    this->_facade->execute(rotate_command);
-    update_scene();
+//    rotate_model rotate_command(3, 3, 3, 1);
+//    this->_facade->execute(rotate_command);
+//    update_scene();
 }
 
 void MainWindow::on_load_button_clicked()

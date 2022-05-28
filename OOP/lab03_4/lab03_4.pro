@@ -12,6 +12,7 @@ SOURCES += \
     builder.cpp \
     camera.cpp \
     camera_command.cpp \
+    command.cpp \
     composite.cpp \
     details.cpp \
     draw_manager.cpp \

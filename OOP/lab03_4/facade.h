@@ -20,6 +20,7 @@ private:
     std::shared_ptr<abstract_loader> _loadManager;
     std::shared_ptr<scene_manager> _sceneManager;
     std::shared_ptr<reform_manager> _transformManager;
+    std::shared_ptr<scene> _scene;
 };
 
 #endif

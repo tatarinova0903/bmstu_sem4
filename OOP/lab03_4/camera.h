@@ -14,12 +14,11 @@ public:
     virtual void accept(std::shared_ptr<visitor> visitor) override;
     point get_pos() { return current_pos; };
 
+private:
+    point current_pos;
     void move_x(const double &shift);
     void move_y(const double &shift);
     void move_z(const double &shift);
-
-private:
-    point current_pos;
 };
 
 #endif

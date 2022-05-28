@@ -14,8 +14,29 @@ facade::facade()
 
 void facade::execute(base_command &command)
 {
+    command.setManagers(_drawManager, _loadManager, _sceneManager, _transformManager);
+    auto camera = _sceneManager->get_cam();
+    auto scene = _sceneManager->get_scene();
+
     command.execute();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //void facade::load_model(std::string fname)
 //{
