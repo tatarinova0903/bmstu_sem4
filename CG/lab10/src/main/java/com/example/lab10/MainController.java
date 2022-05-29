@@ -149,6 +149,30 @@ public class MainController extends AnchorPane {
         return colors.getColors().get(resColorComboBox.getSelectionModel().getSelectedIndex());
     }
 
+    Limit getXLimit() {
+        if (xStartField.getText().isEmpty() || xEndField.getText().isEmpty() || xStepField.getText().isEmpty()) {
+            return new Limit(-100, 100, 1);
+        }
+        double xStart = Double.parseDouble(xStartField.getText());
+        double xEnd = Double.parseDouble(xEndField.getText());
+        double xStep = Double.parseDouble(xStepField.getText());
+        return new Limit(xStart, xEnd, xStep);
+    }
+
+    Limit getZLimit() {
+        if (zStartField.getText().isEmpty() || zEndField.getText().isEmpty() || zStepField.getText().isEmpty()) {
+            return new Limit(-100, 100, 1);
+        }
+        double zStart = Double.parseDouble(zStartField.getText());
+        double zEnd = Double.parseDouble(zEndField.getText());
+        double zStep = Double.parseDouble(zStepField.getText());
+        return new Limit(zStart, zEnd, zStep);
+    }
+
+    FunctionType getFunc() {
+        return functions.getFunctions().get(functionTypeComboBox.getSelectionModel().getSelectedIndex());
+    }
+
     private void addHandlers() {
         ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(
                 xStartField, xEndField, zStartField, zEndField, xStepField, zStepField
@@ -192,7 +216,7 @@ public class MainController extends AnchorPane {
     }
 
     private void requestDrawBtnDidTap() {
-
+        canvas.drawBtnDidTap();
     }
 
     private void aboutProgramBtnDidTap() {

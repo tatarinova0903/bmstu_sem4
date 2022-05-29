@@ -18,8 +18,8 @@ public class Functions {
         ArrayList<String> functions = new ArrayList<>();
         this.functions.forEach(functionType -> {
             switch (functionType) {
-                case FUNC1 -> { functions.add("x + y"); }
-                case FUNC2 -> { functions.add("cos(x) * cos(y)"); }
+                case FUNC1 -> { functions.add("x + z"); }
+                case FUNC2 -> { functions.add("cos(x) * cos(z)"); }
             }
 
         });
