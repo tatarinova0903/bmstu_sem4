@@ -86,6 +86,12 @@ class ResizableCanvas extends Canvas {
         draw();
     }
 
+    void rotateBtnDidTap(double xRotate, double yRotate, double zRotate) {
+        spin_x(xRotate);
+        spin_y(yRotate);
+        spin_z(zRotate);
+    }
+
     void drawBtnDidTap() {
         build_graph(true, 1);
     }
@@ -241,6 +247,45 @@ class ResizableCanvas extends Canvas {
 //        Проверка точки на видимость
         return (0 <= dot.getX() && dot.getX() <= getWidth()) && // todo: abs() < EPS
                 (0 <= dot.getY() && dot.getY() <= getHeight());
+    }
+
+    private void spin_x(double xRotate) {
+//        Поворот по оси X.
+
+        double angle = xRotate / 180 * Math.PI;
+
+        double[][] rotating_matrix = { {1, 0, 0, 0},
+                {0, Math.cos(angle), Math.sin(angle), 0},
+                {0, -Math.sin(angle), Math.cos(angle), 0},
+                {0, 0, 0, 1}};
+
+        model.turnMatrix(rotating_matrix);
+
+        build_graph(false, scale);
+    }
+
+    private void spin_y(double yRotate) {
+//        Поворот по оси Y.
+
+        double angle = yRotate / 180 * Math.PI;
+        double[][] rotating_matrix = {{Math.cos(angle), 0, -Math.sin(angle), 0},
+                {0, 1, 0, 0},
+                {Math.sin(angle), 0, Math.cos(angle), 0},
+                {0, 0, 0, 1}};
+
+        model.turnMatrix(rotating_matrix);
+        build_graph(false, scale);
+    }
+
+    private void spin_z(double zRotate) {
+//        Поворот по оси Z.
+        double angle = zRotate / 180 * Math.PI;
+        double[][] rotating_matrix = {{Math.cos(angle), Math.sin(angle), 0, 0},
+                {-Math.sin(angle), Math.cos(angle), 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1}};
+        model.turnMatrix(rotating_matrix);
+        build_graph(false, scale);
     }
 
     private Limit getXLimit() {

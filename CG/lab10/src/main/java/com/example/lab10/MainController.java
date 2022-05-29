@@ -47,13 +47,11 @@ public class MainController extends AnchorPane {
     private final TextField yRotateField = new TextField();
     private final Text zRotateLabel = new Text("OZ:");
     private final TextField zRotateField = new TextField();
+    private final Button rotateBtn = new Button("Повернуть");
     private final Text scaleLabel = new Text("МАСШТАБИРОВАНИЕ");
     private final Text kScaleLabel = new Text("K:");
     private final TextField kScaleField = new TextField();
-    private final Button addPointToFigureBtn = new Button("Добавить точку в фигуру");
-    private final Button lockFigureBtn = new Button("Замкнуть");
     private final Button drawBtn = new Button("Нарисовать");
-    private final ToggleGroup toggleSetGroup = new ToggleGroup();
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     private final CustomColor colors = new CustomColor();
@@ -89,11 +87,15 @@ public class MainController extends AnchorPane {
         limitsMenu.setAlignment(Pos.CENTER);
         limitsMenu.setSpacing(10);
 
+        xRotateField.setMaxWidth(60);
+        yRotateField.setMaxWidth(60);
+        zRotateField.setMaxWidth(60);
         HBox rotateMenu = new HBox(
                 rotateLabel,
                 xRotateLabel, xRotateField,
                 yRotateLabel, yRotateField,
-                zRotateLabel, zRotateField
+                zRotateLabel, zRotateField,
+                rotateBtn
         );
         rotateMenu.setAlignment(Pos.CENTER);
         rotateMenu.setSpacing(10);
@@ -213,10 +215,21 @@ public class MainController extends AnchorPane {
             requestDrawBtnDidTap();
             canvas.requestFocus();
         });
+        rotateBtn.setOnAction(actionEvent -> {
+            requestRotateBtnDidTap();
+            canvas.requestFocus();
+        });
     }
 
     private void requestDrawBtnDidTap() {
         canvas.drawBtnDidTap();
+    }
+
+    private void requestRotateBtnDidTap() {
+        double xRotate = xRotateField.getText().isEmpty() ? 0 : Double.parseDouble(xRotateField.getText());
+        double yRotate = yRotateField.getText().isEmpty() ? 0 : Double.parseDouble(yRotateField.getText());
+        double zRotate = zRotateField.getText().isEmpty() ? 0 : Double.parseDouble(zRotateField.getText());
+        canvas.rotateBtnDidTap(xRotate, yRotate, zRotate);
     }
 
     private void aboutProgramBtnDidTap() {
