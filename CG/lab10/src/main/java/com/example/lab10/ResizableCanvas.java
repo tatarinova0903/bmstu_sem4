@@ -58,14 +58,7 @@ class ResizableCanvas extends Canvas {
     void scale(boolean isPlus) {
         if (isPlus) { scale += 0.2; }
         else if (scale > 1) { scale -= 0.1; }
-        this.setScaleX(scale);
-        this.setScaleY(scale);
-        double newWidth = getWidth() * 3;
-        double newX = newXForScale(scale);
-        double newHeight = getHeight() * 3;
-        double newY = newYForScale(scale);
-        Rectangle rect = new Rectangle(newX, newY, newWidth, newHeight);
-        this.setClip(rect);
+        build_graph(false, scale);
     }
 
     void goTo(Direction direction) {

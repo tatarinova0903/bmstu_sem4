@@ -115,7 +115,7 @@ public class MainController extends AnchorPane {
         actionMenu.setAlignment(Pos.CENTER);
         actionMenu.setSpacing(10);
 
-        VBox main = new VBox(commonActionsMenu, limitsMenu, rotateMenu, scaleMenu, actionMenu, canvas);
+        VBox main = new VBox(commonActionsMenu, limitsMenu, rotateMenu, actionMenu, canvas);
         main.setSpacing(5);
         configure(main);
         this.getChildren().add(main);
