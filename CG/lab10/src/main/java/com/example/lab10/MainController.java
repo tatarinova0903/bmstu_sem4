@@ -23,27 +23,41 @@ public class MainController extends AnchorPane {
     private final Button cancelAllBtn = new Button("Сбросить");
     private final Text resColorLabel = new Text("Цвет результата:");
     private final ComboBox resColorComboBox = new ComboBox<>();
-    private final Text clipLabel = new Text("ОТСЕКАТЕЛЬ:");
-    private final Text xClipperLabel = new Text("X:");
-    private final TextField xClipperField = new TextField();
-    private final Text yClipperLabel = new Text("Y:");
-    private final TextField yClipperField = new TextField();
-    private final Button lockClipperBtn = new Button("Замкнуть");
-    private final Button addPointToClipperBtn = new Button("Добавить точку в отсекатель");
-    private final Text pointLabel = new Text("ФИГУРА:");
-    private final Text xFigureLabel = new Text("X:");
-    private final TextField xFigureField = new TextField();
-    private final Text yFigureLabel = new Text("Y:");
-    private final TextField yFigureField = new TextField();
+    private final Text functionTypeLabel = new Text("Функция:");
+    private final ComboBox functionTypeComboBox = new ComboBox<>();
+    private final Text limitsLabel = new Text("ПРЕДЕЛЫ");
+    private final Text xLimitsLabel = new Text("X:");
+    private final Text xStartLabel = new Text("от: ");
+    private final TextField xStartField = new TextField();
+    private final Text xEndLabel = new Text("до: ");
+    private final TextField xEndField = new TextField();
+    private final Text xStepLabel = new Text("шаг:");
+    private final TextField xStepField = new TextField();
+    private final Text zLimitsLabel = new Text("Z:");
+    private final Text zStartLabel = new Text("от: ");
+    private final TextField zStartField = new TextField();
+    private final Text zEndLabel = new Text("до: ");
+    private final TextField zEndField = new TextField();
+    private final Text zStepLabel = new Text("шаг:");
+    private final TextField zStepField = new TextField();
+    private final Text rotateLabel = new Text("ВРАЩЕНИЕ");
+    private final Text xRotateLabel = new Text("OX:");
+    private final TextField xRotateField = new TextField();
+    private final Text yRotateLabel = new Text("OY:");
+    private final TextField yRotateField = new TextField();
+    private final Text zRotateLabel = new Text("OZ:");
+    private final TextField zRotateField = new TextField();
+    private final Text scaleLabel = new Text("МАСШТАБИРОВАНИЕ");
+    private final Text kScaleLabel = new Text("K:");
+    private final TextField kScaleField = new TextField();
     private final Button addPointToFigureBtn = new Button("Добавить точку в фигуру");
     private final Button lockFigureBtn = new Button("Замкнуть");
-    private final Button clipBtn = new Button("Обрезать");
+    private final Button drawBtn = new Button("Нарисовать");
     private final ToggleGroup toggleSetGroup = new ToggleGroup();
-    private final ToggleButton clipperBtn = new ToggleButton("Отсекатель");
-    private final ToggleButton figureBtn = new ToggleButton("Фигура");
     private final ResizableCanvas canvas = new ResizableCanvas(this);
 
     private final CustomColor colors = new CustomColor();
+    private final Functions functions = new Functions();
 
     public MainController() {
         HBox commonActionsMenu = new HBox(cancelBtn, cancelAllBtn, plusBtn, minusBtn, aboutAuthorBtn, aboutProgramBtn, currMousePositionLabel);
@@ -55,39 +69,51 @@ public class MainController extends AnchorPane {
         });
         resColorComboBox.getSelectionModel().selectFirst();
 
-        xClipperField.setMaxWidth(60);
-        yClipperField.setMaxWidth(60);
-        HBox clipperMenu = new HBox(
-                clipLabel,
-                xClipperLabel, xClipperField,
-                yClipperLabel, yClipperField,
-                addPointToClipperBtn, lockClipperBtn
-        );
-        clipperMenu.setAlignment(Pos.CENTER);
-        clipperMenu.setSpacing(10);
+        functions.getFunctionsStr().forEach(functionType -> {
+            functionTypeComboBox.getItems().add(functionType);
+        });
+        functionTypeComboBox.getSelectionModel().selectFirst();
 
-        clipperBtn.setToggleGroup(toggleSetGroup);
-        figureBtn.setToggleGroup(toggleSetGroup);
-
-        xFigureField.setMaxWidth(60);
-        yFigureField.setMaxWidth(60);
-        HBox figureMenu = new HBox(
-                pointLabel,
-                xFigureLabel, xFigureField,
-                yFigureLabel, yFigureField,
-                addPointToFigureBtn, lockFigureBtn
+        xStartField.setMaxWidth(60);
+        xEndField.setMaxWidth(60);
+        xStepField.setMaxWidth(60);
+        zStartField.setMaxWidth(60);
+        zEndField.setMaxWidth(60);
+        zStepField.setMaxWidth(60);
+        HBox limitsMenu = new HBox(
+                limitsLabel, xLimitsLabel,
+                xStartLabel, xStartField, xEndLabel, xEndField, xStepLabel, xStepField,
+                zLimitsLabel, zStartLabel, zStartField,
+                zEndLabel, zEndField, zStepLabel, zStepField
         );
-        figureMenu.setAlignment(Pos.CENTER);
-        figureMenu.setSpacing(10);
+        limitsMenu.setAlignment(Pos.CENTER);
+        limitsMenu.setSpacing(10);
+
+        HBox rotateMenu = new HBox(
+                rotateLabel,
+                xRotateLabel, xRotateField,
+                yRotateLabel, yRotateField,
+                zRotateLabel, zRotateField
+        );
+        rotateMenu.setAlignment(Pos.CENTER);
+        rotateMenu.setSpacing(10);
+
+        kScaleField.setMaxWidth(60);
+        HBox scaleMenu = new HBox(
+                scaleLabel, kScaleLabel, kScaleField
+        );
+        scaleMenu.setAlignment(Pos.CENTER);
+        scaleMenu.setSpacing(10);
 
         HBox actionMenu = new HBox(
                 resColorLabel, resColorComboBox,
-                clipperBtn, figureBtn, clipBtn
+                functionTypeLabel, functionTypeComboBox,
+                drawBtn
         );
         actionMenu.setAlignment(Pos.CENTER);
         actionMenu.setSpacing(10);
 
-        VBox main = new VBox(commonActionsMenu, clipperMenu, figureMenu, actionMenu, canvas);
+        VBox main = new VBox(commonActionsMenu, limitsMenu, rotateMenu, scaleMenu, actionMenu, canvas);
         main.setSpacing(5);
         configure(main);
         this.getChildren().add(main);
@@ -105,16 +131,12 @@ public class MainController extends AnchorPane {
     void keyboardDidTap(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case TAB -> {
-                if (xClipperField.focusedProperty().get()) { yClipperField.requestFocus(); }
-                else if (yClipperField.isFocused()) { xClipperField.requestFocus(); }
-                else if (xFigureField.isFocused()) { yFigureField.requestFocus(); }
-                else if (yFigureField.isFocused()) { xFigureField.requestFocus(); }
+                if (xStartField.focusedProperty().get()) { xEndField.requestFocus(); }
+                else if (xEndField.isFocused()) { zStartField.requestFocus(); }
+                else if (zStartField.isFocused()) { zEndField.requestFocus(); }
             }
             case ENTER -> {
-                if (xFigureField.isFocused() || yFigureField.isFocused()) {
-                }
-                else if (xClipperField.isFocused() || yClipperField.isFocused()) {
-                }
+
             }
             case LEFT -> canvas.goTo(Direction.LEFT);
             case RIGHT -> canvas.goTo(Direction.RIGHT);
@@ -129,8 +151,7 @@ public class MainController extends AnchorPane {
 
     private void addHandlers() {
         ArrayList<TextField> textFields = new ArrayList<>(Arrays.asList(
-                xClipperField, yClipperField,
-                xFigureField, yFigureField
+                xStartField, xEndField, zStartField, zEndField, xStepField, zStepField
         ));
         textFields.forEach(textField -> {
             textField.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -164,10 +185,18 @@ public class MainController extends AnchorPane {
             canvas.cancelAllBtnDidTap();
             canvas.requestFocus();
         });
+        drawBtn.setOnAction(actionEvent -> {
+            requestDrawBtnDidTap();
+            canvas.requestFocus();
+        });
+    }
+
+    private void requestDrawBtnDidTap() {
+
     }
 
     private void aboutProgramBtnDidTap() {
-        showInfoAlert("");
+        showInfoAlert("Алгоритм плавающего горизонта");
     }
 
     private void configure(HBox box) {
