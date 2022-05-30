@@ -50,14 +50,15 @@ class ResizableCanvas extends Canvas {
     }
 
     void cancelAllBtnDidTap() {
+        scale = 1;
         model.cancelAll();
         gc.setStroke(Color.BLACK);
         draw();
     }
 
     void scale(boolean isPlus) {
-        if (isPlus) { scale += 0.2; }
-        else if (scale > 1) { scale -= 0.1; }
+        if (isPlus) { scale += 1; }
+        else if (scale > 1) { scale -= 0.5; }
         build_graph(false, scale);
     }
 
@@ -187,7 +188,7 @@ class ResizableCanvas extends Canvas {
         }
 
         res_dot[0] += getWidth() / 2;
-        res_dot[1] += getHeight() / 2;
+        res_dot[1] = res_dot[1] * (-1) + getHeight() / 2;
 
         return new Point3D(res_dot[0], res_dot[1], res_dot[2]);
     }

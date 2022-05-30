@@ -134,8 +134,10 @@ public class MainController extends AnchorPane {
         switch (keyEvent.getCode()) {
             case TAB -> {
                 if (xStartField.focusedProperty().get()) { xEndField.requestFocus(); }
-                else if (xEndField.isFocused()) { zStartField.requestFocus(); }
+                else if (xEndField.isFocused()) { xStepField.requestFocus(); }
+                else if (xStepField.isFocused()) { zStartField.requestFocus(); }
                 else if (zStartField.isFocused()) { zEndField.requestFocus(); }
+                else if (zEndField.isFocused()) { zStepField.requestFocus(); }
             }
             case ENTER -> {
 

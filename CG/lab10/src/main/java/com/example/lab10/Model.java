@@ -1,7 +1,5 @@
 package com.example.lab10;
 
-import java.util.ArrayList;
-
 public class Model {
     private final TranslateCoords translateCoords = new TranslateCoords(0, 0);
     private double[][] transMatrix = new double[4][4];
@@ -38,11 +36,23 @@ public class Model {
 
     double function(FunctionType type, double x, double z) {
         switch (type) {
-            case FUNC1 -> {
+            case FUNC1_SUMXZ -> {
                 return x + z;
             }
-            case FUNC2 -> {
+            case FUNC2_COSXCOSZ -> {
                 return Math.cos(x) * Math.cos(z);
+            }
+            case FUNC3 -> {
+                return Math.sin(Math.cos(x)) * Math.sin(z);
+            }
+            case FUNC4 -> {
+                return Math.cos(x) / z;
+            }
+            case FUNC5 -> {
+                return (x * x / 4) + (z * z / 4);
+            }
+            case FUNC6 -> {
+                return Math.cos(x) * Math.cos(Math.sin(z));
             }
         }
         return 0.0;
