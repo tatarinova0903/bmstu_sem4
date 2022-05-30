@@ -54,6 +54,12 @@ public class Model {
             case FUNC6 -> {
                 return Math.cos(x) * Math.cos(Math.sin(z));
             }
+            case FUNC7 -> {
+                return Math.cos(x) * z / 3;
+            }
+            case FUNC8 -> {
+                return Math.sin(x * x + z * z);
+            }
         }
         return 0.0;
     }

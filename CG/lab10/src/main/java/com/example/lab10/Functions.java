@@ -12,6 +12,8 @@ public class Functions {
         functions.add(FunctionType.FUNC4);
         functions.add(FunctionType.FUNC5);
         functions.add(FunctionType.FUNC6);
+        functions.add(FunctionType.FUNC7);
+        functions.add(FunctionType.FUNC8);
     }
 
     public ArrayList<FunctionType> getFunctions() {
@@ -28,6 +30,8 @@ public class Functions {
                 case FUNC4 -> { functions.add("cos(x) / z"); }
                 case FUNC5 -> { functions.add("x^2 / 4 + z^2 / 4"); }
                 case FUNC6 -> { functions.add("cos(x) * cos(sin(z))"); }
+                case FUNC7 -> { functions.add("cos(x) * z / 3"); }
+                case FUNC8 -> { functions.add("sin(x * x + z * z)"); }
             }
 
         });
