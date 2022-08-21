@@ -1,0 +1,89 @@
+.model tiny
+.code
+.186
+org 100h   
+
+MAIN:
+    OLDPTR:
+    JMP START
+    DW ?
+
+    CUR_TIME DB 0
+    BUFF DB 1fh ; 31 11111b 
+    INSTALL_MARKER DB 'S'
+
+TIMER_HANDLER:
+    PUSHA
+    PUSHF
+    PUSH ES
+    PUSH DS
+
+    MOV AH, 02h
+    INT 1ah
+
+    CMP DH, CUR_TIME
+    MOV CUR_TIME, DH 
+    JE END_ITER
+
+    MOV AL, 0f3h
+    OUT 60h, AL
+    MOV al, BUFF
+    OUT 60h, AL
+
+    DEC BUFF
+    TEST BUFF, 0fh
+    JZ RESET
+    JMP END_ITER
+    RESET:
+        MOV BUFF, 0fh
+
+    END_ITER:
+        POP DS
+        POP ES
+
+        POPF
+        POPA
+
+        JMP DWORD PTR CS:OLDPTR
+
+STOP_MESSAGE DB "UNINSTALL", 10, 13 , '$'
+START_MESSAGE DB "INSTALL", 10, 13 , '$'
+
+START:
+    MOV AX, 351ch
+    INT 21H
+    
+    CMP ES:INSTALL_MARKER, 'S'
+    JE STOP
+
+    MOV WORD PTR OLDPTR, BX
+    MOV WORD PTR OLDPTR + 2, ES
+
+    MOV DX, OFFSET START_MESSAGE
+    MOV AH, 09h
+    INT 21h
+
+    MOV AX, 251ch
+    MOV DX, OFFSET TIMER_HANDLER
+    INT 21H
+    
+    MOV DX, OFFSET START
+    INT 27H
+
+STOP:
+    MOV DX, OFFSET STOP_MESSAGE
+    MOV AH, 09h
+    INT 21h
+
+    MOV DX, WORD PTR ES:OLDPTR
+    MOV DS, WORD PTR ES:OLDPTR + 2
+    MOV AX, 251ch
+    INT 21H
+    
+    MOV AH, 49h
+    INT 21h
+    
+    MOV AH, 4Ch
+    INT 21h
+
+END MAIN
