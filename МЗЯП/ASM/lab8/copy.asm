@@ -1,0 +1,30 @@
+GLOBAL _copy
+SECTION .text
+_copy:
+    MOV RCX, RDX
+
+    CMP RDI, RSI
+    JE EXIT
+
+    CMP RDI, RSI
+    JL NORMAL_COPY
+
+    MOV RAX, RDI
+    SUB RAX, RSI
+
+    CMP RAX, RCX
+    JGE NORMAL_COPY
+
+OVERLAY_COPY:
+    ADD RDI, RCX
+    ADD RSI, RCX
+    DEC RSI
+    DEC RDI
+    STD
+
+NORMAL_COPY:
+    REP MOVSB
+    CLD
+
+EXIT:
+    RET
